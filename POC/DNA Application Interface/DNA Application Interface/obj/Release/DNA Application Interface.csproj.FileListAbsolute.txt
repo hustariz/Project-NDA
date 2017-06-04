@@ -1,0 +1,9 @@
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\bin\Release\DNA Application Interface.exe.config
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\bin\Release\DNA Application Interface.exe
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\bin\Release\DNA Application Interface.pdb
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Release\DNA Application Interface.csprojResolveAssemblyReference.cache
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Release\DNA_Application_Interface.Form1.resources
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Release\DNA_Application_Interface.Properties.Resources.resources
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Release\DNA Application Interface.csproj.GenerateResource.Cache
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Release\DNA Application Interface.exe
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Release\DNA Application Interface.pdb

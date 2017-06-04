@@ -38,7 +38,13 @@ namespace DNA_Application_Interface
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if(textBox1.Text != "")
+            {
+                text_to_send = textBox1.Text;
+                backgroundWorker2.RunWorkerAsync();
 
+            }
+            textBox1.Text = ""; 
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -67,22 +73,62 @@ namespace DNA_Application_Interface
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-
+   
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e) // receive data
         {
-
+            while (client.Connected)
+            {
+                try
+                {
+                  
+                    receive = STR.ReadLine();
+                    this.textBox2.Invoke(new MethodInvoker(delegate () { textBox2.AppendText("you : " + receive + "\n"); }));
+                    receive = " ";
+                }
+                catch(Exception x)
+                {
+                    MessageBox.Show(x.Message.ToString());
+                }
+            }
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e) // send data
         {
-
+            if (client.Connected)
+            {
+                STW.WriteLine(text_to_send);
+                this.textBox2.Invoke(new MethodInvoker(delegate () { textBox2.AppendText("me : " + text_to_send + "\n"); }));
+            }
+              else
+            {
+                MessageBox.Show("Send failed !");
+            }
+            backgroundWorker2.CancelAsync();
         }
 
         private void button3_Click(object sender, EventArgs e) // Connect to Server
         {
             client = new TcpClient();
+            IPEndPoint IP_End = new IPEndPoint(IPAddress.Parse(textBox6.Text), int.Parse(textBox5.Text));
+            try
+            {
+                client.Connect(IP_End);
+                if (client.Connected)
+                {
+                    textBox2.AppendText("connected to server" + "\n");
+                    STW = new StreamWriter(client.GetStream());
+                    STR = new StreamReader(client.GetStream());
+                    STW.AutoFlush = true;
+
+                    backgroundWorker1.RunWorkerAsync();
+                    backgroundWorker2.WorkerSupportsCancellation = true;
+                }
+            }catch(Exception x)
+            {
+                MessageBox.Show(x.Message.ToString());
+            }
         }
     }
 }
