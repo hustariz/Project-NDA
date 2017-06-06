@@ -124,11 +124,22 @@ namespace DNA_Application_Interface
 
                     backgroundWorker1.RunWorkerAsync();
                     backgroundWorker2.WorkerSupportsCancellation = true;
+
+                    SplitFile split = new SplitFile();
+
+                    
+
+                    MessageBox.Show(split.splitForBasisPairs(1));
                 }
             }catch(Exception x)
             {
                 MessageBox.Show(x.Message.ToString());
             }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
