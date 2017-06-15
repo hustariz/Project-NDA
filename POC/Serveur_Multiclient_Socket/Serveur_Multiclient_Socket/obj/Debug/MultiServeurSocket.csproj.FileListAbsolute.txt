@@ -16,3 +16,6 @@ G:\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\obj\Debug\MultiServeurS
 G:\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\obj\Debug\MultiServeurSocket.ServerForm.resources
 G:\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\obj\Debug\Serveur_Multiclient_Socket.Properties.Resources.resources
 G:\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\obj\Debug\MultiServeurSocket.csproj.GenerateResource.Cache
+C:\Users\El Maki\Desktop\Project-NDA\POC\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\bin\Debug\Serveur_Multiclient_Socket.exe.config
+C:\Users\El Maki\Desktop\Project-NDA\POC\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\obj\Debug\Serveur_Multiclient_Socket.exe
+C:\Users\El Maki\Desktop\Project-NDA\POC\Serveur_Multiclient_Socket\Serveur_Multiclient_Socket\obj\Debug\Serveur_Multiclient_Socket.pdb
