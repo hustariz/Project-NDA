@@ -22,7 +22,7 @@ namespace MultiServeurSocket
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ServerForm());
-
+            Console.WriteLine("Test commit Developp");
         }
 
 
