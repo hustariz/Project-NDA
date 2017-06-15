@@ -59,6 +59,12 @@ namespace DNA_Application_Interface
 
         private void button2_Click(object sender, EventArgs e) // Start Server
         {
+
+
+            ServUtils servUtils = new ServUtils();
+            MessageBox.Show("Mabite : " + servUtils.divideGenomeByWorker(2));
+
+
             TcpListener listener = new TcpListener(IPAddress.Any, int.Parse(textBox4.Text));
             listener.Start();
             client = listener.AcceptTcpClient();
@@ -129,7 +135,7 @@ namespace DNA_Application_Interface
 
                     
 
-                    MessageBox.Show(split.splitForBasisPairs(1));
+                    //MessageBox.Show(split.splitForBasisPairs(1));
                 }
             }catch(Exception x)
             {
