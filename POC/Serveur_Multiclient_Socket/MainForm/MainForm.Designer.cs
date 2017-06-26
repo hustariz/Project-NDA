@@ -1,6 +1,6 @@
 ﻿namespace MainForm
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -30,6 +30,13 @@
         {
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.txt_srv_status = new System.Windows.Forms.TextBox();
+            this.btn_stop_srv = new System.Windows.Forms.Button();
+            this.txt_port = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txt_host = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btn_start_srv = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btn_exit_client = new System.Windows.Forms.Button();
             this.txt_status_client = new System.Windows.Forms.TextBox();
@@ -40,13 +47,6 @@
             this.txt_host_client = new System.Windows.Forms.TextBox();
             this.lbl_host_client = new System.Windows.Forms.Label();
             this.btn_connection_client = new System.Windows.Forms.Button();
-            this.txt_srv_status = new System.Windows.Forms.TextBox();
-            this.btn_stop_srv = new System.Windows.Forms.Button();
-            this.txt_port = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txt_host = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btn_start_srv = new System.Windows.Forms.Button();
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -78,7 +78,69 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
-            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
+            // 
+            // txt_srv_status
+            // 
+            this.txt_srv_status.Location = new System.Drawing.Point(47, 41);
+            this.txt_srv_status.Multiline = true;
+            this.txt_srv_status.Name = "txt_srv_status";
+            this.txt_srv_status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_srv_status.Size = new System.Drawing.Size(334, 195);
+            this.txt_srv_status.TabIndex = 13;
+            // 
+            // btn_stop_srv
+            // 
+            this.btn_stop_srv.Location = new System.Drawing.Point(306, 12);
+            this.btn_stop_srv.Name = "btn_stop_srv";
+            this.btn_stop_srv.Size = new System.Drawing.Size(75, 23);
+            this.btn_stop_srv.TabIndex = 12;
+            this.btn_stop_srv.Text = "Stop";
+            this.btn_stop_srv.UseVisualStyleBackColor = true;
+            this.btn_stop_srv.Click += new System.EventHandler(this.btn_stop_srv_Click);
+            // 
+            // txt_port
+            // 
+            this.txt_port.Location = new System.Drawing.Point(185, 14);
+            this.txt_port.Name = "txt_port";
+            this.txt_port.Size = new System.Drawing.Size(34, 20);
+            this.txt_port.TabIndex = 11;
+            this.txt_port.Text = "100";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(153, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Port :";
+            // 
+            // txt_host
+            // 
+            this.txt_host.Location = new System.Drawing.Point(47, 14);
+            this.txt_host.Name = "txt_host";
+            this.txt_host.Size = new System.Drawing.Size(100, 20);
+            this.txt_host.TabIndex = 9;
+            this.txt_host.Text = "127.0.0.1";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Host :";
+            // 
+            // btn_start_srv
+            // 
+            this.btn_start_srv.Location = new System.Drawing.Point(225, 12);
+            this.btn_start_srv.Name = "btn_start_srv";
+            this.btn_start_srv.Size = new System.Drawing.Size(75, 23);
+            this.btn_start_srv.TabIndex = 7;
+            this.btn_start_srv.Text = "Start";
+            this.btn_start_srv.UseVisualStyleBackColor = true;
+            this.btn_start_srv.Click += new System.EventHandler(this.btn_start_srv_Click);
             // 
             // tabPage2
             // 
@@ -107,6 +169,7 @@
             this.btn_exit_client.TabIndex = 22;
             this.btn_exit_client.Text = "Exit";
             this.btn_exit_client.UseVisualStyleBackColor = true;
+            this.btn_exit_client.Click += new System.EventHandler(this.btn_exit_client_Click);
             // 
             // txt_status_client
             // 
@@ -124,6 +187,7 @@
             this.btn_send_client.TabIndex = 20;
             this.btn_send_client.Text = "Send";
             this.btn_send_client.UseVisualStyleBackColor = true;
+            this.btn_send_client.Click += new System.EventHandler(this.btn_send_client_Click);
             // 
             // txt_message_client
             // 
@@ -175,75 +239,15 @@
             this.btn_connection_client.TabIndex = 14;
             this.btn_connection_client.Text = "Connect";
             this.btn_connection_client.UseVisualStyleBackColor = true;
+            this.btn_connection_client.Click += new System.EventHandler(this.btn_connection_client_Click);
             // 
-            // txt_srv_status
-            // 
-            this.txt_srv_status.Location = new System.Drawing.Point(47, 41);
-            this.txt_srv_status.Multiline = true;
-            this.txt_srv_status.Name = "txt_srv_status";
-            this.txt_srv_status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_srv_status.Size = new System.Drawing.Size(334, 195);
-            this.txt_srv_status.TabIndex = 13;
-            // 
-            // btn_stop_srv
-            // 
-            this.btn_stop_srv.Location = new System.Drawing.Point(306, 12);
-            this.btn_stop_srv.Name = "btn_stop_srv";
-            this.btn_stop_srv.Size = new System.Drawing.Size(75, 23);
-            this.btn_stop_srv.TabIndex = 12;
-            this.btn_stop_srv.Text = "Stop";
-            this.btn_stop_srv.UseVisualStyleBackColor = true;
-            // 
-            // txt_port
-            // 
-            this.txt_port.Location = new System.Drawing.Point(185, 14);
-            this.txt_port.Name = "txt_port";
-            this.txt_port.Size = new System.Drawing.Size(34, 20);
-            this.txt_port.TabIndex = 11;
-            this.txt_port.Text = "100";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(153, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Port :";
-            // 
-            // txt_host
-            // 
-            this.txt_host.Location = new System.Drawing.Point(47, 14);
-            this.txt_host.Name = "txt_host";
-            this.txt_host.Size = new System.Drawing.Size(100, 20);
-            this.txt_host.TabIndex = 9;
-            this.txt_host.Text = "127.0.0.1";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Host :";
-            // 
-            // btn_start_srv
-            // 
-            this.btn_start_srv.Location = new System.Drawing.Point(225, 12);
-            this.btn_start_srv.Name = "btn_start_srv";
-            this.btn_start_srv.Size = new System.Drawing.Size(75, 23);
-            this.btn_start_srv.TabIndex = 7;
-            this.btn_start_srv.Text = "Start";
-            this.btn_start_srv.UseVisualStyleBackColor = true;
-            // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(444, 382);
             this.Controls.Add(this.Server);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Project NDA";
             this.Server.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

@@ -12,9 +12,9 @@ using System.Windows.Forms;
 
 namespace MultiServeurSocket
 {
-    public partial class ServerForm : Form
+    public partial class Server : Form
     {
-        public ServerForm()
+        public Server()
         {
             InitializeComponent();
             IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName()); //Get your own IP
@@ -121,7 +121,9 @@ namespace MultiServeurSocket
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
 
+        private void ServerForm_Load(object sender, EventArgs e)
+        {
 
-
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace ClientSocket
             {
                 if (adress.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    txt_host.Text = adress.ToString();
+                    txt_host_client.Text = adress.ToString();
                 }
             }
         }
@@ -54,19 +54,19 @@ namespace ClientSocket
                 try
                 {
                     attempts++;
-                    txt_status.Text += ("Connection attempt " + attempts + "\r\n");
+                    txt_status_client.Text += ("Connection attempt " + attempts + "\r\n");
                     // Change IPAddress.Loopback to a remote IP to connect to a remote host.
 
-                    ClientSocket.Connect(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
+                    ClientSocket.Connect(IPAddress.Parse(txt_host_client.Text), Int32.Parse(txt_port_client.Text));
                 }
                 catch (SocketException)
                 {
-                    txt_status.Text = "SocketException";
+                    txt_status_client.Text = "SocketException";
                 }
             }
 
-            txt_status.Text = "";
-            txt_status.Text += ("Connected \r\n");
+            txt_status_client.Text = "";
+            txt_status_client.Text += ("Connected \r\n");
         }
 
         /// <summary>
@@ -83,8 +83,8 @@ namespace ClientSocket
         private void SendRequest()
         {
 
-            string request = txt_message.Text;
-            txt_status.Text += ("request sent : " + request + "\r\n");
+            string request = txt_message_client.Text;
+            txt_status_client.Text += ("request sent : " + request + "\r\n");
             SendString(request);
 
             if (request.ToLower() == "exit")
@@ -111,7 +111,7 @@ namespace ClientSocket
             Array.Copy(buffer, data, received);
             string text = Encoding.ASCII.GetString(data);
 
-            txt_status.Text += ("Response : " + text + "\r\n");
+            txt_status_client.Text += ("Response : " + text + "\r\n");
         }
 
 

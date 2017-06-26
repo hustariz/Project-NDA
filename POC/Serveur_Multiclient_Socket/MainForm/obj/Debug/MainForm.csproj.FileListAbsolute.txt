@@ -1,0 +1,9 @@
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\bin\Debug\MainForm.exe.config
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\bin\Debug\MainForm.exe
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\bin\Debug\MainForm.pdb
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\obj\Debug\MainForm.MainForm.resources
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\obj\Debug\MainForm.csproj.GenerateResource.Cache
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\obj\Debug\MainForm.exe
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\obj\Debug\MainForm.pdb
+C:\Users\Porridge\Desktop\Project DNA\Project-NDA\POC\Serveur_Multiclient_Socket\MainForm\obj\Debug\MainForm.csprojResolveAssemblyReference.cache
