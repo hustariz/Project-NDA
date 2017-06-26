@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DNA_Application_Interface.Properties
+namespace MainForm.Properties
 {
 
 
