@@ -114,6 +114,5 @@ namespace ClientSocket
             txt_status_client.Text += ("Response : " + text + "\r\n");
         }
 
-
     }
 }

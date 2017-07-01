@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -10,22 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace MultiServeurSocket
+namespace MainForm
 {
-    public partial class Server : Form
+    public partial class MainForm : Form
     {
-        public Server()
-        {
-            InitializeComponent();
-            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName()); //Get your own IP
-            foreach(IPAddress adress in localIP)
-            {
-                if(adress.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    txt_host.Text = adress.ToString();
-                }
-            }
-        }
+
         private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
@@ -33,26 +19,16 @@ namespace MultiServeurSocket
 
 
 
-
-        private void btn_start_srv_Click(object sender, EventArgs e)
+        public void SetupServer(IPAddress host, int port)
         {
-            SetupServer();
-        }
-
-        private void btn_stop_srv_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SetupServer()
-        {
-            txt_srv_status.Text += ("Setting up server...\r\n");
-            serverSocket.Bind(new IPEndPoint(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text)));
+            AppendSrvStatus("Setting up server...");
+            serverSocket.Bind(new IPEndPoint(host, port));
             serverSocket.Listen(1);
             serverSocket.BeginAccept(AcceptCallback, null);
-            txt_srv_status.Text += ("Server setup complete\r\n");
+            AppendSrvStatus("Server setup complete");
         }
-        private void AcceptCallback(IAsyncResult AR)
+
+        public void AcceptCallback(IAsyncResult AR)
         {
             Socket socket;
 
@@ -67,11 +43,14 @@ namespace MultiServeurSocket
 
             clientSockets.Add(socket);
             socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-            txt_srv_status.Text +=  ("Client connected, waiting for request...\r\n");
+            //txt_srv_status.Invoke((MethodInvoker)delegate
+            //{
+            AppendSrvStatus("Client connected, waiting for request...\r\n");
+            //});
             serverSocket.BeginAccept(AcceptCallback, null);
         }
 
-        private void ReceiveCallback(IAsyncResult AR)
+        public void ReceiveCallback(IAsyncResult AR)
         {
             Socket current = (Socket)AR.AsyncState;
             int received;
@@ -82,7 +61,7 @@ namespace MultiServeurSocket
             }
             catch (SocketException)
             {
-                txt_srv_status.Text += ("Client forcefully disconnected\r\n");
+                AppendSrvStatus("Client forcefully disconnected\r\n");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 current.Close();
                 clientSockets.Remove(current);
@@ -92,14 +71,22 @@ namespace MultiServeurSocket
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
-            txt_srv_status.Text +=  ("Received Text : " + text + "\r\n");
+
+            //txt_srv_status.Invoke((MethodInvoker)delegate
+            //{
+            AppendSrvStatus("Received Text : " + text + "\r\n");
+            //});
 
             if (text.ToLower() == "get time") // Client requested time
             {
-                txt_srv_status.Text += ("Text is a get time request\r\n");
+                //txt_srv_status.Invoke((MethodInvoker)delegate
+                //{
+                AppendSrvStatus("Text is a get time request\r\n");
                 byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
                 current.Send(data);
-                txt_srv_status.Text += ("Time sent to client\r\n");
+                AppendSrvStatus("Time sent to client\r\n");
+                //});
+
             }
             else if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
@@ -107,18 +94,30 @@ namespace MultiServeurSocket
                 current.Shutdown(SocketShutdown.Both);
                 current.Close();
                 clientSockets.Remove(current);
-                txt_srv_status.Text += ("Client disconnected\r\n");
+                //txt_srv_status.Invoke((MethodInvoker)delegate
+                //{
+                AppendSrvStatus("Client disconnected\r\n");
                 return;
+                //});
             }
             else
             {
-                txt_srv_status.Text += ("Text is an invalid request\r\n");
+                //txt_srv_status.Invoke((MethodInvoker)delegate
+                //{
+                AppendSrvStatus("Text is an invalid request\r\n");
                 byte[] data = Encoding.ASCII.GetBytes("Invalid request\r\n");
                 current.Send(data);
-                txt_srv_status.Text += ("Warning Sent\r\n");
+                AppendSrvStatus("Warning Sent\r\n");
+                //});
             }
-
-            current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
+            try
+            {
+                current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
     }

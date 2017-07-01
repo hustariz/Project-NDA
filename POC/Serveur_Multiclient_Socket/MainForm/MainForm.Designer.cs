@@ -30,7 +30,7 @@
         {
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.txt_srv_status = new System.Windows.Forms.TextBox();
+            this.txt_status_srv = new System.Windows.Forms.TextBox();
             this.btn_stop_srv = new System.Windows.Forms.Button();
             this.txt_port = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -64,7 +64,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.txt_srv_status);
+            this.tabPage1.Controls.Add(this.txt_status_srv);
             this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
             this.tabPage1.Controls.Add(this.label2);
@@ -79,14 +79,14 @@
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // txt_srv_status
+            // txt_status_srv
             // 
-            this.txt_srv_status.Location = new System.Drawing.Point(47, 41);
-            this.txt_srv_status.Multiline = true;
-            this.txt_srv_status.Name = "txt_srv_status";
-            this.txt_srv_status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_srv_status.Size = new System.Drawing.Size(334, 195);
-            this.txt_srv_status.TabIndex = 13;
+            this.txt_status_srv.Location = new System.Drawing.Point(47, 41);
+            this.txt_status_srv.Multiline = true;
+            this.txt_status_srv.Name = "txt_status_srv";
+            this.txt_status_srv.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_status_srv.Size = new System.Drawing.Size(334, 195);
+            this.txt_status_srv.TabIndex = 13;
             // 
             // btn_stop_srv
             // 
@@ -272,7 +272,7 @@
         private System.Windows.Forms.TextBox txt_host_client;
         private System.Windows.Forms.Label lbl_host_client;
         private System.Windows.Forms.Button btn_connection_client;
-        private System.Windows.Forms.TextBox txt_srv_status;
+        private System.Windows.Forms.TextBox txt_status_srv;
         private System.Windows.Forms.Button btn_stop_srv;
         private System.Windows.Forms.TextBox txt_port;
         private System.Windows.Forms.Label label2;
