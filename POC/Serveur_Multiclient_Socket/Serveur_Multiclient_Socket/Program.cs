@@ -21,7 +21,12 @@ namespace MultiServeurSocket
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+<<<<<<< HEAD
             Application.Run(new ServerForm());
+=======
+            Application.Run(new Server());
+
+>>>>>>> ServerMulticlientSocket
         }
 
 

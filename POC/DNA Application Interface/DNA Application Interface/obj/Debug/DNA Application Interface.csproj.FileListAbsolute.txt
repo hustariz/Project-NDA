@@ -7,3 +7,12 @@ C:\Users\loika\Source\Repos\Project-NDA3\Project-NDA\POC\DNA Application Interfa
 C:\Users\loika\Source\Repos\Project-NDA3\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.csproj.GenerateResource.Cache
 C:\Users\loika\Source\Repos\Project-NDA3\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.exe
 C:\Users\loika\Source\Repos\Project-NDA3\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.pdb
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\bin\Debug\DNA Application Interface.exe.config
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\bin\Debug\DNA Application Interface.exe
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\bin\Debug\DNA Application Interface.pdb
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.csprojResolveAssemblyReference.cache
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA_Application_Interface.Form1.resources
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA_Application_Interface.Properties.Resources.resources
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.csproj.GenerateResource.Cache
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.exe
+E:\Dev\ProjectC#\Project-NDA\POC\DNA Application Interface\DNA Application Interface\obj\Debug\DNA Application Interface.pdb

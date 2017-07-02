@@ -11,10 +11,10 @@ namespace DNA_Application_Interface
     class SplitFile
     {
         
-        public string splitForBasisPairs(int workerNumber)
+        public string splitForBasisPairs()
         {
             List<String> liste = new List<string>();
-            String[] values = File.ReadAllLines(@"C:\Users\loika\Source\Repos\Project-NDA3\Project-NDA\Genomes\genome-soffes.txt");
+            String[] values = File.ReadAllLines(@"E:\Dev\ProjectC#\Project-NDA\Genomes\genome-soffes.txt");
             String[] toto;
             int i = 1;
             foreach (string value in values)
@@ -25,10 +25,13 @@ namespace DNA_Application_Interface
 
             foreach (string tab in liste)
             {
-                Console.WriteLine(tab);
+               using(StreamWriter w = File.AppendText("log.txt"))
+                {
+                    Log(tab.ToString(), w);
+                }
             }
 
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return null;
         }
@@ -37,6 +40,16 @@ namespace DNA_Application_Interface
         public SplitFile()
         {
 
+        }
+
+        public static void Log(string logMessage, TextWriter w)
+        {
+            //w.Write("\r\nLog Entry : ");
+            //w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
+            //    DateTime.Now.ToLongDateString());
+            //w.WriteLine("  :");
+            w.WriteLine("  :{0}", logMessage);
+            //w.WriteLine("-------------------------------");
         }
     }
 }
