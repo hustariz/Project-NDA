@@ -1,0 +1,9 @@
+F:\Serveur_Multiclient_Socket\ClientSocket\bin\Debug\ClientSocket.exe.config
+F:\Serveur_Multiclient_Socket\ClientSocket\bin\Debug\ClientSocket.exe
+F:\Serveur_Multiclient_Socket\ClientSocket\bin\Debug\ClientSocket.pdb
+F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.csprojResolveAssemblyReference.cache
+F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.Client.resources
+F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.Properties.Resources.resources
+F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.csproj.GenerateResource.Cache
+F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.exe
+F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.pdb
