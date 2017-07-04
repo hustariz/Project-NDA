@@ -70,6 +70,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -83,6 +84,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\ADN.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Logo_Cesi_Alternance.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\AND.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ADN.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Logo_Cesi_Alternance.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
