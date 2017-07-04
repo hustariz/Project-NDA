@@ -7,3 +7,12 @@ F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.Properties.Res
 F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.csproj.GenerateResource.Cache
 F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.exe
 F:\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.pdb
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\bin\Debug\ClientSocket.exe.config
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\bin\Debug\ClientSocket.exe
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\bin\Debug\ClientSocket.pdb
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.csprojResolveAssemblyReference.cache
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.Client.resources
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.Properties.Resources.resources
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.csproj.GenerateResource.Cache
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.exe
+E:\Dev\ProjectC#\Project-NDA\POC\Serveur_Multiclient_Socket\ClientSocket\obj\Debug\ClientSocket.pdb
