@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.file = new System.Windows.Forms.Button();
@@ -48,24 +49,34 @@
             this.txt_host_client = new System.Windows.Forms.TextBox();
             this.lbl_host_client = new System.Windows.Forms.Label();
             this.btn_connection_client = new System.Windows.Forms.Button();
+            this.application_title = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.txt_info_thread = new System.Windows.Forms.TextBox();
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // Server
             // 
             this.Server.Controls.Add(this.tabPage1);
             this.Server.Controls.Add(this.tabPage2);
-            this.Server.Location = new System.Drawing.Point(12, 12);
+            this.Server.Location = new System.Drawing.Point(124, 38);
             this.Server.Name = "Server";
             this.Server.SelectedIndex = 0;
-            this.Server.Size = new System.Drawing.Size(405, 317);
+            this.Server.Size = new System.Drawing.Size(484, 512);
             this.Server.TabIndex = 0;
             // 
             // tabPage1
             // 
+<<<<<<< HEAD
             this.tabPage1.Controls.Add(this.file);
+=======
+            this.tabPage1.Controls.Add(this.txt_info_thread);
+>>>>>>> Developp
             this.tabPage1.Controls.Add(this.txt_status_srv);
             this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
@@ -76,7 +87,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(397, 291);
+            this.tabPage1.Size = new System.Drawing.Size(476, 486);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -92,16 +103,16 @@
             // 
             // txt_status_srv
             // 
-            this.txt_status_srv.Location = new System.Drawing.Point(47, 41);
+            this.txt_status_srv.Location = new System.Drawing.Point(6, 157);
             this.txt_status_srv.Multiline = true;
             this.txt_status_srv.Name = "txt_status_srv";
             this.txt_status_srv.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_status_srv.Size = new System.Drawing.Size(334, 195);
+            this.txt_status_srv.Size = new System.Drawing.Size(463, 323);
             this.txt_status_srv.TabIndex = 13;
             // 
             // btn_stop_srv
             // 
-            this.btn_stop_srv.Location = new System.Drawing.Point(306, 12);
+            this.btn_stop_srv.Location = new System.Drawing.Point(394, 11);
             this.btn_stop_srv.Name = "btn_stop_srv";
             this.btn_stop_srv.Size = new System.Drawing.Size(75, 23);
             this.btn_stop_srv.TabIndex = 12;
@@ -111,7 +122,7 @@
             // 
             // txt_port
             // 
-            this.txt_port.Location = new System.Drawing.Point(185, 14);
+            this.txt_port.Location = new System.Drawing.Point(194, 13);
             this.txt_port.Name = "txt_port";
             this.txt_port.Size = new System.Drawing.Size(34, 20);
             this.txt_port.TabIndex = 11;
@@ -120,7 +131,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(153, 17);
+            this.label2.Location = new System.Drawing.Point(156, 16);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 10;
@@ -128,7 +139,7 @@
             // 
             // txt_host
             // 
-            this.txt_host.Location = new System.Drawing.Point(47, 14);
+            this.txt_host.Location = new System.Drawing.Point(47, 13);
             this.txt_host.Name = "txt_host";
             this.txt_host.Size = new System.Drawing.Size(100, 20);
             this.txt_host.TabIndex = 9;
@@ -137,7 +148,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 17);
+            this.label1.Location = new System.Drawing.Point(6, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 8;
@@ -145,7 +156,7 @@
             // 
             // btn_start_srv
             // 
-            this.btn_start_srv.Location = new System.Drawing.Point(225, 12);
+            this.btn_start_srv.Location = new System.Drawing.Point(313, 11);
             this.btn_start_srv.Name = "btn_start_srv";
             this.btn_start_srv.Size = new System.Drawing.Size(75, 23);
             this.btn_start_srv.TabIndex = 7;
@@ -167,14 +178,14 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(397, 291);
+            this.tabPage2.Size = new System.Drawing.Size(476, 486);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Client";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // btn_exit_client
             // 
-            this.btn_exit_client.Location = new System.Drawing.Point(305, 16);
+            this.btn_exit_client.Location = new System.Drawing.Point(395, 16);
             this.btn_exit_client.Name = "btn_exit_client";
             this.btn_exit_client.Size = new System.Drawing.Size(75, 23);
             this.btn_exit_client.TabIndex = 22;
@@ -184,16 +195,20 @@
             // 
             // txt_status_client
             // 
-            this.txt_status_client.Location = new System.Drawing.Point(47, 122);
+            this.txt_status_client.Location = new System.Drawing.Point(6, 142);
             this.txt_status_client.Multiline = true;
             this.txt_status_client.Name = "txt_status_client";
+<<<<<<< HEAD
             this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txt_status_client.Size = new System.Drawing.Size(333, 148);
+=======
+            this.txt_status_client.Size = new System.Drawing.Size(464, 148);
+>>>>>>> Developp
             this.txt_status_client.TabIndex = 21;
             // 
             // btn_send_client
             // 
-            this.btn_send_client.Location = new System.Drawing.Point(305, 93);
+            this.btn_send_client.Location = new System.Drawing.Point(395, 113);
             this.btn_send_client.Name = "btn_send_client";
             this.btn_send_client.Size = new System.Drawing.Size(75, 23);
             this.btn_send_client.TabIndex = 20;
@@ -203,15 +218,15 @@
             // 
             // txt_message_client
             // 
-            this.txt_message_client.Location = new System.Drawing.Point(47, 43);
+            this.txt_message_client.Location = new System.Drawing.Point(6, 43);
             this.txt_message_client.Multiline = true;
             this.txt_message_client.Name = "txt_message_client";
-            this.txt_message_client.Size = new System.Drawing.Size(333, 44);
+            this.txt_message_client.Size = new System.Drawing.Size(464, 64);
             this.txt_message_client.TabIndex = 19;
             // 
             // txt_port_client
             // 
-            this.txt_port_client.Location = new System.Drawing.Point(185, 18);
+            this.txt_port_client.Location = new System.Drawing.Point(191, 19);
             this.txt_port_client.Name = "txt_port_client";
             this.txt_port_client.Size = new System.Drawing.Size(34, 20);
             this.txt_port_client.TabIndex = 18;
@@ -245,7 +260,7 @@
             // 
             // btn_connection_client
             // 
-            this.btn_connection_client.Location = new System.Drawing.Point(225, 16);
+            this.btn_connection_client.Location = new System.Drawing.Point(314, 16);
             this.btn_connection_client.Name = "btn_connection_client";
             this.btn_connection_client.Size = new System.Drawing.Size(75, 23);
             this.btn_connection_client.TabIndex = 14;
@@ -253,11 +268,53 @@
             this.btn_connection_client.UseVisualStyleBackColor = true;
             this.btn_connection_client.Click += new System.EventHandler(this.btn_connection_client_Click);
             // 
+            // application_title
+            // 
+            this.application_title.AutoSize = true;
+            this.application_title.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold);
+            this.application_title.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.application_title.Location = new System.Drawing.Point(261, 4);
+            this.application_title.Name = "application_title";
+            this.application_title.Size = new System.Drawing.Size(218, 31);
+            this.application_title.TabIndex = 1;
+            this.application_title.Text = "PROJECT NDA";
+            this.application_title.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(614, 60);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(158, 486);
+            this.pictureBox2.TabIndex = 3;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::MainForm.Properties.Resources.ADN;
+            this.pictureBox1.Location = new System.Drawing.Point(16, 60);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(102, 490);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
+            // txt_info_thread
+            // 
+            this.txt_info_thread.Location = new System.Drawing.Point(3, 39);
+            this.txt_info_thread.Multiline = true;
+            this.txt_info_thread.Name = "txt_info_thread";
+            this.txt_info_thread.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_info_thread.Size = new System.Drawing.Size(467, 112);
+            this.txt_info_thread.TabIndex = 14;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 382);
+            this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.application_title);
             this.Controls.Add(this.Server);
             this.Name = "MainForm";
             this.Text = "Project NDA";
@@ -266,7 +323,10 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -291,7 +351,14 @@
         private System.Windows.Forms.TextBox txt_host;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_start_srv;
+<<<<<<< HEAD
         private System.Windows.Forms.Button file;
+=======
+        private System.Windows.Forms.Label application_title;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.TextBox txt_info_thread;
+>>>>>>> Developp
     }
 }
 
