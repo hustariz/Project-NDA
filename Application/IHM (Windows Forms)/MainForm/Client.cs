@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.IO;
 
 namespace MainForm
 {
@@ -52,6 +53,7 @@ namespace MainForm
 
         private void SendRequest()
         {
+  
             string request = txt_message_client.Text;
             SendString(request);
             AppendClientStatus("request sent : " + request);
@@ -59,6 +61,13 @@ namespace MainForm
                 {
                     Exit();
                 }
+
+        }
+
+        private void sendFile()
+        {
+
+            string request;
 
         }
 
@@ -97,11 +106,16 @@ namespace MainForm
 
         private void btn_send_client_Click(object sender, EventArgs e)
         {
+
             SendRequest();
             if (txt_message_client.Text.ToLower() != "exit")
             {
                 ReceiveResponse();
             }
         }
+
+       
+
+
     }
 }

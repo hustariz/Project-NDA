@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -102,6 +103,31 @@ namespace MainForm
                     AppendSrvStatus("Client disconnected");
                     return;
                     //});
+                }
+
+                else if (text.ToLower()== "file")
+                {
+                    List<String> liste = new List<string>();
+                    string messageToSend;
+                    String[] values = File.ReadAllLines(@"E:\Dev\ProjectC#\Project-NDA\Genomes\genome_greshake.txt");
+                    //byte[] bytes = new byte[1024];
+
+                    String[] toto;
+                    int i = 1;
+                    foreach (string value in values)
+                    {
+                        toto = value.Split('\t');
+
+                        liste.Add(toto[3]);
+
+                    }
+                    messageToSend = string.Join("", liste);
+
+                    byte[] data = new byte[10000];
+                    data = Encoding.ASCII.GetBytes(messageToSend);
+
+                    current.Send(data);
+
                 }
                 else
                 {

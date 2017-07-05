@@ -34,3 +34,12 @@ C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\o
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.csprojResolveAssemblyReference.cache
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.MainForm.resources
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.csproj.GenerateResource.Cache
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb

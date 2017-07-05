@@ -30,6 +30,7 @@
         {
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.file = new System.Windows.Forms.Button();
             this.txt_status_srv = new System.Windows.Forms.TextBox();
             this.btn_stop_srv = new System.Windows.Forms.Button();
             this.txt_port = new System.Windows.Forms.TextBox();
@@ -64,6 +65,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.file);
             this.tabPage1.Controls.Add(this.txt_status_srv);
             this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
@@ -78,6 +80,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // file
+            // 
+            this.file.Location = new System.Drawing.Point(306, 262);
+            this.file.Name = "file";
+            this.file.Size = new System.Drawing.Size(75, 23);
+            this.file.TabIndex = 15;
+            this.file.Text = "File";
+            this.file.UseVisualStyleBackColor = true;
             // 
             // txt_status_srv
             // 
@@ -176,6 +187,7 @@
             this.txt_status_client.Location = new System.Drawing.Point(47, 122);
             this.txt_status_client.Multiline = true;
             this.txt_status_client.Name = "txt_status_client";
+            this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txt_status_client.Size = new System.Drawing.Size(333, 148);
             this.txt_status_client.TabIndex = 21;
             // 
@@ -279,6 +291,7 @@
         private System.Windows.Forms.TextBox txt_host;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_start_srv;
+        private System.Windows.Forms.Button file;
     }
 }
 
