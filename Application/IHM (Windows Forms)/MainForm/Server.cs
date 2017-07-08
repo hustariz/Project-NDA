@@ -10,15 +10,15 @@ using System.Windows.Forms;
 
 namespace MainForm
 {
+    // TO DO Finir commentaire et faire un commit "Clean code  + comment"
     public partial class MainForm : Form
     {
 
         private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        // List of clientSocket for multiple connection from client
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
-
-
 
         public void SetupServer(IPAddress host, int port)
         {
@@ -29,10 +29,10 @@ namespace MainForm
                 AppendSrvStatus("Server setup complete");
         }
 
+        //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult AR)
         {
             Socket socket;
-
             try
             {
                 socket = serverSocket.EndAccept(AR);
@@ -41,23 +41,20 @@ namespace MainForm
             {
                 return;
             }
-
             clientSockets.Add(socket);
             socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-            //txt_srv_status.Invoke((MethodInvoker)delegate
-            //{
             AppendSrvStatus("Client connected, waiting for request...");
-            //});
+            //In case another client wants to connect
             serverSocket.BeginAccept(AcceptCallback, null);
         }
 
+        // Receive the message from the client and do action following the input
         public void ReceiveCallback(IAsyncResult AR)
         {
             Invoke(new ThreadStart(delegate
             {
                 Socket current = (Socket)AR.AsyncState;
                 int received;
-
                 try
                 {
                     received = current.EndReceive(AR);
@@ -74,22 +71,15 @@ namespace MainForm
                 byte[] recBuf = new byte[received];
                 Array.Copy(buffer, recBuf, received);
                 string text = Encoding.ASCII.GetString(recBuf);
-
-                //txt_srv_status.Invoke((MethodInvoker)delegate
-                //{
                 AppendSrvStatus("Received Text : " + text);
-                //});
 
                 if (text.ToLower() == "get time") // Client requested time
                 {
-                    //txt_srv_status.Invoke((MethodInvoker)delegate
-                    //{
                     AppendSrvStatus("Text is a get time request");
                     byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
+                    //Send data to the client
                     current.Send(data);
                     AppendSrvStatus("Time sent to client");
-                    //});
-
                 }
                 else if (text.ToLower() == "exit") // Client wants to exit gracefully
                 {
@@ -97,21 +87,16 @@ namespace MainForm
                     current.Shutdown(SocketShutdown.Both);
                     current.Close();
                     clientSockets.Remove(current);
-                    //txt_srv_status.Invoke((MethodInvoker)delegate
-                    //{
                     AppendSrvStatus("Client disconnected");
                     return;
-                    //});
                 }
                 else
                 {
-                    //txt_srv_status.Invoke((MethodInvoker)delegate
-                    //{
                     AppendSrvStatus("Text is an invalid request");
+                    //Send data to the client
                     byte[] data = Encoding.ASCII.GetBytes("Invalid request");
                     current.Send(data);
                     AppendSrvStatus("Warning Sent");
-                    //});
                 }
                 try
                 {
@@ -124,8 +109,7 @@ namespace MainForm
             }));
         }
 
-        // Server
-
+        // Server's button event handlers
         private void btn_start_srv_Click(object sender, EventArgs e)
         {
             SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));

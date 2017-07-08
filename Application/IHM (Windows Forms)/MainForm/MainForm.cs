@@ -31,6 +31,7 @@ namespace MainForm
             }
         }
 
+        // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
             try
@@ -46,6 +47,7 @@ namespace MainForm
             }
         }
 
+        // Append the Client Status Textbox with the argument
         public void AppendClientStatus(params object[] message)
         {
             try
@@ -61,9 +63,5 @@ namespace MainForm
             }
         }
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

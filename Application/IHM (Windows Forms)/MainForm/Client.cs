@@ -15,20 +15,17 @@ namespace MainForm
 
         Socket ClientSocket;
 
+        //Open a Socket Connection with a server
         private void ConnectToServer(IPAddress host, int port)
         {
             ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             int attempts = 0;
-
             while (!ClientSocket.Connected)
             {
-
                 try
                 {
                     attempts++;
-                    AppendClientStatus("Connection attempt " + attempts);
-                    // Change IPAddress.Loopback to a remote IP to connect to a remote host.
-                    AppendClientStatus(ClientSocket.Connected);
+                    AppendClientStatus("Connection attempt :" + attempts);
                     ClientSocket.Connect(host, port);
                 }
                 catch (SocketException)
@@ -39,9 +36,7 @@ namespace MainForm
             AppendClientStatus("Connected");
         }
 
-        /// <summary>
-        /// Close socket and exit program.
-        /// </summary>
+        // Close socket and write a message in the status box.
         private void Exit()
         {
             SendString("exit"); // Tell the server we are exiting
@@ -50,6 +45,7 @@ namespace MainForm
             AppendClientStatus("Client disconnected");
         }
 
+        // Send a Request to the server
         private void SendRequest()
         {
             string request = txt_message_client.Text;
@@ -62,18 +58,18 @@ namespace MainForm
 
         }
 
-        /// <summary>
-        /// Sends a string to the server with ASCII encoding.
-        /// </summary>
+
+        // Sends a string to the server with ASCII encoding.
         private void SendString(string text)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(text);
             ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
 
+        // Receive and convert data into a string to print it
+        // Do not remove the delegate
         private void ReceiveResponse()
         {
- 
             Invoke(new ThreadStart(delegate
             {
                 var buffer = new byte[2048];
@@ -86,6 +82,7 @@ namespace MainForm
             }));
         }
 
+        // Client's button event handler
         private void btn_connection_client_Click(object sender, EventArgs e)
         {
             ConnectToServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
@@ -94,7 +91,6 @@ namespace MainForm
         {
             Exit();
         }
-
         private void btn_send_client_Click(object sender, EventArgs e)
         {
             SendRequest();

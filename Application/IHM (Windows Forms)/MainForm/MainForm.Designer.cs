@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.txt_info_thread = new System.Windows.Forms.TextBox();
             this.txt_status_srv = new System.Windows.Forms.TextBox();
             this.btn_stop_srv = new System.Windows.Forms.Button();
             this.txt_port = new System.Windows.Forms.TextBox();
@@ -51,7 +52,6 @@
             this.application_title = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.txt_info_thread = new System.Windows.Forms.TextBox();
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -86,6 +86,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // txt_info_thread
+            // 
+            this.txt_info_thread.Location = new System.Drawing.Point(3, 39);
+            this.txt_info_thread.Multiline = true;
+            this.txt_info_thread.Name = "txt_info_thread";
+            this.txt_info_thread.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_info_thread.Size = new System.Drawing.Size(467, 112);
+            this.txt_info_thread.TabIndex = 14;
             // 
             // txt_status_srv
             // 
@@ -184,7 +193,8 @@
             this.txt_status_client.Location = new System.Drawing.Point(6, 142);
             this.txt_status_client.Multiline = true;
             this.txt_status_client.Name = "txt_status_client";
-            this.txt_status_client.Size = new System.Drawing.Size(464, 148);
+            this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_status_client.Size = new System.Drawing.Size(464, 338);
             this.txt_status_client.TabIndex = 21;
             // 
             // btn_send_client
@@ -278,15 +288,6 @@
             this.pictureBox1.Size = new System.Drawing.Size(102, 490);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
-            // 
-            // txt_info_thread
-            // 
-            this.txt_info_thread.Location = new System.Drawing.Point(3, 39);
-            this.txt_info_thread.Multiline = true;
-            this.txt_info_thread.Name = "txt_info_thread";
-            this.txt_info_thread.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_info_thread.Size = new System.Drawing.Size(467, 112);
-            this.txt_info_thread.TabIndex = 14;
             // 
             // MainForm
             // 
