@@ -121,7 +121,7 @@
   <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAJ4AAAHmCAYAAACCgzdjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsAAAA7AAWrWiQkAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8
+        YQUAAAAJcEhZcwAADrwAAA68AZW8ckkAAAAZdEVYdFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8
         AABH6UlEQVR4Xu2dB7hcRd3G10/AjiJNAkpR6SAiqICAfAoo0hQQRHoXQUQEhA8L0pMAobcA6aSH9EBI
         QkgI6ZX0kJDeewNCmG9/szN7Z8+dvXvq7tm78z7Pm5udU+bsnHfPmfIvGeEQCp999pnYvHmz2Lpli5Xr
         168Ta9esEWvXaq4Vq1auFEuXLBZLly7Jc+bMGVlOr8dZs2aI0aNGijGjR4mJE8bLz/ntM6aLOXNmiSXZ
@@ -432,4 +432,7 @@
         vAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <metadata name="tmr_grid_data_update.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

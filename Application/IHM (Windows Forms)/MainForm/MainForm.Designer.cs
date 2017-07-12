@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.txt_info_thread = new System.Windows.Forms.TextBox();
+            this.grd_node_data = new System.Windows.Forms.DataGridView();
+            this.lbl_server_logs = new System.Windows.Forms.Label();
             this.txt_status_srv = new System.Windows.Forms.TextBox();
             this.btn_stop_srv = new System.Windows.Forms.Button();
             this.txt_port = new System.Windows.Forms.TextBox();
@@ -40,6 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btn_start_srv = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lbl_client_logs = new System.Windows.Forms.Label();
             this.btn_exit_client = new System.Windows.Forms.Button();
             this.txt_status_client = new System.Windows.Forms.TextBox();
             this.btn_send_client = new System.Windows.Forms.Button();
@@ -52,8 +55,10 @@
             this.application_title = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.tmr_grid_data_update = new System.Windows.Forms.Timer(this.components);
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -71,7 +76,8 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.txt_info_thread);
+            this.tabPage1.Controls.Add(this.grd_node_data);
+            this.tabPage1.Controls.Add(this.lbl_server_logs);
             this.tabPage1.Controls.Add(this.txt_status_srv);
             this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
@@ -87,22 +93,39 @@
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // txt_info_thread
+            // grd_node_data
             // 
-            this.txt_info_thread.Location = new System.Drawing.Point(3, 39);
-            this.txt_info_thread.Multiline = true;
-            this.txt_info_thread.Name = "txt_info_thread";
-            this.txt_info_thread.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_info_thread.Size = new System.Drawing.Size(467, 112);
-            this.txt_info_thread.TabIndex = 14;
+            this.grd_node_data.AllowUserToAddRows = false;
+            this.grd_node_data.AllowUserToDeleteRows = false;
+            this.grd_node_data.AllowUserToOrderColumns = true;
+            this.grd_node_data.BackgroundColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.grd_node_data.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grd_node_data.Location = new System.Drawing.Point(7, 40);
+            this.grd_node_data.Name = "grd_node_data";
+            this.grd_node_data.ReadOnly = true;
+            this.grd_node_data.RowHeadersVisible = false;
+            this.grd_node_data.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grd_node_data.Size = new System.Drawing.Size(462, 143);
+            this.grd_node_data.TabIndex = 16;
+            // 
+            // lbl_server_logs
+            // 
+            this.lbl_server_logs.AutoSize = true;
+            this.lbl_server_logs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lbl_server_logs.Location = new System.Drawing.Point(6, 189);
+            this.lbl_server_logs.Name = "lbl_server_logs";
+            this.lbl_server_logs.Size = new System.Drawing.Size(72, 15);
+            this.lbl_server_logs.TabIndex = 15;
+            this.lbl_server_logs.Text = "Server Logs";
             // 
             // txt_status_srv
             // 
-            this.txt_status_srv.Location = new System.Drawing.Point(6, 157);
+            this.txt_status_srv.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.txt_status_srv.Location = new System.Drawing.Point(9, 207);
             this.txt_status_srv.Multiline = true;
             this.txt_status_srv.Name = "txt_status_srv";
             this.txt_status_srv.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_status_srv.Size = new System.Drawing.Size(463, 323);
+            this.txt_status_srv.Size = new System.Drawing.Size(460, 273);
             this.txt_status_srv.TabIndex = 13;
             // 
             // btn_stop_srv
@@ -161,6 +184,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.lbl_client_logs);
             this.tabPage2.Controls.Add(this.btn_exit_client);
             this.tabPage2.Controls.Add(this.txt_status_client);
             this.tabPage2.Controls.Add(this.btn_send_client);
@@ -178,6 +202,16 @@
             this.tabPage2.Text = "Client";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // lbl_client_logs
+            // 
+            this.lbl_client_logs.AutoSize = true;
+            this.lbl_client_logs.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            this.lbl_client_logs.Location = new System.Drawing.Point(9, 138);
+            this.lbl_client_logs.Name = "lbl_client_logs";
+            this.lbl_client_logs.Size = new System.Drawing.Size(68, 15);
+            this.lbl_client_logs.TabIndex = 23;
+            this.lbl_client_logs.Text = "Client Logs";
+            // 
             // btn_exit_client
             // 
             this.btn_exit_client.Location = new System.Drawing.Point(395, 16);
@@ -190,11 +224,12 @@
             // 
             // txt_status_client
             // 
-            this.txt_status_client.Location = new System.Drawing.Point(6, 142);
+            this.txt_status_client.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.txt_status_client.Location = new System.Drawing.Point(6, 157);
             this.txt_status_client.Multiline = true;
             this.txt_status_client.Name = "txt_status_client";
             this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_status_client.Size = new System.Drawing.Size(464, 338);
+            this.txt_status_client.Size = new System.Drawing.Size(464, 323);
             this.txt_status_client.TabIndex = 21;
             // 
             // btn_send_client
@@ -269,7 +304,6 @@
             this.application_title.Size = new System.Drawing.Size(218, 31);
             this.application_title.TabIndex = 1;
             this.application_title.Text = "PROJECT NDA";
-            this.application_title.Click += new System.EventHandler(this.label3_Click);
             // 
             // pictureBox2
             // 
@@ -289,6 +323,11 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
+            // tmr_grid_data_update
+            // 
+            this.tmr_grid_data_update.Interval = 1000;
+            this.tmr_grid_data_update.Tick += new System.EventHandler(this.tmr_grid_data_update_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -303,6 +342,7 @@
             this.Server.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -336,7 +376,10 @@
         private System.Windows.Forms.Label application_title;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.TextBox txt_info_thread;
+        private System.Windows.Forms.Label lbl_server_logs;
+        private System.Windows.Forms.Label lbl_client_logs;
+        private System.Windows.Forms.DataGridView grd_node_data;
+        private System.Windows.Forms.Timer tmr_grid_data_update;
     }
 }
 

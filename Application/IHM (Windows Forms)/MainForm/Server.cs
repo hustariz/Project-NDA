@@ -10,7 +10,6 @@ using System.Windows.Forms;
 
 namespace MainForm
 {
-    // TO DO Finir commentaire et faire un commit "Clean code  + comment"
     public partial class MainForm : Form
     {
 
@@ -23,7 +22,15 @@ namespace MainForm
         public void SetupServer(IPAddress host, int port)
         {
                 AppendSrvStatus("Setting up server...");
-                serverSocket.Bind(new IPEndPoint(host, port));
+                // Enable timer
+                Invoke(new ThreadStart(delegate {
+                    tmr_grid_data_update.Enabled = true;
+                }));
+                AppendSrvStatus("Node connected: ");
+                Invoke(new ThreadStart(delegate {
+                    grd_node_data.Rows.Add("Initial", "4/4", "15%", "1000MB");
+                }));
+            serverSocket.Bind(new IPEndPoint(host, port));
                 serverSocket.Listen(1);
                 serverSocket.BeginAccept(AcceptCallback, null);
                 AppendSrvStatus("Server setup complete");
@@ -120,6 +127,13 @@ namespace MainForm
 
         }
 
-
+        // Update the data grid, timer = 1s
+        private void tmr_grid_data_update_Tick(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in grd_node_data.Rows)
+            {
+                row.SetValues("Updated", "4/4",  "30%", "2000MB");
+            }
+        }
     }
 }
