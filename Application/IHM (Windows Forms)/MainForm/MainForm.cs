@@ -32,6 +32,7 @@ namespace MainForm
 
                 }
             }
+
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
             grd_node_data.Columns.Add("nodeWorkersNumber", "Worker");
             grd_node_data.Columns.Add("nodeCpuUsage", "CPU");

@@ -17,9 +17,11 @@ namespace NetworkAndGenericCalculation.Node
         int ActualWorker { get; }
 
         // Get the CPU usage of the node.
-        float CPuUsage { get; }
+        float ProcessorUsage { get; }
 
         // Get the Memory usage of the node.
         float MemoryUsage { get; }
+
+        IList<IWorker> Workers { get; }
     }
 }
