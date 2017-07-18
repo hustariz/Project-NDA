@@ -61,18 +61,17 @@ namespace MainForm
             }
         }
 
-<<<<<<< HEAD
+
         private void sendFileButton_Click(object sender, EventArgs e)
         {
             
         }
 
   
-=======
+
         private void label3_Click(object sender, EventArgs e)
         {
 
         }
->>>>>>> Developp
     }
 }

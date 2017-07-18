@@ -72,11 +72,11 @@
             // 
             // tabPage1
             // 
-<<<<<<< HEAD
+
             this.tabPage1.Controls.Add(this.file);
-=======
+
             this.tabPage1.Controls.Add(this.txt_info_thread);
->>>>>>> Developp
+
             this.tabPage1.Controls.Add(this.txt_status_srv);
             this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
@@ -198,12 +198,12 @@
             this.txt_status_client.Location = new System.Drawing.Point(6, 142);
             this.txt_status_client.Multiline = true;
             this.txt_status_client.Name = "txt_status_client";
-<<<<<<< HEAD
+
             this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txt_status_client.Size = new System.Drawing.Size(333, 148);
-=======
+
             this.txt_status_client.Size = new System.Drawing.Size(464, 148);
->>>>>>> Developp
+
             this.txt_status_client.TabIndex = 21;
             // 
             // btn_send_client
@@ -351,14 +351,14 @@
         private System.Windows.Forms.TextBox txt_host;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_start_srv;
-<<<<<<< HEAD
+
         private System.Windows.Forms.Button file;
-=======
+
         private System.Windows.Forms.Label application_title;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.TextBox txt_info_thread;
->>>>>>> Developp
+
     }
 }
 
