@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppliMetier
+namespace NetworkAndGenericCalculation.Node
 {
-    class Program
+    class DistantNode
     {
-        static void Main(string[] args)
-        {
-        }
     }
 }

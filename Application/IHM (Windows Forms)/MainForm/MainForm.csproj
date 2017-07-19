@@ -91,9 +91,12 @@
   <ItemGroup>
     <None Include="Properties\Logo_Cesi_Alternance.png" />
   </ItemGroup>
+<<<<<<< HEAD
   <ItemGroup>
     <Folder Include="Worker\" />
   </ItemGroup>
+=======
+>>>>>>> Developp
   <ItemGroup>
     <None Include="Resources\AND.bmp" />
   </ItemGroup>
@@ -102,6 +105,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Logo_Cesi_Alternance.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NetworkAndGenericCalculation\NetworkAndGenericCalculation.csproj">
+      <Project>{cbd0dc09-eb8f-49c5-85e2-46de04ed18d9}</Project>
+      <Name>NetworkAndGenericCalculation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

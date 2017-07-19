@@ -1,0 +1,15 @@
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.csprojResolveAssemblyReference.cache
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.csprojResolveAssemblyReference.cache
+C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.csprojResolveAssemblyReference.cache
+C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.pdb

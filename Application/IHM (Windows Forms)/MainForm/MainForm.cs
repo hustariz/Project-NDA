@@ -19,7 +19,10 @@ namespace MainForm
         public MainForm()
         {
             InitializeComponent();
-            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName()); //Get your own IP
+            // Center window's position on the actual screen
+            CenterToScreen();
+            //Get your own IP
+            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName()); 
             foreach (IPAddress adress in localIP)
             {
                 if (adress.AddressFamily == AddressFamily.InterNetwork)
@@ -29,8 +32,40 @@ namespace MainForm
 
                 }
             }
+
+            grd_node_data.Columns.Add("nodeAddress&Name", "Node");
+            grd_node_data.Columns.Add("nodeWorkersNumber", "Worker");
+            grd_node_data.Columns.Add("nodeCpuUsage", "CPU");
+            grd_node_data.Columns.Add("nodeMemoryUsage", "Memory");
+
+
+            grd_node_data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            // Adjust Size of the cells to fill the grid spaces
+            grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+
+
         }
 
+      
+
+        // Append the Client Status Textbox with the argument
+        public void AppendClientStatus(params object[] message)
+        {
+            try
+            {
+                if (InvokeRequired)
+                    Invoke(new ThreadStart(delegate { AppendClientStatus(message); }));
+                else
+                    txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
+            }
+            catch
+            {
+                return;
+            }
+        }
+
+        // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
             try
@@ -46,21 +81,7 @@ namespace MainForm
             }
         }
 
-        public void AppendClientStatus(params object[] message)
-        {
-            try
-            {
-                if (InvokeRequired)
-                    Invoke(new ThreadStart(delegate { AppendSrvStatus(message); }));
-                else
-                    txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
-            }
-            catch
-            {
-                return;
-            }
-        }
-
+<<<<<<< HEAD
 
         private void sendFileButton_Click(object sender, EventArgs e)
         {
@@ -71,7 +92,8 @@ namespace MainForm
 
         private void label3_Click(object sender, EventArgs e)
         {
+=======
+>>>>>>> Developp
 
-        }
     }
 }
