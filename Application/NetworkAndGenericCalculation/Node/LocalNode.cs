@@ -49,13 +49,16 @@ namespace NetworkAndGenericCalculation.Node
         public string NetworkAdress { get; protected set; }
     
         // Filter a sequence of valor following a predicate
+
         public int ActualWorker => Workers.Where(workers => ! workers.IsAvailable).Count();
+
+        public bool isWorkerActive => (ActualWorker > 0);
 
         public float ProcessorUsage => processorCounter.NextValue();
 
         public float MemoryUsage => memoryCounter.NextValue();
 
-        public bool isWorkerActive => (ActualWorker > 0);
+
 
         public override string ToString() => "HostAdress [" + NetworkAdress + "]";
     }
