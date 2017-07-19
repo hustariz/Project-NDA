@@ -55,8 +55,8 @@ namespace NetworkAndGenericCalculation.Node
 
         public float MemoryUsage => memoryCounter.NextValue();
 
+        public bool isWorkerActive => (ActualWorker > 0);
 
-
-        public override string ToString() => "LocalNode [" + NetworkAdress + "]";
+        public override string ToString() => "HostAdress [" + NetworkAdress + "]";
     }
 }
