@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NetworkAndGenericCalculation.Node;
+using NetworkAndGenericCalculation.Worker;
 
 namespace MainForm
 {
@@ -18,22 +20,30 @@ namespace MainForm
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
+        private LocalNode localnode;
 
         public void SetupServer(IPAddress host, int port)
         {
                 AppendSrvStatus("Setting up server...");
-                // Enable timer
+                // Enabling timer
                 Invoke(new ThreadStart(delegate {
                     tmr_grid_data_update.Enabled = true;
                 }));
-                AppendSrvStatus("Node connected: ");
-                Invoke(new ThreadStart(delegate {
-                    grd_node_data.Rows.Add("Initial", "4/4", "15%", "1000MB");
-                }));
-            serverSocket.Bind(new IPEndPoint(host, port));
+                serverSocket.Bind(new IPEndPoint(host, port));
                 serverSocket.Listen(1);
                 serverSocket.BeginAccept(AcceptCallback, null);
                 AppendSrvStatus("Server setup complete");
+                AppendSrvStatus("Setting up local node...");
+                localnode = new LocalNode(4, txt_host.Text);
+        }
+
+        private void ConnectLocalNode(INode node)
+        {
+
+            AppendSrvStatus("Node connected : ", node);
+            Invoke(new ThreadStart(delegate {
+                grd_node_data.Rows.Add(node, "0/" + node.Workers.Count, node.ProcessorUsage + "%", node.MemoryUsage + "MB");
+            }));
         }
 
         //Accept the connection of multiple client
@@ -120,6 +130,7 @@ namespace MainForm
         private void btn_start_srv_Click(object sender, EventArgs e)
         {
             SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
+            ConnectLocalNode(localnode);
         }
 
         private void btn_stop_srv_Click(object sender, EventArgs e)
@@ -132,7 +143,10 @@ namespace MainForm
         {
             foreach (DataGridViewRow row in grd_node_data.Rows)
             {
-                row.SetValues("Updated", "4/4",  "30%", "2000MB");
+                INode node = (INode)row.Cells[0].Value;
+                row.SetValues(node,
+                    node.ActualWorker + "/" + node.Workers.Count, Math.Round(node.ProcessorUsage, 2) + "%",
+                    node.MemoryUsage + "MB");
             }
         }
     }

@@ -34,3 +34,27 @@ C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\o
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.csprojResolveAssemblyReference.cache
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.MainForm.resources
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.csproj.GenerateResource.Cache
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA-ServerMulticlientSocket\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.csprojResolveAssemblyReference.cache
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.MainForm.resources
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.csproj.GenerateResource.Cache
