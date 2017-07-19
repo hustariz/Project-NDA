@@ -91,12 +91,9 @@
   <ItemGroup>
     <None Include="Properties\Logo_Cesi_Alternance.png" />
   </ItemGroup>
-<<<<<<< HEAD
   <ItemGroup>
     <Folder Include="Worker\" />
   </ItemGroup>
-=======
->>>>>>> Developp
   <ItemGroup>
     <None Include="Resources\AND.bmp" />
   </ItemGroup>
