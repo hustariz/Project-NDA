@@ -20,12 +20,12 @@ namespace MainForm
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
-        private LocalNode localnode = new LocalNode(4);
+        private LocalNode localnode;
 
         public void SetupServer(IPAddress host, int port)
         {
                 AppendSrvStatus("Setting up server...");
-                // Enable timer
+                // Enabling timer
                 Invoke(new ThreadStart(delegate {
                     tmr_grid_data_update.Enabled = true;
                 }));
@@ -33,11 +33,14 @@ namespace MainForm
                 serverSocket.Listen(1);
                 serverSocket.BeginAccept(AcceptCallback, null);
                 AppendSrvStatus("Server setup complete");
+                AppendSrvStatus("Setting up local node...");
+                localnode = new LocalNode(4, txt_host.Text);
         }
 
         private void ConnectLocalNode(INode node)
         {
-            AppendSrvStatus("Node connected:", node);
+
+            AppendSrvStatus("Node connected : ", node);
             Invoke(new ThreadStart(delegate {
                 grd_node_data.Rows.Add(node, "0/" + node.Workers.Count, node.ProcessorUsage + "%", node.MemoryUsage + "MB");
             }));

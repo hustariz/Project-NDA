@@ -21,8 +21,10 @@ namespace NetworkAndGenericCalculation.Node
         private PerformanceCounter processorCounter;
         private PerformanceCounter memoryCounter;
 
-        public LocalNode(int localThreadsCount)
+        public LocalNode(int localThreadsCount, string IpAdress)
                 {
+
+                    NetworkAdress = IpAdress;
                     Workers = new WThread[localThreadsCount];
                     for (int i = 0; i < localThreadsCount; ++i)
                     {
@@ -44,7 +46,7 @@ namespace NetworkAndGenericCalculation.Node
         public IList<IWorker> Workers { get; protected set; }
 
 
-        public string IpAdress => "IPBouchon";
+        public string NetworkAdress { get; protected set; }
     
         // Filter a sequence of valor following a predicate
         public int ActualWorker => Workers.Where(workers => ! workers.IsAvailable).Count();
@@ -53,6 +55,8 @@ namespace NetworkAndGenericCalculation.Node
 
         public float MemoryUsage => memoryCounter.NextValue();
 
-        public override string ToString() => "LocalNode [" + IpAdress + "]";
+
+
+        public override string ToString() => "LocalNode [" + NetworkAdress + "]";
     }
 }

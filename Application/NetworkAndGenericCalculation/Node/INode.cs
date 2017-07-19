@@ -11,7 +11,7 @@ namespace NetworkAndGenericCalculation.Node
     public interface INode
     {
         // Get network Adress of the node.
-        string IpAdress { get;  }
+        string NetworkAdress { get; }
 
         // Get number of worker doing job for this node.
         int ActualWorker { get; }
