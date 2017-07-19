@@ -15,11 +15,17 @@ namespace DNA_Application_Interface
         {
             List<String> liste = new List<string>();
             String[] values = File.ReadAllLines(@"C:\Users\loika\Source\Repos\Project-NDA3\Project-NDA\Genomes\genome-soffes.txt");
+
+            byte[] bytes = new byte[1024];
+
+
+
             String[] toto;
             int i = 1;
             foreach (string value in values)
             {
                 toto = value.Split('\t');
+
                 liste.Add(toto[3]);
             }
 
