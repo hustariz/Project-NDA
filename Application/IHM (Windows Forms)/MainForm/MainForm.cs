@@ -55,7 +55,7 @@ namespace MainForm
             try
             {
                 if (InvokeRequired)
-                    Invoke(new ThreadStart(delegate { AppendClientStatus(message); }));
+                    Invoke(new ThreadStart(() => { AppendClientStatus(message); }));
                 else
                     txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
             }
@@ -71,7 +71,7 @@ namespace MainForm
             try
             {
                 if (InvokeRequired)
-                    Invoke(new ThreadStart(delegate { AppendSrvStatus(message); }));
+                    Invoke(new ThreadStart(() => { AppendSrvStatus(message); }));
                 else
                     txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
             }
