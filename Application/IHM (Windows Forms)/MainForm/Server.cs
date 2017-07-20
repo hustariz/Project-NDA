@@ -26,7 +26,8 @@ namespace MainForm
         {
                 AppendSrvStatus("Setting up server...");
                 // Enabling timer
-                Invoke(new ThreadStart(delegate {
+                // () => == delegate
+                Invoke(new ThreadStart(() => {
                     tmr_grid_data_update.Enabled = true;
                 }));
                 serverSocket.Bind(new IPEndPoint(host, port));
@@ -40,8 +41,13 @@ namespace MainForm
         private void ConnectLocalNode(INode node)
         {
 
+<<<<<<< HEAD
+            AppendSrvStatus("Node connected : ", node);
+            Invoke(new ThreadStart(() => {
+=======
             AppendSrvStatus("Connected : ", node);
             Invoke(new ThreadStart(delegate {
+>>>>>>> 9312770e8a1326761fc2775d604453433a9483c7
                 grd_node_data.Rows.Add(node, "0/" + node.Workers.Count, node.ProcessorUsage + "%", node.MemoryUsage + "MB");
             }));
         }
@@ -68,7 +74,7 @@ namespace MainForm
         // Receive the message from the client and do action following the input
         public void ReceiveCallback(IAsyncResult AR)
         {
-            Invoke(new ThreadStart(delegate
+            Invoke(new ThreadStart(() =>
             {
                 Socket current = (Socket)AR.AsyncState;
                 int received;
