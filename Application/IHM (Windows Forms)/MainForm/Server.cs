@@ -41,8 +41,13 @@ namespace MainForm
         private void ConnectLocalNode(INode node)
         {
 
+<<<<<<< HEAD
             AppendSrvStatus("Node connected : ", node);
             Invoke(new ThreadStart(() => {
+=======
+            AppendSrvStatus("Connected : ", node);
+            Invoke(new ThreadStart(delegate {
+>>>>>>> 9312770e8a1326761fc2775d604453433a9483c7
                 grd_node_data.Rows.Add(node, "0/" + node.Workers.Count, node.ProcessorUsage + "%", node.MemoryUsage + "MB");
             }));
         }
@@ -144,10 +149,9 @@ namespace MainForm
         {
             foreach (DataGridViewRow row in grd_node_data.Rows)
             {
+                //Local or Distant node
                 INode node = (INode)row.Cells[0].Value;
-                row.SetValues(node,
-                    node.ActualWorker + "/" + node.Workers.Count, Math.Round(node.ProcessorUsage, 2) + "%",
-                    node.MemoryUsage + "MB");
+                row.SetValues(node, node.ActualWorker + "/" + node.Workers.Count, Math.Round(node.ProcessorUsage, 2) + "%", node.MemoryUsage + "MB");
             }
         }
     }

@@ -23,5 +23,8 @@ namespace NetworkAndGenericCalculation.Node
         float MemoryUsage { get; }
 
         IList<IWorker> Workers { get; }
+
+        //Return true if a worker is active on this node.
+        bool isWorkerActive { get; }
     }
 }

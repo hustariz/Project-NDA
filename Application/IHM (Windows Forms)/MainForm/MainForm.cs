@@ -34,24 +34,21 @@ namespace MainForm
             }
 
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
-            grd_node_data.Columns.Add("nodeWorkersNumber", "Worker");
+            grd_node_data.Columns.Add("nodeWorkersNumber", "Worker(s)");
             grd_node_data.Columns.Add("nodeCpuUsage", "CPU");
             grd_node_data.Columns.Add("nodeMemoryUsage", "Memory");
-
-
-            grd_node_data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+  
             // Adjust Size of the cells to fill the grid spaces
-            grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-
-
+            grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;       
         }
 
       
 
         // Append the Client Status Textbox with the argument
+        //Params object to be able to display object
         public void AppendClientStatus(params object[] message)
         {
+<<<<<<< HEAD
             try
             {
                 if (InvokeRequired)
@@ -63,11 +60,18 @@ namespace MainForm
             {
                 return;
             }
+=======
+            if (InvokeRequired)
+                Invoke(new ThreadStart(delegate { AppendClientStatus(message); }));
+            else
+                txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
+>>>>>>> 9312770e8a1326761fc2775d604453433a9483c7
         }
 
         // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
+<<<<<<< HEAD
             try
             {
                 if (InvokeRequired)
@@ -79,6 +83,12 @@ namespace MainForm
             {
                 return;
             }
+=======
+            if (InvokeRequired)
+                Invoke(new ThreadStart(delegate { AppendSrvStatus(message); }));
+            else
+                txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
+>>>>>>> 9312770e8a1326761fc2775d604453433a9483c7
         }
 
 

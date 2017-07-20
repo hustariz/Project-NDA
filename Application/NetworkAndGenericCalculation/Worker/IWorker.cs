@@ -16,7 +16,6 @@ namespace NetworkAndGenericCalculation.Worker
         // Get the worker ID.
         int GetID { get; }
 
-
         //Returns true if worker available.
         bool IsAvailable { get; set; }
     }
