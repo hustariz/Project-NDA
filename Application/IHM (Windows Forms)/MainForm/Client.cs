@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 
-namespace MainForm
+namespace MainForms
 {
     public partial class MainForm : Form
     {
@@ -67,10 +67,10 @@ namespace MainForm
         }
 
         // Receive and convert data into a string to print it
-        // Do not remove the delegate
+        // Do not remove the delegate == () =>
         private void ReceiveResponse()
         {
-            Invoke(new ThreadStart(delegate
+            Invoke(new ThreadStart(() =>
             {
                 var buffer = new byte[2048];
                 int received = ClientSocket.Receive(buffer, SocketFlags.None);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NetworkAndGenericCalculation.Node;
+using NetworkAndGenericCalculation.Nodes;
 
 namespace NetworkAndGenericCalculation.Worker
 {
@@ -11,7 +11,7 @@ namespace NetworkAndGenericCalculation.Worker
     public class WThread : IWorker
     {
 
-        public WThread(LocalNode node, int id)
+        public WThread(Node node, int id)
         {
             Node = node;
             GetID = id;

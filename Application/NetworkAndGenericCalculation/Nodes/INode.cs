@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetworkAndGenericCalculation.Node
+namespace NetworkAndGenericCalculation.Nodes
 {
     // A node is composed of thread which can be local, or remote connected via sockets.
     public interface INode

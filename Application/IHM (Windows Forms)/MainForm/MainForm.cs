@@ -9,10 +9,10 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MainForm;
+using MainForms;
 using System.Threading;
 
-namespace MainForm
+namespace MainForms
 {
     public partial class MainForm : Form
     {
@@ -49,7 +49,7 @@ namespace MainForm
         public void AppendClientStatus(params object[] message)
         {
             if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { AppendClientStatus(message); }));
+                Invoke(new ThreadStart(() => { AppendClientStatus(message); }));
             else
                 txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
@@ -58,7 +58,7 @@ namespace MainForm
         public void AppendSrvStatus(params object[] message)
         {
             if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { AppendSrvStatus(message); }));
+                Invoke(new ThreadStart(() => { AppendSrvStatus(message); }));
             else
                 txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
