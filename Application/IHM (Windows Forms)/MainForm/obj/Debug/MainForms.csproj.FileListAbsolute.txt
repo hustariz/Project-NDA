@@ -1,0 +1,6 @@
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csprojResolveAssemblyReference.cache
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.MainForm.resources
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb

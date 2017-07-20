@@ -1,4 +1,4 @@
-﻿namespace MainForm
+﻿namespace MainForms
 {
     partial class MainForm
     {
@@ -316,7 +316,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::MainForm.Properties.Resources.ADN;
+            this.pictureBox1.Image = global::MainForms.Properties.Resources.ADN;
             this.pictureBox1.Location = new System.Drawing.Point(16, 60);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(102, 490);

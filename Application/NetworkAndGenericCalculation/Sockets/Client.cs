@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetworkAndGenericCalculation.Node
+namespace NetworkAndGenericCalculation.Sockets
 {
-    class DistantNode
+    public class Client
     {
     }
 }

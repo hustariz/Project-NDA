@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetworkAndGenericCalculation.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,16 +8,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-// C'est normal il est rien censé faire vers le serveur implémente le MVC depuis server.cs vers IHM les infos du coup
-using NetworkAndGenericCalculation.Nodes;
-using NetworkAndGenericCalculation.Worker;
-using NetworkAndGenericCalculation.Sockets;
+using MainForms;
 
-namespace MainForms
+namespace NetworkAndGenericCalculation.Sockets
 {
-    public partial class MainForm : Form
+    public class Server
     {
-
         private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         // List of clientSocket for multiple connection from client
         private static readonly List<Socket> clientSockets = new List<Socket>();
@@ -24,7 +21,40 @@ namespace MainForms
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
         private Node localnode;
         private Server socketServer;
+        private MainForm view;
 
+        public Server(MainForm view)
+        {
+            this.view = view;
+        }
+
+
+
+        public void SetupServer(IPAddress host, int port)
+        {
+            view.AppendSrvStatus("Setting up server...");
+            AppendSrvStatus("Setting up server...");
+            serverSocket.Bind(new IPEndPoint(host, port));
+            serverSocket.Listen(1);
+            serverSocket.BeginAccept(AcceptCallback, null);
+            AppendSrvStatus("Server setup complete");
+            AppendSrvStatus("Setting up local node...");
+            //localnode = new Node(4, txt_host.Text);
+        }
+
+        // Append the Server Status Textbox with the argument
+        public string AppendSrvStatus(params object[] message)
+        {
+            return string.Join(" ", message) + Environment.NewLine;
+        }
+
+        private void ConnectNode(INode node)
+        {
+            //AppendSrvStatus("Connected : ", node);
+            //Invoke(new ThreadStart(() => {
+            //    grd_node_data.Rows.Add(node, "0/" + node.Workers.Count, node.ProcessorUsage + "%", node.MemoryUsage + "MB");
+            //}));
+        }
 
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult AR)
@@ -106,37 +136,9 @@ namespace MainForms
             }));
         }
 
-        // Update the data grid, timer = 1s
-        private void tmr_grid_data_update_Tick(object sender, EventArgs e)
+        private void Invoke(ThreadStart threadStart)
         {
-            foreach (DataGridViewRow row in grd_node_data.Rows)
-            {
-                //Local or Distant node
-                INode node = (INode)row.Cells[0].Value;
-                row.SetValues(node, node.ActualWorker + "/" + node.Workers.Count, Math.Round(node.ProcessorUsage, 2) + "%", node.MemoryUsage + "MB");
-            }
-        }
-
-        // Server's button event handlers
-        private void btn_start_srv_Click(object sender, EventArgs e)
-        {
-            socketServer = new Server(this);
-            txt_status_srv.Text += socketServer.AppendSrvStatus("Setting up server...");
-            // Enabling timer
-            // () => == delegate
-            Invoke(new ThreadStart(() => {
-                tmr_grid_data_update.Enabled = true;
-            }));
-            socketServer.SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
-            txt_status_srv.Text += socketServer.AppendSrvStatus("Server setup complete");
-            //AppendSrvStatus("Setting up local node...");
-            //localnode = new Node(4, txt_host.Text);
-            //ConnectLocalNode(localnode);
-        }
-
-        private void btn_stop_srv_Click(object sender, EventArgs e)
-        {
-
+            throw new NotImplementedException();
         }
     }
 }

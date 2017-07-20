@@ -9,10 +9,10 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MainForm;
+using MainForms;
 using System.Threading;
 
-namespace MainForm
+namespace MainForms
 {
     public partial class MainForm : Form
     {
@@ -48,47 +48,19 @@ namespace MainForm
         //Params object to be able to display object
         public void AppendClientStatus(params object[] message)
         {
-<<<<<<< HEAD
-            try
-            {
-                if (InvokeRequired)
-                    Invoke(new ThreadStart(() => { AppendClientStatus(message); }));
-                else
-                    txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
-            }
-            catch
-            {
-                return;
-            }
-=======
             if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { AppendClientStatus(message); }));
+                Invoke(new ThreadStart(() => { AppendClientStatus(message); }));
             else
                 txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
->>>>>>> 9312770e8a1326761fc2775d604453433a9483c7
         }
 
         // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
-<<<<<<< HEAD
-            try
-            {
-                if (InvokeRequired)
-                    Invoke(new ThreadStart(() => { AppendSrvStatus(message); }));
-                else
-                    txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
-            }
-            catch
-            {
-                return;
-            }
-=======
             if (InvokeRequired)
-                Invoke(new ThreadStart(delegate { AppendSrvStatus(message); }));
+                Invoke(new ThreadStart(() => { AppendSrvStatus(message); }));
             else
                 txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
->>>>>>> 9312770e8a1326761fc2775d604453433a9483c7
         }
 
 
