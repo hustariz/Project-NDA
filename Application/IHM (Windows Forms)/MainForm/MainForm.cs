@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MainForm;
 using System.Threading;
+using System.Diagnostics;
+using c_projet_adn.Worker;
+using System.IO;
 
 namespace MainForm
 {
@@ -22,7 +25,7 @@ namespace MainForm
             // Center window's position on the actual screen
             CenterToScreen();
             //Get your own IP
-            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName()); 
+            IPAddress[] localIP = Dns.GetHostAddresses(Dns.GetHostName());
             foreach (IPAddress adress in localIP)
             {
                 if (adress.AddressFamily == AddressFamily.InterNetwork)
@@ -47,7 +50,7 @@ namespace MainForm
 
         }
 
-      
+
 
         // Append the Client Status Textbox with the argument
         public void AppendClientStatus(params object[] message)
@@ -81,19 +84,79 @@ namespace MainForm
             }
         }
 
-<<<<<<< HEAD
 
         private void sendFileButton_Click(object sender, EventArgs e)
         {
-            
+
         }
 
-  
+
 
         private void label3_Click(object sender, EventArgs e)
         {
-=======
->>>>>>> Developp
 
+        }
+
+        public void RunMapReduce()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            MapReduce<int, string, string, int, string, int> job = new MapReduce<int, string, string, int, string, int>(Map, Reduce);
+            var items = DnaProcess(@"C:\temp\dna.txt");
+            sw.Stop();
+            Console.WriteLine("Process file time : " + sw.ElapsedMilliseconds);
+            sw.Reset();
+            sw.Start();
+            var pairs = items.Select((item, k) => new KVPair<int, string>() { Key = k, Value = item });
+            sw.Stop();
+            Console.WriteLine("Select time : " + sw.ElapsedMilliseconds);
+            sw.Reset();
+            sw.Start();
+            job.Map(pairs);
+            sw.Stop();
+            Console.WriteLine("Map time : " + sw.ElapsedMilliseconds);
+            sw.Reset();
+            sw.Start();
+            var result = job.Reduce();
+            sw.Stop();
+            Console.WriteLine("Reduce time : " + sw.ElapsedMilliseconds);
+            Console.WriteLine("end");
+        }
+
+        private static void Map(int key, string value, Map<string, int> context)
+        {
+            context.AddPair(value, 1);
+        }
+
+        private static void Reduce(string key, IList<int> values, Reduce<string, int> context)
+        {
+            int total = values.Sum();
+            context.AddPair(key, total);
+        }
+
+        private string[] DnaProcess(string sourceFile)
+        {
+            string[] pairs;
+            List<string> pairsList = new List<string>();
+            List<char[]> charList = new List<char[]>();
+            foreach (string line in File.ReadAllLines(sourceFile))
+            {
+                if (!line.StartsWith("#"))
+                {
+                    foreach (char c in line.Split('\t')[3].ToCharArray())
+                    {
+                        pairsList.Add(c.ToString());
+                    }
+                }
+            }
+
+            pairs = pairsList.ToArray<string>();
+            return pairs;
+        }
+
+        private void file_Click(object sender, EventArgs e)
+        {
+            RunMapReduce();
+        }
     }
 }

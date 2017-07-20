@@ -13,3 +13,7 @@ C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\bi
 C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.csprojResolveAssemblyReference.cache
 C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.dll
 C:\Users\El Maki\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.pdb
+E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.dll
+E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.pdb
+E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.dll
+E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.pdb

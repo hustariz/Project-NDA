@@ -21,7 +21,7 @@ namespace MainForm
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
-        private LocalNode localnode;
+        private Node localnode;
 
         public void SetupServer(IPAddress host, int port)
         {
@@ -35,7 +35,7 @@ namespace MainForm
                 serverSocket.BeginAccept(AcceptCallback, null);
                 AppendSrvStatus("Server setup complete");
                 AppendSrvStatus("Setting up local node...");
-                localnode = new LocalNode(4, txt_host.Text);
+                localnode = new Node(4, txt_host.Text);
         }
 
         private void ConnectLocalNode(INode node)

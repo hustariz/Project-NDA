@@ -59,6 +59,10 @@
     <Compile Include="Server.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Worker\KVPair.cs" />
+    <Compile Include="Worker\Map.cs" />
+    <Compile Include="Worker\MapReduce.cs" />
+    <Compile Include="Worker\Reduce.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -91,9 +95,7 @@
   <ItemGroup>
     <None Include="Properties\Logo_Cesi_Alternance.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Worker\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\AND.bmp" />
   </ItemGroup>

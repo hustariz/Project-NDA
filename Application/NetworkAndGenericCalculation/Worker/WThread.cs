@@ -11,7 +11,7 @@ namespace NetworkAndGenericCalculation.Worker
     public class WThread : IWorker
     {
 
-        public WThread(LocalNode node, int id)
+        public WThread(Node.Node node, int id)
         {
             Node = node;
             GetID = id;

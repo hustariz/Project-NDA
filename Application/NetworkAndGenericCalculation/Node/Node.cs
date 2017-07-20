@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace NetworkAndGenericCalculation.Node
 {
     //Node running on the computer where is it launched.
-    public class LocalNode : INode
+    public class Node : INode
     {
 
 
@@ -21,7 +21,7 @@ namespace NetworkAndGenericCalculation.Node
         private PerformanceCounter processorCounter;
         private PerformanceCounter memoryCounter;
 
-        public LocalNode(int localThreadsCount, string IpAdress)
+        public Node(int localThreadsCount, string IpAdress)
                 {
 
                     NetworkAdress = IpAdress;

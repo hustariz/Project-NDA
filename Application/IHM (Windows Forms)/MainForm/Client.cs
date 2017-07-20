@@ -60,7 +60,7 @@ namespace MainForm
 
         }
 
-<<<<<<< HEAD
+
         private void sendFile()
         {
 
@@ -71,10 +71,10 @@ namespace MainForm
         /// <summary>
         /// Sends a string to the server with ASCII encoding.
         /// </summary>
-=======
+
 
         // Sends a string to the server with ASCII encoding.
->>>>>>> Developp
+
         private void SendString(string text)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(text);

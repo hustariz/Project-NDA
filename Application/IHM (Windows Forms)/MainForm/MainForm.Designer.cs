@@ -32,12 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-<<<<<<< HEAD
             this.file = new System.Windows.Forms.Button();
-=======
             this.grd_node_data = new System.Windows.Forms.DataGridView();
             this.lbl_server_logs = new System.Windows.Forms.Label();
->>>>>>> Developp
             this.txt_status_srv = new System.Windows.Forms.TextBox();
             this.btn_stop_srv = new System.Windows.Forms.Button();
             this.txt_port = new System.Windows.Forms.TextBox();
@@ -80,16 +77,9 @@
             // 
             // tabPage1
             // 
-<<<<<<< HEAD
-
             this.tabPage1.Controls.Add(this.file);
-
-            this.tabPage1.Controls.Add(this.txt_info_thread);
-
-=======
             this.tabPage1.Controls.Add(this.grd_node_data);
             this.tabPage1.Controls.Add(this.lbl_server_logs);
->>>>>>> Developp
             this.tabPage1.Controls.Add(this.txt_status_srv);
             this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
@@ -105,7 +95,6 @@
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-<<<<<<< HEAD
             // file
             // 
             this.file.Location = new System.Drawing.Point(306, 262);
@@ -114,7 +103,8 @@
             this.file.TabIndex = 15;
             this.file.Text = "File";
             this.file.UseVisualStyleBackColor = true;
-=======
+            this.file.Click += new System.EventHandler(this.file_Click);
+            // 
             // grd_node_data
             // 
             this.grd_node_data.AllowUserToAddRows = false;
@@ -139,7 +129,6 @@
             this.lbl_server_logs.Size = new System.Drawing.Size(72, 15);
             this.lbl_server_logs.TabIndex = 15;
             this.lbl_server_logs.Text = "Server Logs";
->>>>>>> Developp
             // 
             // txt_status_srv
             // 
@@ -251,17 +240,8 @@
             this.txt_status_client.Location = new System.Drawing.Point(6, 157);
             this.txt_status_client.Multiline = true;
             this.txt_status_client.Name = "txt_status_client";
-<<<<<<< HEAD
-
-            this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_status_client.Size = new System.Drawing.Size(333, 148);
-
-            this.txt_status_client.Size = new System.Drawing.Size(464, 148);
-
-=======
             this.txt_status_client.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txt_status_client.Size = new System.Drawing.Size(464, 323);
->>>>>>> Developp
             this.txt_status_client.TabIndex = 21;
             // 
             // btn_send_client
@@ -411,15 +391,15 @@
         private System.Windows.Forms.Label application_title;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
-<<<<<<< HEAD
+
         private System.Windows.Forms.TextBox txt_info_thread;
 
-=======
+
         private System.Windows.Forms.Label lbl_server_logs;
         private System.Windows.Forms.Label lbl_client_logs;
         private System.Windows.Forms.DataGridView grd_node_data;
         private System.Windows.Forms.Timer tmr_grid_data_update;
->>>>>>> Developp
+
     }
 }
 
