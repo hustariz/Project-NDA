@@ -16,8 +16,11 @@ namespace MainForms
 {
     public partial class MainForm : Form
     {
+        private FormController formController;
+
         public MainForm()
         {
+
             InitializeComponent();
             // Center window's position on the actual screen
             CenterToScreen();
@@ -42,7 +45,10 @@ namespace MainForms
             grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;       
         }
 
-      
+        public void SetController(FormController controller)
+        {
+            formController = controller;
+        }
 
         // Append the Client Status Textbox with the argument
         //Params object to be able to display object

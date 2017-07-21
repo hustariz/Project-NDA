@@ -49,12 +49,6 @@
     <Compile Include="Worker\IWorker.cs" />
     <Compile Include="Worker\WThread.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IHM %28Windows Forms%29\MainForm\MainForms.csproj">
-      <Project>{512cf2e3-340e-4b37-ab00-9b2428194099}</Project>
-      <Name>MainForms</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

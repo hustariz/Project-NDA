@@ -8,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 // C'est normal il est rien censé faire vers le serveur implémente le MVC depuis server.cs vers IHM les infos du coup
-using NetworkAndGenericCalculation.Nodes;
-using NetworkAndGenericCalculation.Worker;
-using NetworkAndGenericCalculation.Sockets;
+//using NetworkAndGenericCalculation.Nodes;
+//using NetworkAndGenericCalculation.Worker;
+//using NetworkAndGenericCalculation.Sockets;
 
 namespace MainForms
 {
@@ -22,8 +22,8 @@ namespace MainForms
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
-        private Node localnode;
-        private Server socketServer;
+        //private Node localnode;
+        //private Server socketServer;
 
 
         //Accept the connection of multiple client
@@ -112,23 +112,23 @@ namespace MainForms
             foreach (DataGridViewRow row in grd_node_data.Rows)
             {
                 //Local or Distant node
-                INode node = (INode)row.Cells[0].Value;
-                row.SetValues(node, node.ActualWorker + "/" + node.Workers.Count, Math.Round(node.ProcessorUsage, 2) + "%", node.MemoryUsage + "MB");
+                //INode node = (INode)row.Cells[0].Value;
+                //row.SetValues(node, node.ActualWorker + "/" + node.Workers.Count, Math.Round(node.ProcessorUsage, 2) + "%", node.MemoryUsage + "MB");
             }
         }
 
         // Server's button event handlers
         private void btn_start_srv_Click(object sender, EventArgs e)
         {
-            socketServer = new Server(this);
-            txt_status_srv.Text += socketServer.AppendSrvStatus("Setting up server...");
+            //socketServer = new Server(this);
+            //txt_status_srv.Text += socketServer.AppendSrvStatus("Setting up server...");
             // Enabling timer
             // () => == delegate
             Invoke(new ThreadStart(() => {
                 tmr_grid_data_update.Enabled = true;
             }));
-            socketServer.SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
-            txt_status_srv.Text += socketServer.AppendSrvStatus("Server setup complete");
+            //socketServer.SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
+            //txt_status_srv.Text += socketServer.AppendSrvStatus("Server setup complete");
             //AppendSrvStatus("Setting up local node...");
             //localnode = new Node(4, txt_host.Text);
             //ConnectLocalNode(localnode);
