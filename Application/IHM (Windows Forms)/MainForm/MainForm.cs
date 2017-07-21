@@ -11,12 +11,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MainForms;
 using System.Threading;
+using NetworkAndGenericCalculation.Sockets;
 
 namespace MainForms
 {
     public partial class MainForm : Form
     {
         private FormController formController;
+        private Server server;
+        private Client client;
+
+
 
         public MainForm()
         {
@@ -35,6 +40,11 @@ namespace MainForms
 
                 }
             }
+            server = new Server();
+            client = new Client();
+
+            formController = new FormController(this, server, client);
+
 
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
             grd_node_data.Columns.Add("nodeWorkersNumber", "Worker(s)");
@@ -68,7 +78,5 @@ namespace MainForms
             else
                 txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
-
-
     }
 }

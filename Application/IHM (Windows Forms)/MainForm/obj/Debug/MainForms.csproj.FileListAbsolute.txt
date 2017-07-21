@@ -4,3 +4,8 @@ C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\ob
 C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache
 C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
 C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\El Maki\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb

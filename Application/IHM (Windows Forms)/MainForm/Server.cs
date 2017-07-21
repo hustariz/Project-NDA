@@ -127,6 +127,8 @@ namespace MainForms
             Invoke(new ThreadStart(() => {
                 tmr_grid_data_update.Enabled = true;
             }));
+
+            formController.SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
             //socketServer.SetupServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
             //txt_status_srv.Text += socketServer.AppendSrvStatus("Server setup complete");
             //AppendSrvStatus("Setting up local node...");

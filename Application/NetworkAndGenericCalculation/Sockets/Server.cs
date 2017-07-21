@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MainForms;
+
 
 namespace NetworkAndGenericCalculation.Sockets
 {
@@ -21,23 +21,16 @@ namespace NetworkAndGenericCalculation.Sockets
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
         private Node localnode;
         private Server socketServer;
-        private MainForm view;
 
-        public Server(MainForm view)
-        {
-            this.view = view;
-        }
 
 
 
         public void SetupServer(IPAddress host, int port)
         {
-            view.AppendSrvStatus("Setting up server...");
-            AppendSrvStatus("Setting up server...");
+
             serverSocket.Bind(new IPEndPoint(host, port));
             serverSocket.Listen(1);
             serverSocket.BeginAccept(AcceptCallback, null);
-            AppendSrvStatus("Server setup complete");
             AppendSrvStatus("Setting up local node...");
             //localnode = new Node(4, txt_host.Text);
         }
@@ -136,9 +129,5 @@ namespace NetworkAndGenericCalculation.Sockets
             }));
         }
 
-        private void Invoke(ThreadStart threadStart)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
