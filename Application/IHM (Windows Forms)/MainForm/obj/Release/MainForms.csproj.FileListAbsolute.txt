@@ -1,0 +1,11 @@
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Release\MainForm.exe.config
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Release\MainForm.exe
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Release\MainForm.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Release\NetworkAndGenericCalculation.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Release\NetworkAndGenericCalculation.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Release\MainForms.csprojResolveAssemblyReference.cache
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Release\MainForms.MainForm.resources
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Release\MainForm.Properties.Resources.resources
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Release\MainForms.csproj.GenerateResource.Cache
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Release\MainForm.exe
+C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Release\MainForm.pdb

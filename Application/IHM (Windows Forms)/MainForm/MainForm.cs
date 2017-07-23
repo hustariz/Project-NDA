@@ -17,11 +17,11 @@ namespace MainForms
 {
     public partial class MainForm : Form
     {
-        private FormController formController;
+        private ServController servController;
+        private ClientController clientController;
         private Server server;
         private Client client;
-
-
+        public Action<string> Logger { get; private set; }
 
         public MainForm()
         {
@@ -37,13 +37,13 @@ namespace MainForms
                 {
                     txt_host_client.Text = adress.ToString();
                     txt_host.Text = adress.ToString();
-
                 }
             }
-            server = new Server();
-            client = new Client();
 
-            formController = new FormController(this, server, client);
+            server = new Server(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text), this.SLog);
+            servController = new ServController(this, server);
+            client = new Client(this.CLog);
+            clientController = new ClientController(this, client);
 
 
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
@@ -55,9 +55,14 @@ namespace MainForms
             grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;       
         }
 
-        public void SetController(FormController controller)
+        public void SetServController(ServController controller)
         {
-            formController = controller;
+            servController = controller;
+        }
+
+        public void SetClientController(ClientController controller)
+        {
+            clientController = controller;
         }
 
         // Append the Client Status Textbox with the argument
@@ -78,5 +83,17 @@ namespace MainForms
             else
                 txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
+
+        public void SLog(string message)
+        {
+            AppendSrvStatus(message);
+        }
+        public void CLog(string message)
+        {
+            AppendClientStatus(message);
+        }
+
+
+
     }
 }

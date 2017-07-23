@@ -1,9 +1,11 @@
 ﻿using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,31 +16,39 @@ namespace NetworkAndGenericCalculation.Sockets
 {
     public class Server
     {
-        private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
-        private static readonly List<Socket> clientSockets = new List<Socket>();
-        private const int BUFFER_SIZE = 2048;
-        private static readonly byte[] buffer = new byte[BUFFER_SIZE];
-        private Node localnode;
-        private Server socketServer;
+        private static List<Socket> clientSockets { get; set; }
+        private int BUFFER_SIZE { get; set; }
+        private static byte[] buffer { get; set; }
+        private Action<string> Logger { get; set; }
+        private int LocalPort { get; set; }
+        private IPAddress LocalAddress { get; set; }
 
 
 
-
-        public void SetupServer(IPAddress host, int port)
+        public Server(IPAddress host, int portNumber, Action<string> logger)
         {
-
-            serverSocket.Bind(new IPEndPoint(host, port));
-            serverSocket.Listen(1);
-            serverSocket.BeginAccept(AcceptCallback, null);
-            AppendSrvStatus("Setting up local node...");
-            //localnode = new Node(4, txt_host.Text);
+            serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            clientSockets = new List<Socket>();
+            LocalPort = portNumber;
+            LocalAddress = host;
+            BUFFER_SIZE = 2048;
+            buffer = new byte[BUFFER_SIZE];
+            Logger = logger;
         }
 
-        // Append the Server Status Textbox with the argument
-        public string AppendSrvStatus(params object[] message)
+
+        public void SetupServer()
         {
-            return string.Join(" ", message) + Environment.NewLine;
+            Log("Setting up server...");
+            serverSocket.Bind(new IPEndPoint(LocalAddress, LocalPort));
+            serverSocket.Listen(1);
+            serverSocket.BeginAccept(AcceptCallback, serverSocket);
+            Log("Server setup complete");
+            //AppendSrvStatus("Setting up local node...");
+            //localnode = new Node(4, txt_host.Text);
         }
 
         private void ConnectNode(INode node)
@@ -52,18 +62,18 @@ namespace NetworkAndGenericCalculation.Sockets
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult AR)
         {
-            Socket socket;
+            Socket list = (Socket)AR.AsyncState;
             try
             {
-                socket = serverSocket.EndAccept(AR);
+                list = serverSocket.EndAccept(AR);
             }
             catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
             {
                 return;
             }
-            clientSockets.Add(socket);
-            socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-            AppendSrvStatus("Client connected, waiting for request...");
+            clientSockets.Add(list);
+            list.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, list);
+            Log("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(AcceptCallback, null);
         }
@@ -71,62 +81,67 @@ namespace NetworkAndGenericCalculation.Sockets
         // Receive the message from the client and do action following the input
         public void ReceiveCallback(IAsyncResult AR)
         {
-            Invoke(new ThreadStart(() =>
+            Socket current = (Socket)AR.AsyncState;
+            int received;
+            try
             {
-                Socket current = (Socket)AR.AsyncState;
-                int received;
-                try
-                {
-                    received = current.EndReceive(AR);
-                }
-                catch (SocketException)
-                {
-                    AppendSrvStatus("Client forcefully disconnected");
-                    // Don't shutdown because the socket may be disposed and its disconnected anyway.
-                    current.Close();
-                    clientSockets.Remove(current);
-                    return;
-                }
+                received = current.EndReceive(AR);
+            }
+            catch (SocketException)
+            {
+                Log("Client forcefully disconnected");
+                // Don't shutdown because the socket may be disposed and its disconnected anyway.
+                current.Close();
+                clientSockets.Remove(current);
+                return;
+            }
+            byte[] recBuf = new byte[received];
+            Array.Copy(buffer, recBuf, received);
+            string text = Encoding.ASCII.GetString(recBuf);
+            Log("Received Text : " + text);
 
-                byte[] recBuf = new byte[received];
-                Array.Copy(buffer, recBuf, received);
-                string text = Encoding.ASCII.GetString(recBuf);
-                AppendSrvStatus("Received Text : " + text);
-
-                if (text.ToLower() == "get time") // Client requested time
-                {
-                    AppendSrvStatus("Text is a get time request");
-                    byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
-                    //Send data to the client
-                    current.Send(data);
-                    AppendSrvStatus("Time sent to client");
-                }
-                else if (text.ToLower() == "exit") // Client wants to exit gracefully
-                {
-                    // Always Shutdown before closing
-                    current.Shutdown(SocketShutdown.Both);
-                    current.Close();
-                    clientSockets.Remove(current);
-                    AppendSrvStatus("Client disconnected");
-                    return;
-                }
-                else
-                {
-                    AppendSrvStatus("Text is an invalid request");
-                    //Send data to the client
-                    byte[] data = Encoding.ASCII.GetBytes("Invalid request");
-                    current.Send(data);
-                    AppendSrvStatus("Warning Sent");
-                }
-                try
-                {
-                    current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }));
+            if (text.ToLower() == "get time") // Client requested time
+            {
+                Log("Text is a get time request");
+                byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
+                //Require an invoke if monoinstance
+                //Send data to the client
+                current.Send(data);
+                //String data = DateTime.Now.ToLongTimeString();
+                //OnMessageReceived?.Invoke(current, data);
+                Log("Time sent to client");
+            }
+            else if (text.ToLower() == "exit") // Client wants to exit gracefully
+            {
+                // Always Shutdown before closing
+                current.Shutdown(SocketShutdown.Both);
+                current.Close();
+                clientSockets.Remove(current);
+                Log("Client disconnected");
+                return;
+            }
+            else
+            {
+                Log("Text is an invalid request");
+                //Send data to the client
+                byte[] data = Encoding.ASCII.GetBytes("Invalid request : please send 'get time'");
+                //String data = "Invalid request";
+                //    OnMessageReceived?.Invoke(current, data);
+                current.Send(data);
+                Log("Warning Sent");
+            }
+            try
+            {
+                current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+        internal void Log(string msg)
+        {
+            Logger?.Invoke(msg);
         }
 
     }
