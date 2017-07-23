@@ -99,12 +99,12 @@ namespace MainForm
 
         }
 
-        public void RunMapReduce()
+        public void RunMapReduce(String[] data, int i)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
             MapReduce<int, string, string, int, string, int> job = new MapReduce<int, string, string, int, string, int>(Map, Reduce);
-            var items = DnaProcess(@"C:\temp\dna.txt");
+            var items = data;
             sw.Stop();
             Console.WriteLine("Process file time : " + sw.ElapsedMilliseconds);
             sw.Reset();
@@ -136,8 +136,10 @@ namespace MainForm
             context.AddPair(key, total);
         }
 
-        private string[] DnaProcess(string sourceFile)
+        private string[] DnaProcess(string sourceFile,int nbBytes)
         {
+
+            byte[] toBytes = Encoding.ASCII.GetBytes(sourceFile);
             string[] pairs;
             List<string> pairsList = new List<string>();
             List<char[]> charList = new List<char[]>();
@@ -161,13 +163,15 @@ namespace MainForm
             Node nd1 = new Node(1, "22");
             WThread ws = new WThread(nd1, 1);
 
-            string coucou = "hello";
-            int coucou2 = 3;
+            String[] data = DnaProcess("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_greshake.txt",10000);
 
-            ws.ExecuteFunction<String, int>("toto",2,fonctionTest);
+            //string coucou = "hello";
+            //int coucou2 = 3;
+
+            ws.ExecuteFunction<String[], int>(data,2, RunMapReduce);
             //int coucou3 = (int)ws.ExecuteTask<string, int> (coucou, coucou2);
 
-            RunMapReduce();
+           
         }
 
         public void fonctionTest(string s1,int s2)

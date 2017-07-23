@@ -40,6 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileTreatment\FileSplitter.cs" />
+    <Compile Include="MapReduce\KVPair.cs" />
+    <Compile Include="MapReduce\Map.cs" />
+    <Compile Include="MapReduce\MapReduce.cs" />
+    <Compile Include="MapReduce\Reduce.cs" />
     <Compile Include="Node\INode.cs" />
     <Compile Include="Node\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
