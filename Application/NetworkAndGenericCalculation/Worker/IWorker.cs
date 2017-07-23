@@ -16,8 +16,12 @@ namespace NetworkAndGenericCalculation.Worker
         // Get the worker ID.
         int GetID { get; }
 
-
         //Returns true if worker available.
         bool IsAvailable { get; set; }
+
+
+        R ExecuteTask<R ,O>( O data);
+
+        void ExecuteFunction<X,G> (X v1, G v2,Action<X, G> function);
     }
 }

@@ -24,6 +24,25 @@ namespace NetworkAndGenericCalculation.Worker
 
         public bool IsAvailable { get; set; }
 
+
+        public void ExecuteFunction<X, G>(X v1, G v2, Action<X, G> function)
+        {
+            function((X)v1,(G)v2);
+            //throw new NotImplementedException();
+        }
+
+        public String ExecuteTask<String,Integer>(Integer data)
+        {
+            
+            return (String)(Object)"coucou";
+        }
+
+        public string getMoncul()
+        {
+            return "Mabite";
+        }
+
+
         public override string ToString()
         {
             return "Worker ID : " + GetID;

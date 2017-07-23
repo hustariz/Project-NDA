@@ -14,6 +14,8 @@ using System.Threading;
 using System.Diagnostics;
 using c_projet_adn.Worker;
 using System.IO;
+using NetworkAndGenericCalculation.Worker;
+using NetworkAndGenericCalculation.Node;
 
 namespace MainForm
 {
@@ -156,7 +158,21 @@ namespace MainForm
 
         private void file_Click(object sender, EventArgs e)
         {
+            Node nd1 = new Node(1, "22");
+            WThread ws = new WThread(nd1, 1);
+
+            string coucou = "hello";
+            int coucou2 = 3;
+
+            ws.ExecuteFunction<String, int>("toto",2,fonctionTest);
+            //int coucou3 = (int)ws.ExecuteTask<string, int> (coucou, coucou2);
+
             RunMapReduce();
+        }
+
+        public void fonctionTest(string s1,int s2)
+        {
+            MessageBox.Show(s1);
         }
     }
 }
