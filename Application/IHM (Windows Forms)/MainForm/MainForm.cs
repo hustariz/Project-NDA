@@ -16,6 +16,7 @@ using c_projet_adn.Worker;
 using System.IO;
 using NetworkAndGenericCalculation.Worker;
 using NetworkAndGenericCalculation.Node;
+using NetworkAndGenericCalculation.FileTreatment;
 
 namespace MainForm
 {
@@ -163,12 +164,19 @@ namespace MainForm
             Node nd1 = new Node(1, "22");
             WThread ws = new WThread(nd1, 1);
 
-            String[] data = DnaProcess("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_greshake.txt",10000);
+            //String[] data = DnaProcess("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_greshake.txt",10000);
 
+            FileSplitter fs = new FileSplitter();
+
+            String readedFile = fs.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_greshake.txt");
+
+            List<String> moncul = fs.Moncul(readedFile, 10);
+
+            
             //string coucou = "hello";
             //int coucou2 = 3;
 
-            ws.ExecuteFunction<String[], int>(data,2, RunMapReduce);
+            //ws.ExecuteFunction<String[], int>(data,2, RunMapReduce);
             //int coucou3 = (int)ws.ExecuteTask<string, int> (coucou, coucou2);
 
            
