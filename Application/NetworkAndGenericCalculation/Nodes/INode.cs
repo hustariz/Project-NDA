@@ -24,6 +24,7 @@ namespace NetworkAndGenericCalculation.Nodes
 
         IList<IWorker> Workers { get; }
 
+
         //Return true if a worker is active on this node.
         bool isWorkerActive { get; }
 

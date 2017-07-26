@@ -30,16 +30,19 @@ namespace NetworkAndGenericCalculation.Nodes
             memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
         }
 
-  
+
 
         public IList<IWorker> Workers { get; protected set; }
+        //public List<WThread> WThread { get; protected set; }
+
+        //public List<IWorker> Workers { get; protected set; }
 
 
         public string NetworkAdress { get; protected set; }
     
         // Filter a sequence of valor following a predicate
 
-        public int ActualWorker => Workers.Where(workers => ! workers.IsAvailable).Count();
+        public int ActualWorker => Workers.Where(workers => !workers.IsAvailable).Count();
 
         public bool isWorkerActive => (ActualWorker > 0);
 
@@ -48,7 +51,10 @@ namespace NetworkAndGenericCalculation.Nodes
         public float MemoryUsage => memoryCounter.NextValue();
 
         public bool isAvailable => (ActualWorker == 0);
-    
+
+        //public IList<IWorker> Workers => throw new NotImplementedException();
+
+
         public override string ToString() => "HostAdress [" + NetworkAdress + "]";
     }
 }
