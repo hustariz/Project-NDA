@@ -60,39 +60,39 @@ namespace NetworkAndGenericCalculation.Sockets
         }
 
         //Accept the connection of multiple client
-        public void AcceptCallback(IAsyncResult AR)
+        public void AcceptCallback(IAsyncResult ar)
         {
-            Socket list = (Socket)AR.AsyncState;
+            Socket listener = (Socket)ar.AsyncState;
             try
             {
-                list = serverSocket.EndAccept(AR);
+                listener = serverSocket.EndAccept(ar);
             }
             catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
             {
                 return;
             }
-            clientSockets.Add(list);
-            list.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, list);
+            clientSockets.Add(listener);
+            listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
             Log("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(AcceptCallback, null);
         }
 
         // Receive the message from the client and do action following the input
-        public void ReceiveCallback(IAsyncResult AR)
+        public void ReceiveCallback(IAsyncResult ar)
         {
-            Socket current = (Socket)AR.AsyncState;
+            Socket client = (Socket)ar.AsyncState;
             int received;
             try
             {
-                received = current.EndReceive(AR);
+                received = client.EndReceive(ar);
             }
             catch (SocketException)
             {
                 Log("Client forcefully disconnected");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
-                current.Close();
-                clientSockets.Remove(current);
+                client.Close();
+                clientSockets.Remove(client);
                 return;
             }
             byte[] recBuf = new byte[received];
@@ -103,42 +103,57 @@ namespace NetworkAndGenericCalculation.Sockets
             if (text.ToLower() == "get time") // Client requested time
             {
                 Log("Text is a get time request");
-                byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
-                //Require an invoke if monoinstance
-                //Send data to the client
-                current.Send(data);
-                //String data = DateTime.Now.ToLongTimeString();
-                //OnMessageReceived?.Invoke(current, data);
+                byte[] callback = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
+                SendCallback(ar, callback);
                 Log("Time sent to client");
             }
             else if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
                 // Always Shutdown before closing
-                current.Shutdown(SocketShutdown.Both);
-                current.Close();
-                clientSockets.Remove(current);
+                client.Shutdown(SocketShutdown.Both);
+                client.Close();
+                clientSockets.Remove(client);
                 Log("Client disconnected");
                 return;
             }
             else
             {
                 Log("Text is an invalid request");
-                //Send data to the client
-                byte[] data = Encoding.ASCII.GetBytes("Invalid request : please send 'get time'");
-                //String data = "Invalid request";
-                //    OnMessageReceived?.Invoke(current, data);
-                current.Send(data);
+
+                byte[] callback = Encoding.ASCII.GetBytes("Invalid request : please send 'get time'");
+                //Send callback to the client
+                SendCallback(ar, callback);
                 Log("Warning Sent");
             }
             try
             {
-                current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
+                client.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, client);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
         }
+
+        private static void SendCallback(IAsyncResult ar, byte[] callback)
+        {
+            try
+            {
+                Socket client = (Socket)ar.AsyncState;
+                //Send data to the client
+                client.Send(callback);
+                // Complete sending the data to the remote device.
+                int bytesSent = client.EndSend(ar);
+                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+
         internal void Log(string msg)
         {
             Logger?.Invoke(msg);

@@ -2,3 +2,4 @@ C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\b
 C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\bin\Release\NetworkAndGenericCalculation.pdb
 C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.dll
 C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.csprojResolveAssemblyReference.cache

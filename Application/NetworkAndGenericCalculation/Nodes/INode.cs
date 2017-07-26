@@ -26,5 +26,8 @@ namespace NetworkAndGenericCalculation.Nodes
 
         //Return true if a worker is active on this node.
         bool isWorkerActive { get; }
+
+        //Return true is the node is available.
+        bool isAvailable { get; }
     }
 }

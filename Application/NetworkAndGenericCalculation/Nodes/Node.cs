@@ -14,32 +14,21 @@ namespace NetworkAndGenericCalculation.Nodes
     {
 
 
-        //Process p = /*get the desired process here*/;
-        //private PerformanceCounter ramCounter = new PerformanceCounter("Process", "Working Set", p.ProcessName);
-        //private PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", p.ProcessName);
-
         private PerformanceCounter processorCounter;
         private PerformanceCounter memoryCounter;
 
-        public Node(int localThreadsCount, string IpAdress)
-                {
+        public Node(int ThreadsCount, string NetworkAdress)
+        {
 
-                    NetworkAdress = IpAdress;
-                    Workers = new WThread[localThreadsCount];
-                    for (int i = 0; i < localThreadsCount; ++i)
-                    {
-                        Workers[i] = new WThread(this, i);
-                    }
-                    processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-                    memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
-                }
-        //while (true)
-        //{
-        //    Thread.Sleep(500);
-        //    double ram = ramCounter.NextValue();
-        //double cpu = cpuCounter.NextValue();
-        //Console.WriteLine("RAM: "+(ram/1024/1024)+" MB; CPU: "+(cpu)+" %");
-        //}
+            this.NetworkAdress = NetworkAdress;
+            Workers = new WThread[ThreadsCount];
+            for (int i = 0; i < ThreadsCount; ++i)
+            {
+                Workers[i] = new WThread(this, i);
+            }
+            processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
+        }
 
   
 
@@ -58,8 +47,8 @@ namespace NetworkAndGenericCalculation.Nodes
 
         public float MemoryUsage => memoryCounter.NextValue();
 
-
-
+        public bool isAvailable => (ActualWorker == 0);
+    
         public override string ToString() => "HostAdress [" + NetworkAdress + "]";
     }
 }
