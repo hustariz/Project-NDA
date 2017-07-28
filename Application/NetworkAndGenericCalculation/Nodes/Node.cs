@@ -33,10 +33,6 @@ namespace NetworkAndGenericCalculation.Nodes
 
 
         public IList<IWorker> Workers { get; protected set; }
-        //public List<WThread> WThread { get; protected set; }
-
-        //public List<IWorker> Workers { get; protected set; }
-
 
         public string NetworkAdress { get; protected set; }
     
@@ -52,7 +48,7 @@ namespace NetworkAndGenericCalculation.Nodes
 
         public bool isAvailable => (ActualWorker == 0);
 
-        //public IList<IWorker> Workers => throw new NotImplementedException();
+
 
 
         public override string ToString() => "HostAdress [" + NetworkAdress + "]";

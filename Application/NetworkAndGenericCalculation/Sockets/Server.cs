@@ -22,13 +22,15 @@ namespace NetworkAndGenericCalculation.Sockets
         private static List<Socket> clientSockets { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
-        private Action<string> Logger { get; set; }
+        private Action<string> ServLogger { get; set; }
+        private Action<string, int, float, float> GridUpdater { get; set; }
         private int LocalPort { get; set; }
         private IPAddress LocalAddress { get; set; }
+        private Node localnode { get; set; }
 
 
 
-        public Server(IPAddress host, int portNumber, Action<string> logger)
+        public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<string, int, float, float> gridupdater)
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSockets = new List<Socket>();
@@ -36,27 +38,33 @@ namespace NetworkAndGenericCalculation.Sockets
             LocalAddress = host;
             BUFFER_SIZE = 2048;
             buffer = new byte[BUFFER_SIZE];
-            Logger = logger;
+            ServLogger = servLogger;
+            GridUpdater = gridupdater;
         }
 
 
         public void SetupServer()
         {
-            Log("Setting up server...");
+            SLog("Setting up server...");
             serverSocket.Bind(new IPEndPoint(LocalAddress, LocalPort));
             serverSocket.Listen(1);
             serverSocket.BeginAccept(AcceptCallback, serverSocket);
-            Log("Server setup complete");
-            //AppendSrvStatus("Setting up local node...");
-            //localnode = new Node(4, txt_host.Text);
+            SLog("Server setup complete");
+
         }
 
-        private void ConnectNode(INode node)
+        public void ConnectNode(int threadCount, String IP)
         {
-            //AppendSrvStatus("Connected : ", node);
-            //Invoke(new ThreadStart(() => {
-            //    grd_node_data.Rows.Add(node, "0/" + node.Workers.Count, node.ProcessorUsage + "%", node.MemoryUsage + "MB");
-            //}));
+            SLog("Setting up local node...");
+            localnode = new Node(threadCount, IP);
+            SLog("Connected : " + localnode.ToString());
+
+
+        }
+
+        public void updateNodeGridData()
+        {
+            NLog(localnode.ToString(), localnode.ActualWorker, localnode.ProcessorUsage, localnode.MemoryUsage);
         }
 
         //Accept the connection of multiple client
@@ -73,7 +81,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
             clientSockets.Add(listener);
             listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
-            Log("Client connected, waiting for request...");
+            SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(AcceptCallback, null);
         }
@@ -89,7 +97,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
             catch (SocketException)
             {
-                Log("Client forcefully disconnected");
+                SLog("Client forcefully disconnected");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 client.Close();
                 clientSockets.Remove(client);
@@ -98,14 +106,14 @@ namespace NetworkAndGenericCalculation.Sockets
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
-            Log("Received Text : " + text);
+            SLog("Received Text : " + text);
 
             if (text.ToLower() == "get time") // Client requested time
             {
-                Log("Text is a get time request");
+                SLog("Text is a get time request");
                 byte[] callback = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
                 SendCallback(ar, callback);
-                Log("Time sent to client");
+                SLog("Time sent to client");
             }
             else if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
@@ -113,17 +121,17 @@ namespace NetworkAndGenericCalculation.Sockets
                 client.Shutdown(SocketShutdown.Both);
                 client.Close();
                 clientSockets.Remove(client);
-                Log("Client disconnected");
+                SLog("Client disconnected");
                 return;
             }
             else
             {
-                Log("Text is an invalid request");
+                SLog("Text is an invalid request");
 
                 byte[] callback = Encoding.ASCII.GetBytes("Invalid request : please send 'get time'");
                 //Send callback to the client
                 SendCallback(ar, callback);
-                Log("Warning Sent");
+                SLog("Warning Sent");
             }
             try
             {
@@ -153,10 +161,15 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-
-        internal void Log(string msg)
+        internal void NLog(string nodeAdress, int nodeWorkerCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            Logger?.Invoke(msg);
+            GridUpdater?.Invoke(nodeAdress, nodeWorkerCount, nodeProcessorUsage, nodeMemoryUsage);
+        }
+
+
+        internal void SLog(string msg)
+        {
+            ServLogger?.Invoke(msg);
         }
 
     }

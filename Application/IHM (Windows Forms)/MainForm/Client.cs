@@ -17,10 +17,23 @@ namespace MainForms
         Socket ClientSocket;
 
 
+        // Append the Client Status Textbox with the argument
+        //Params object to be able to display object
+        public void AppendClientStatus(params object[] message)
+        {
+            txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
+        }
+
+
+        public void CLog(string message)
+        {
+            AppendClientStatus(message);
+        }
+
         // Client's button event handler
         private void btn_connection_client_Click(object sender, EventArgs e)
         {
-           clientController.ConnectToServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
+           clientController.ConnectToServer(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text));
         }
         private void btn_exit_client_Click(object sender, EventArgs e)
         {
