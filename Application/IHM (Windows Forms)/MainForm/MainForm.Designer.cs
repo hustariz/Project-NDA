@@ -1,4 +1,6 @@
-﻿namespace MainForms
+﻿using System;
+
+namespace MainForms
 {
     partial class MainForm
     {
@@ -32,10 +34,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.nmr_local_thread = new System.Windows.Forms.NumericUpDown();
+            this.lbl_local_thread = new System.Windows.Forms.Label();
             this.grd_node_data = new System.Windows.Forms.DataGridView();
             this.lbl_server_logs = new System.Windows.Forms.Label();
             this.txt_status_srv = new System.Windows.Forms.TextBox();
-            this.btn_stop_srv = new System.Windows.Forms.Button();
             this.txt_port = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txt_host = new System.Windows.Forms.TextBox();
@@ -58,6 +61,7 @@
             this.tmr_grid_data_update = new System.Windows.Forms.Timer(this.components);
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmr_local_thread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -76,10 +80,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.nmr_local_thread);
+            this.tabPage1.Controls.Add(this.lbl_local_thread);
             this.tabPage1.Controls.Add(this.grd_node_data);
             this.tabPage1.Controls.Add(this.lbl_server_logs);
             this.tabPage1.Controls.Add(this.txt_status_srv);
-            this.tabPage1.Controls.Add(this.btn_stop_srv);
             this.tabPage1.Controls.Add(this.txt_port);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.txt_host);
@@ -92,6 +97,38 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // nmr_local_thread
+            // 
+            this.nmr_local_thread.Location = new System.Drawing.Point(333, 14);
+            this.nmr_local_thread.Maximum = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.nmr_local_thread.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmr_local_thread.Name = "nmr_local_thread";
+            this.nmr_local_thread.Size = new System.Drawing.Size(36, 20);
+            this.nmr_local_thread.TabIndex = 18;
+            this.nmr_local_thread.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nmr_local_thread.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lbl_local_thread
+            // 
+            this.lbl_local_thread.AutoSize = true;
+            this.lbl_local_thread.Location = new System.Drawing.Point(234, 16);
+            this.lbl_local_thread.Name = "lbl_local_thread";
+            this.lbl_local_thread.Size = new System.Drawing.Size(93, 13);
+            this.lbl_local_thread.TabIndex = 17;
+            this.lbl_local_thread.Text = "Available Thread :";
             // 
             // grd_node_data
             // 
@@ -127,16 +164,6 @@
             this.txt_status_srv.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txt_status_srv.Size = new System.Drawing.Size(460, 273);
             this.txt_status_srv.TabIndex = 13;
-            // 
-            // btn_stop_srv
-            // 
-            this.btn_stop_srv.Location = new System.Drawing.Point(394, 11);
-            this.btn_stop_srv.Name = "btn_stop_srv";
-            this.btn_stop_srv.Size = new System.Drawing.Size(75, 23);
-            this.btn_stop_srv.TabIndex = 12;
-            this.btn_stop_srv.Text = "Stop";
-            this.btn_stop_srv.UseVisualStyleBackColor = true;
-            this.btn_stop_srv.Click += new System.EventHandler(this.btn_stop_srv_Click);
             // 
             // txt_port
             // 
@@ -174,7 +201,7 @@
             // 
             // btn_start_srv
             // 
-            this.btn_start_srv.Location = new System.Drawing.Point(313, 11);
+            this.btn_start_srv.Location = new System.Drawing.Point(394, 11);
             this.btn_start_srv.Name = "btn_start_srv";
             this.btn_start_srv.Size = new System.Drawing.Size(75, 23);
             this.btn_start_srv.TabIndex = 7;
@@ -316,7 +343,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::MainForms.Properties.Resources.ADN;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(16, 60);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(102, 490);
@@ -342,6 +369,7 @@
             this.Server.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmr_local_thread)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
@@ -367,7 +395,6 @@
         private System.Windows.Forms.Label lbl_host_client;
         private System.Windows.Forms.Button btn_connection_client;
         private System.Windows.Forms.TextBox txt_status_srv;
-        private System.Windows.Forms.Button btn_stop_srv;
         private System.Windows.Forms.TextBox txt_port;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txt_host;
@@ -380,6 +407,8 @@
         private System.Windows.Forms.Label lbl_client_logs;
         private System.Windows.Forms.DataGridView grd_node_data;
         private System.Windows.Forms.Timer tmr_grid_data_update;
+        private System.Windows.Forms.NumericUpDown nmr_local_thread;
+        private System.Windows.Forms.Label lbl_local_thread;
     }
 }
 

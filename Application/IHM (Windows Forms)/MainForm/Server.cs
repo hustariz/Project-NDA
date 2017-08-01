@@ -16,6 +16,8 @@ namespace MainForms
 {
     public partial class MainForm : Form
     {
+
+        //if true doesn't create another row in Nlog
         bool gridCreated = false;
         // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
@@ -23,17 +25,17 @@ namespace MainForms
             txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
 
-        public void CreateNodeGrdStatus(string nodeAdress, int nodeWorkerCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void CreateNodeGrdStatus(string nodeAdress, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
-                grd_node_data.Rows.Add(nodeAdress, "0/" + nodeWorkerCount, nodeProcessorUsage + "%", nodeMemoryUsage + "MB");
+                grd_node_data.Rows.Add(nodeAdress, nodeActiveWThread + "/" + nodeWThreadCount, nodeProcessorUsage + "%", nodeMemoryUsage + "MB");
                 gridCreated = true;
             }));
         }
 
 
-        public void AppendGrdStatus(string nodeAdress, int nodeWorkerCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void AppendGrdStatus(string nodeAdress, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
@@ -41,7 +43,7 @@ namespace MainForms
                 {
                     //Local or Distant node
                     //INode node = (INode)row.Cells[0].Value;
-                    row.SetValues(nodeAdress, 4 + "/" + nodeWorkerCount, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
+                    row.SetValues(nodeAdress, nodeActiveWThread + "/" + nodeWThreadCount, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
                 }
             }));
         }
@@ -50,10 +52,10 @@ namespace MainForms
         {
             AppendSrvStatus(message);
         }
-        public void Nlog(string nodeAdress, int nodeWorkerCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void Nlog(string nodeAdress, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            if (!gridCreated) CreateNodeGrdStatus(nodeAdress, nodeWorkerCount, nodeProcessorUsage, nodeMemoryUsage);
-            AppendGrdStatus(nodeAdress, nodeWorkerCount, nodeProcessorUsage, nodeMemoryUsage);
+            if (!gridCreated) CreateNodeGrdStatus(nodeAdress, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
+            AppendGrdStatus(nodeAdress, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
         }
 
         // Update the data grid, timer = 1s
@@ -72,11 +74,7 @@ namespace MainForms
             }));
 
             servController.SetupServer();
-            servController.ConnectNode(4, ipServer);
-        }
-
-        private void btn_stop_srv_Click(object sender, EventArgs e)
-        {
+            servController.ConnectNode(Convert.ToInt32(nmr_local_thread.Value), ipServer);
 
         }
     }

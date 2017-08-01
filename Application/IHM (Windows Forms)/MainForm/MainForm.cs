@@ -55,13 +55,26 @@ namespace MainForms
             grd_node_data.Columns.Add("nodeMemoryUsage", "Memory");
   
             // Adjust Size of the cells to fill the grid spaces
-            grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;       
+            grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            int worker = 0;
+            int io = 0;
+            ThreadPool.GetAvailableThreads(out worker, out io);
+
+            Console.WriteLine("Thread pool threads available at startup: ");
+            Console.WriteLine("   Worker threads: {0:N0}", worker);
+            Console.WriteLine("   Asynchronous I/O threads: {0:N0}", io);
+
+            Console.WriteLine("The number of processors " +
+    "on this computer is {0}.",
+    Environment.ProcessorCount);
         }
 
         public void SetServController(ServController controller)
         {
             servController = controller;
         }
+
 
         public void SetClientController(ClientController controller)
         {

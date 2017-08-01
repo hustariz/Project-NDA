@@ -38,6 +38,7 @@ namespace NetworkAndGenericCalculation.Nodes
     
         // Filter a sequence of valor following a predicate
 
+
         public int ActualWorker => Workers.Where(workers => !workers.IsAvailable).Count();
 
         public bool isWorkerActive => (ActualWorker > 0);
