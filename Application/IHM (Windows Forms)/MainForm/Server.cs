@@ -25,17 +25,17 @@ namespace MainForms
             txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
 
-        public void CreateNodeGrdStatus(string nodeAdress, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void CreateNodeGrdStatus(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
-                grd_node_data.Rows.Add(nodeAdress, nodeActiveWThread + "/" + nodeWThreadCount, nodeProcessorUsage + "%", nodeMemoryUsage + "MB");
+                grd_node_data.Rows.Add(nodeAdress, nodeStatus, nodeActiveWThread + "/" + nodeWThreadCount, nodeProcessorUsage + "%", nodeMemoryUsage + "MB");
                 gridCreated = true;
             }));
         }
 
 
-        public void AppendGrdStatus(string nodeAdress, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void AppendGrdStatus(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
@@ -43,7 +43,7 @@ namespace MainForms
                 {
                     //Local or Distant node
                     //INode node = (INode)row.Cells[0].Value;
-                    row.SetValues(nodeAdress, nodeActiveWThread + "/" + nodeWThreadCount, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
+                    row.SetValues(nodeAdress, nodeStatus, nodeActiveWThread + "/" + nodeWThreadCount, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
                 }
             }));
         }
@@ -52,10 +52,10 @@ namespace MainForms
         {
             AppendSrvStatus(message);
         }
-        public void Nlog(string nodeAdress, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void Nlog(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            if (!gridCreated) CreateNodeGrdStatus(nodeAdress, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
-            AppendGrdStatus(nodeAdress, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
+            if (!gridCreated) CreateNodeGrdStatus(nodeAdress, nodeStatus, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
+            AppendGrdStatus(nodeAdress, nodeStatus, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
         }
 
         // Update the data grid, timer = 1s

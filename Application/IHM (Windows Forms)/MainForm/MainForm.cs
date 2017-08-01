@@ -50,12 +50,14 @@ namespace MainForms
 
 
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
+            grd_node_data.Columns.Add("nodeState", "State");
             grd_node_data.Columns.Add("nodeWorkersNumber", "Worker(s)");
             grd_node_data.Columns.Add("nodeCpuUsage", "CPU");
             grd_node_data.Columns.Add("nodeMemoryUsage", "Memory");
-  
+            grd_node_data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             // Adjust Size of the cells to fill the grid spaces
             grd_node_data.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
 
             int worker = 0;
             int io = 0;
