@@ -77,6 +77,10 @@ namespace MainForms
             servController = controller;
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            server.SplitAndSend();
+        }
 
         public void SetClientController(ClientController controller)
         {

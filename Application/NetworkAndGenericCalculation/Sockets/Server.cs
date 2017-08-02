@@ -1,4 +1,5 @@
-﻿using NetworkAndGenericCalculation.Nodes;
+﻿using NetworkAndGenericCalculation.FileTreatment;
+using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -172,6 +173,17 @@ namespace NetworkAndGenericCalculation.Sockets
         internal void SLog(string msg)
         {
             ServLogger?.Invoke(msg);
+        }
+
+        public void SplitAndSend()
+        {
+            FileSplitter moncul = new FileSplitter();
+            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_greshake.txt");
+            List<Byte[]> ListeToSend = moncul.SplitIntoChunks(fileTosend, 15000);
+
+
+            byte[] buffer = Encoding.ASCII.GetBytes(fileTosend);
+            //serverSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
 
     }

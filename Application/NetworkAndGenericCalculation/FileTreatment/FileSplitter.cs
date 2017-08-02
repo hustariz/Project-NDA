@@ -50,6 +50,22 @@ namespace NetworkAndGenericCalculation.FileTreatment
         }
 
 
+        public List<byte[]> SplitIntoChunks(string text, int chunkSize)
+        {
+
+            List<byte[]> moncul = new List<byte[]>();
+            //List<string> chunks = new List<string>();
+            int offset = 0;
+            while (offset < text.Length)
+            {
+                int size = Math.Min(chunkSize, text.Length - offset);
+                byte[] buffer = Encoding.ASCII.GetBytes(text.Substring(offset, size));
+                moncul.Add(buffer);
+                offset += size;
+            }
+            return moncul;
+        }
+
         public List<string> Moncul(string str, int chunks)
         {
             var l = new List<string>();
