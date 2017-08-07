@@ -31,6 +31,13 @@ namespace NetworkAndGenericCalculation.Sockets
         private IPAddress LocalAddress { get; set; }
         private Node localnode { get; set; }
 
+        // ManualResetEvent instances signal completion.
+        private static ManualResetEvent connectDone =
+            new ManualResetEvent(false);
+        private static ManualResetEvent sendDone =
+            new ManualResetEvent(false);
+        private static ManualResetEvent receiveDone =
+            new ManualResetEvent(false);
 
 
         public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<string,string, int, int, float, float> gridupdater)
@@ -52,7 +59,7 @@ namespace NetworkAndGenericCalculation.Sockets
             SLog("Setting up server...");
             serverSocket.Bind(new IPEndPoint(LocalAddress, LocalPort));
             serverSocket.Listen(1);
-            serverSocket.BeginAccept(AcceptCallback, serverSocket);
+            serverSocket.BeginAccept(new AsyncCallback(AcceptCallback),serverSocket);
             //serverSocket.BeginAccept(SplitAndSend, serverSocket);
             SLog("Server setup complete");
 
@@ -98,18 +105,18 @@ namespace NetworkAndGenericCalculation.Sockets
         // Receive the message from the client and do action following the input
         public void ReceiveCallback(IAsyncResult ar)
         {
-            Socket client = (Socket)ar.AsyncState;
+            Socket handler = (Socket)ar.AsyncState;
             int received;
             try
             {
-                received = client.EndReceive(ar);
+                received = handler.EndReceive(ar);
             }
             catch (SocketException)
             {
                 SLog("Client forcefully disconnected");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
-                client.Close();
-                clientSockets.Remove(client);
+                handler.Close();
+                clientSockets.Remove(handler);
                 return;
             }
             byte[] recBuf = new byte[received];
@@ -127,9 +134,9 @@ namespace NetworkAndGenericCalculation.Sockets
             else if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
                 // Always Shutdown before closing
-                client.Shutdown(SocketShutdown.Both);
-                client.Close();
-                clientSockets.Remove(client);
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
+                clientSockets.Remove(handler);
                 SLog("Client disconnected");
                 return;
             }
@@ -144,7 +151,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
             try
             {
-                client.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, client);
+                handler.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, handler);
             }
             catch (Exception e)
             {
@@ -156,14 +163,15 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             try
             {
-                Socket client = (Socket)ar.AsyncState;
+                // Retrieve the socket from the state object.
+                Socket handler = (Socket)ar.AsyncState;
 
-                //Send data to the client
-                //client.Send(callback);
-                // Complete sending the data to the remote device
-                
-                int bytesSent = client.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+                // Complete sending the data to the remote device.
+                int bytesSent = handler.EndSend(ar);
+                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
 
             }
             catch (Exception e)
@@ -186,16 +194,17 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend()
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
             ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 15000, 15000);
-            
 
 
-            clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
+            Send(clientSockets[0], chunkToUse);
+            sendDone.WaitOne();
+            //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
 
-           // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
+            // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
 
 
 
@@ -210,6 +219,14 @@ namespace NetworkAndGenericCalculation.Sockets
 
             //chunkToUse.chunkBytes
 
+        }
+
+        private static void Send(Socket handler, ChunkSplit chunkToUse)
+        {
+
+            // Begin sending the data to the remote device.
+            handler.BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, 0,
+                new AsyncCallback(SendCallback), handler);
         }
 
     }

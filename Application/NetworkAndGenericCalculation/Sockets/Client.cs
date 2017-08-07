@@ -42,6 +42,7 @@ namespace NetworkAndGenericCalculation.Sockets
             new ManualResetEvent(false);
         private static ManualResetEvent receiveDone =
             new ManualResetEvent(false);
+        public static ManualResetEvent allDone = new ManualResetEvent(false);
 
         public Client(Action<string> logger)
         {
@@ -104,12 +105,27 @@ namespace NetworkAndGenericCalculation.Sockets
             byte[] buffer = Encoding.ASCII.GetBytes(text);
             ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
+        public static void AcceptCallback(IAsyncResult ar)
+        {
+            // Signal the main thread to continue.
+            allDone.Set();
+
+            // Get the socket that handles the client request.
+            Socket listener = (Socket)ar.AsyncState;
+            Socket handler = listener.EndAccept(ar);
+
+            // Create the state object.
+            StateObject state = new StateObject();
+            state.workSocket = handler;
+            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                new AsyncCallback(ReceiveCallback), state);
+        }
+
 
         private static void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
-                Console.WriteLine("PAR LA");
                 // Retrieve the state object and the client socket 
                 // from the asynchronous state object.
                 StateObject state = (StateObject)ar.AsyncState;

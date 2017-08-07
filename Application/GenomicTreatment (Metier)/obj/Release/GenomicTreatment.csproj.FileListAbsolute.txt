@@ -1,3 +1,6 @@
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Release\GenomicTreatment.Properties.Resources.resources
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Release\GenomicTreatment.csproj.GenerateResource.Cache
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Release\GenomicTreatment.csprojResolveAssemblyReference.cache
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Release\GenomicTreatment.Properties.Resources.resources
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Release\GenomicTreatment.csproj.GenerateResource.Cache
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Release\GenomicTreatment.csprojResolveAssemblyReference.cache

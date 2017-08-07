@@ -7,3 +7,7 @@ E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\bin\Releas
 E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\bin\Release\NetworkAndGenericCalculation.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.dll
 E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\NetworkAndGenericCalculation\bin\Release\NetworkAndGenericCalculation.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\NetworkAndGenericCalculation\bin\Release\NetworkAndGenericCalculation.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\NetworkAndGenericCalculation\obj\Release\NetworkAndGenericCalculation.pdb
