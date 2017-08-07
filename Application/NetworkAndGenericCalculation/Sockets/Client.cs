@@ -16,7 +16,7 @@ namespace NetworkAndGenericCalculation.Sockets
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.
-        public const int BufferSize = 256;
+        public const int BufferSize = 2048;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         // Received data string.
@@ -67,6 +67,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     Attempts++;
                     Log("Connection attempt :" + Attempts);
                     ClientSocket.Connect(host, port);
+                   
                 }
                 catch (SocketException)
                 {
@@ -75,6 +76,26 @@ namespace NetworkAndGenericCalculation.Sockets
             }
             Log(nodeClient.NetworkAdress);
             Log("Connected");
+            Receive(ClientSocket);
+            receiveDone.WaitOne();
+        }
+
+        private static void Receive(Socket client)
+        {
+            try
+            {
+                // Create the state object.
+                StateObject state = new StateObject();
+                state.workSocket = client;
+                Console.WriteLine("jaten d trucs");
+                // Begin receiving the data from the remote device.
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReceiveCallback), state);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         // Close socket and write a message in the status box.
@@ -105,6 +126,9 @@ namespace NetworkAndGenericCalculation.Sockets
             byte[] buffer = Encoding.ASCII.GetBytes(text);
             ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
+
+
+
         public static void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
@@ -131,30 +155,33 @@ namespace NetworkAndGenericCalculation.Sockets
                 StateObject state = (StateObject)ar.AsyncState;
                 Socket client = state.workSocket;
 
+                //Socket client = (Socket)ar.AsyncState;
+
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
+                Console.WriteLine(bytesRead);
 
-                
 
-                if (bytesRead > 0)
-                {
-                    // There might be more data, so store the data received so far.
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                 if (bytesRead > 0)
+                 {
+                     // There might be more data, so store the data received so far.
+                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                     Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                     // Get the rest of the data.
+                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                         new AsyncCallback(ReceiveCallback), state);
+                 }
+                 else
+                 {
+                     // All the data has arrived; put it in response.
+                     if (state.sb.Length > 1)
+                     {
+                         response = state.sb.ToString();
+                     }
+                     // Signal that all bytes have been received.
+                     receiveDone.Set();
+                 }
 
-                    // Get the rest of the data.
-                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                        new AsyncCallback(ReceiveCallback), state);
-                }
-                else
-                {
-                    // All the data has arrived; put it in response.
-                    if (state.sb.Length > 1)
-                    {
-                        response = state.sb.ToString();
-                    }
-                    // Signal that all bytes have been received.
-                    receiveDone.Set();
-                }
             }
             catch (Exception e)
             {
@@ -179,5 +206,7 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             Logger?.Invoke(msg);
         }
+
+
     }
 }

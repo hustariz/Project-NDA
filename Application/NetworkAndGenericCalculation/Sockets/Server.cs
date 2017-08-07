@@ -170,8 +170,8 @@ namespace NetworkAndGenericCalculation.Sockets
                 int bytesSent = handler.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                //handler.Shutdown(SocketShutdown.Both);
+                //handler.Close();
 
             }
             catch (Exception e)
