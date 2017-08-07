@@ -41,5 +41,10 @@ namespace MainForms
             serverSocket.updateNodeGridData();
         }
 
+        public void sendFile()
+        {
+            
+        }
+
     }
 }

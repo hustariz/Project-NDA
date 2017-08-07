@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace NetworkAndGenericCalculation.Nodes
 {
     //Node running on the computer where is it launched.
-    public class Node : INode
+    public class Node : INode 
     {
 
 

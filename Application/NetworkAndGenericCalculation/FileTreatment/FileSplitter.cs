@@ -1,9 +1,11 @@
-﻿using System;
+﻿using NetworkAndGenericCalculation.Chunk;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace NetworkAndGenericCalculation.FileTreatment
 {
@@ -21,7 +23,7 @@ namespace NetworkAndGenericCalculation.FileTreatment
                 int index = 0;
                 while (input.Position < input.Length)
                 {
-                    using (Stream output = File.Create("C:/Users/loika/Desktop/toto.txt" + index))
+                    using (Stream output = File.Create("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt" + index))
                     
                         using (MemoryStream ms = new MemoryStream())
                         {
@@ -50,20 +52,18 @@ namespace NetworkAndGenericCalculation.FileTreatment
         }
 
 
-        public List<byte[]> SplitIntoChunks(string text, int chunkSize)
+        public ChunkSplit SplitIntoChunks(string text, int chunkSize, int offsets)
         {
 
-            List<byte[]> moncul = new List<byte[]>();
+
+            byte[] moncul = new byte[chunkSize];
             //List<string> chunks = new List<string>();
-            int offset = 0;
-            while (offset < text.Length)
-            {
-                int size = Math.Min(chunkSize, text.Length - offset);
-                byte[] buffer = Encoding.ASCII.GetBytes(text.Substring(offset, size));
-                moncul.Add(buffer);
-                offset += size;
-            }
-            return moncul;
+            int offset = offsets;
+            int size = Math.Min(chunkSize, text.Length - offset);
+            moncul = Encoding.ASCII.GetBytes(text.Substring(offset, size));
+            offset += size;
+            ChunkSplit chunkToSend = new ChunkSplit(moncul, offset);
+            return chunkToSend;
         }
 
         public List<string> Moncul(string str, int chunks)

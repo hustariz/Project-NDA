@@ -1,3 +1,6 @@
 C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csprojResolveAssemblyReference.cache
 C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.Properties.Resources.resources
 C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csproj.GenerateResource.Cache
+E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csprojResolveAssemblyReference.cache
+E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.Properties.Resources.resources
+E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csproj.GenerateResource.Cache

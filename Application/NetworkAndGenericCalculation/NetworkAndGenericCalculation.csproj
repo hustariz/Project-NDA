@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chunk\ChunkSplit.cs" />
     <Compile Include="FileTreatment\FileSplitter.cs" />
     <Compile Include="MapReduce\KVPair.cs" />
     <Compile Include="MapReduce\Map.cs" />

@@ -1,4 +1,5 @@
-﻿using NetworkAndGenericCalculation.FileTreatment;
+﻿using NetworkAndGenericCalculation.Chunk;
+using NetworkAndGenericCalculation.FileTreatment;
 using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
+        private static List<Node> nodeConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
         private Action<string> ServLogger { get; set; }
@@ -41,6 +43,7 @@ namespace NetworkAndGenericCalculation.Sockets
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
+            nodeConnected = new List<Node>();
         }
 
 
@@ -50,6 +53,7 @@ namespace NetworkAndGenericCalculation.Sockets
             serverSocket.Bind(new IPEndPoint(LocalAddress, LocalPort));
             serverSocket.Listen(1);
             serverSocket.BeginAccept(AcceptCallback, serverSocket);
+            //serverSocket.BeginAccept(SplitAndSend, serverSocket);
             SLog("Server setup complete");
 
         }
@@ -59,7 +63,7 @@ namespace NetworkAndGenericCalculation.Sockets
             SLog("Setting up local node...");
             localnode = new Node(threadCount, IP);
             SLog("Connected : " + localnode.ToString());
-
+            nodeConnected.Add(localnode);
 
         }
 
@@ -73,6 +77,7 @@ namespace NetworkAndGenericCalculation.Sockets
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult ar)
         {
+
             Socket listener = (Socket)ar.AsyncState;
             try
             {
@@ -84,6 +89,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
             clientSockets.Add(listener);
             listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
+            //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, SplitAndSend, listener);
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(AcceptCallback, null);
@@ -115,7 +121,7 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 SLog("Text is a get time request");
                 byte[] callback = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
-                SendCallback(ar, callback);
+                //SendCallback(ar, callback);
                 SLog("Time sent to client");
             }
             else if (text.ToLower() == "exit") // Client wants to exit gracefully
@@ -133,7 +139,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 byte[] callback = Encoding.ASCII.GetBytes("Invalid request : please send 'get time'");
                 //Send callback to the client
-                SendCallback(ar, callback);
+                //SendCallback(ar, callback);
                 SLog("Warning Sent");
             }
             try
@@ -146,14 +152,16 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        private static void SendCallback(IAsyncResult ar, byte[] callback)
+        private static void SendCallback(IAsyncResult ar)
         {
             try
             {
                 Socket client = (Socket)ar.AsyncState;
+
                 //Send data to the client
-                client.Send(callback);
-                // Complete sending the data to the remote device.
+                //client.Send(callback);
+                // Complete sending the data to the remote device
+                
                 int bytesSent = client.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
@@ -178,12 +186,30 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend()
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_greshake.txt");
-            List<Byte[]> ListeToSend = moncul.SplitIntoChunks(fileTosend, 15000);
+            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+
+            //ChunkSplit chunkToUse = new ChunkSplit();
+            ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 15000, 15000);
+            
 
 
-            byte[] buffer = Encoding.ASCII.GetBytes(fileTosend);
-            //serverSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+            clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
+
+           // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
+
+
+
+
+            // Serveur envoyer la méthode / Texte
+            // Thread
+            // Si node available
+            // Envoyer un tableau chunk
+            // Si pas worker 
+            // Thread.sleep
+            // jusqu'à un événement worker dispo
+
+            //chunkToUse.chunkBytes
+
         }
 
     }
