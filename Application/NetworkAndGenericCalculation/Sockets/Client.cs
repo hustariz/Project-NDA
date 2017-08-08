@@ -87,7 +87,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 // Create the state object.
                 StateObject state = new StateObject();
                 state.workSocket = client;
-                Console.WriteLine("jaten d trucs");
+
                 // Begin receiving the data from the remote device.
                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
