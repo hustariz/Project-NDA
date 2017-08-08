@@ -2,26 +2,17 @@
 using System.Collections.Generic;
 using System;
 using NetworkAndGenericCalculation.Chunk;
+using NetworkAndGenericCalculation.FileTreatment;
 
 namespace NetworkAndGenericCalculation.MapReduce
 {
     public class Map<T> : IMapper<T>
     {
-        /*private IDictionary<K, IList<V>> keyvalues = new Dictionary<K, IList<V>>();
-
-        public IDictionary<K, IList<V>> KeyValues { get { return keyvalues; } }
-
-        public void AddPair(K key, V value)
-        {
-            if (!keyvalues.ContainsKey(key))
-                keyvalues[key] = new List<V>();
-
-            keyvalues[key].Add(value);
-        }*/
+0
 
         private Chunk<T>[] chunks;
 
-        public Map(int chunkLength, String dataSource)
+        public Map(int chunkLength, IDataReader<T> dataSource)
         {
             DataSource = dataSource;
             ChunkDefaultLength = chunkLength;
@@ -34,21 +25,35 @@ namespace NetworkAndGenericCalculation.MapReduce
         /// <summary>
         /// Représenta la source de data, à modifier quand il y aura eu création de l'interface DataReader
         /// </summary>
-        public String DataSource { get; protected set; }
+        public IDataReader<T> DataSource { get; protected set; }
 
         public int ChunkDefaultLength { get; private set; }
 
+        public int ChunkPreferredLength { get; private set; }
+
         public int ChunkCount { get; private set; }
 
-        public int Length => DataSource.Length;
+        public long Length => DataSource.Length;
 
         public int ChunkRemainsLength { get; private set; }
 
         public bool IsActive { get; private set; }
 
+        int IMapper<T>.Length => throw new NotImplementedException();
+
+        int IMapper<T>.ChunkDefaultLength => throw new NotImplementedException();
+
+        int IMapper<T>.ChunkCount => throw new NotImplementedException();
+
+        bool IMapper<T>.IsActive => throw new NotImplementedException();
+
+        int IMapper<T>.ChunkRemainsLength => throw new NotImplementedException();
+
         public void Dispose()
         {
-            throw new NotImplementedException();
+            chunks = null;
+            ChunkPreferredLength = ChunkRemainsLength = ChunkCount = 0;
+            DataSource = null;
         }
 
         public Chunk<T> NextChunk()
@@ -69,5 +74,21 @@ namespace NetworkAndGenericCalculation.MapReduce
             return null;
         }
 
+
+        private int ChunkLength(int chunkId)
+        {
+            if (ChunkRemainsLength == 0) return ChunkPreferredLength;
+            return chunkId == ChunkCount - 1 ? ChunkRemainsLength : ChunkPreferredLength;
+        }
+
+        void IDisposable.Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        Chunk<T> IMapper<T>.NextChunk()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
