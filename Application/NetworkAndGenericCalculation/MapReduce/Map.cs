@@ -8,7 +8,7 @@ namespace NetworkAndGenericCalculation.MapReduce
 {
     public class Map<T> : IMapper<T>
     {
-0
+
 
         private Chunk<T>[] chunks;
 
