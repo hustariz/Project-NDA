@@ -194,7 +194,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend()
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
             ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 15000, 15000);

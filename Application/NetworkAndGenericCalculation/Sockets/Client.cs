@@ -1,6 +1,7 @@
 ﻿using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -161,6 +162,8 @@ namespace NetworkAndGenericCalculation.Sockets
                 int bytesRead = client.EndReceive(ar);
                 Console.WriteLine(bytesRead);
 
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.RunWorkerAsync();
 
                  if (bytesRead > 0)
                  {
@@ -207,6 +210,9 @@ namespace NetworkAndGenericCalculation.Sockets
             Logger?.Invoke(msg);
         }
 
-
+        private void bw_DoWork(Object sender, DoWorkEventArgs e)
+        {
+            Console.WriteLine("mabite");
+        }
     }
 }
