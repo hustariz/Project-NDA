@@ -222,7 +222,8 @@ namespace NetworkAndGenericCalculation.Sockets
                 bcChecker.RunWorkerCompleted += (o, a) =>
                 {
                     var data = new byte[bytesRead];
-                    Send(ClientSocket, data);
+                    byte[] buffer = Encoding.ASCII.GetBytes("caca");
+                    Send(ClientSocket, buffer);
                     Console.WriteLine("Tout le monde a fini");
                 };
 

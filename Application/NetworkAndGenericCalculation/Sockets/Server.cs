@@ -31,6 +31,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private Action<string, string, int, int, float, float> GridUpdater { get; set; }
         private int LocalPort { get; set; }
         private IPAddress LocalAddress { get; set; }
+        private static String response = String.Empty;
+
         private Node localnode { get; set; }
 
         // ManualResetEvent instances signal completion.
@@ -53,6 +55,7 @@ namespace NetworkAndGenericCalculation.Sockets
             ServLogger = servLogger;
             GridUpdater = gridupdater;
             nodeConnected = new List<Node>();
+
         }
 
 
@@ -64,7 +67,26 @@ namespace NetworkAndGenericCalculation.Sockets
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback),serverSocket);
             //serverSocket.BeginAccept(SplitAndSend, serverSocket);
             SLog("Server setup complete");
+            
 
+        }
+
+        private void Receive(Socket client)
+        {
+            try
+            {
+                // Create the state object.
+                StateObject state = new StateObject();
+                state.workSocket = client;
+
+                // Begin receiving the data from the remote device.
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReceiveCallback), state);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         public void ConnectNode(int threadCount, String IP)
@@ -99,8 +121,9 @@ namespace NetworkAndGenericCalculation.Sockets
             clientSockets.Add(listener);
             StateObject state = new StateObject();
             state.workSocket = listener;
-            listener.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-           new AsyncCallback(ReceiveCallback), state);
+            Receive(listener);
+            /*listener.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+           new AsyncCallback(ReceiveCallback), state);*/
             //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
             //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, SplitAndSend, listener);
             SLog("Client connected, waiting for request...");
@@ -108,16 +131,45 @@ namespace NetworkAndGenericCalculation.Sockets
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
+
+
         // Receive the message from the client and do action following the input
         public void ReceiveCallback(IAsyncResult ar)
         {
+
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
-
-            int received;
+            int received = handler.EndReceive(ar);
             try
             {
-                received = handler.EndReceive(ar);
+                
+                
+
+                if (received > 0)
+                {
+                    // There might be more data, so store the data received so far.
+                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, received));
+                    Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, received));
+
+                    // Get the rest of the data.
+                    /*handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                        new AsyncCallback(ReceiveCallback), state);*/
+                    receiveDone.Set();
+                }
+                else
+                {
+                    // All the data has arrived; put it in response.
+                    if (state.sb.Length > 1)
+                    {
+
+                        response = state.sb.ToString();
+                    }
+                    // Signal that all bytes have been received.
+                    //Console.WriteLine("FIN");
+                    
+
+                    //
+                }
             }
             catch (SocketException)
             {
@@ -127,11 +179,8 @@ namespace NetworkAndGenericCalculation.Sockets
                 clientSockets.Remove(handler);
                 return;
             }
+            
 
-            byte[] recBuf = new byte[received];
-            Array.Copy(buffer, recBuf, received);
-            string text = Encoding.ASCII.GetString(recBuf);
-            SLog("Received Text : " + text);
 
             /*
             if (text.ToLower() == "get time") // Client requested time
