@@ -160,12 +160,36 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
-                Console.WriteLine(bytesRead);
+            
 
-                BackgroundWorker bw = new BackgroundWorker();
+                int finalresult = 0;
+
+                BackgroundWorker bw = new BackgroundWorker()
+                {
+                    WorkerSupportsCancellation = true,
+                    WorkerReportsProgress = true
+
+                };
+                bw.DoWork += (o, a) =>
+                {
+                    Console.WriteLine("MABITE");
+                    calculTest(2, 4);
+                };
+
+                ;
+
+                bw.RunWorkerCompleted += (o, a) =>
+                {
+                    Console.WriteLine("MABITE2");
+                };
+
+                //bw.RunWorkerCompleted += worker_RunWorkerCompleted;
+
                 bw.RunWorkerAsync();
 
-                 if (bytesRead > 0)
+
+
+                if (bytesRead > 0)
                  {
                      // There might be more data, so store the data received so far.
                      state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
@@ -179,11 +203,15 @@ namespace NetworkAndGenericCalculation.Sockets
                      // All the data has arrived; put it in response.
                      if (state.sb.Length > 1)
                      {
-                         response = state.sb.ToString();
+                        
+                        response = state.sb.ToString();
                      }
-                     // Signal that all bytes have been received.
-                     receiveDone.Set();
-                 }
+                    // Signal that all bytes have been received.
+                    //Console.WriteLine("FIN");
+                    receiveDone.Set();
+
+                    //
+                }
 
             }
             catch (Exception e)
@@ -210,9 +238,19 @@ namespace NetworkAndGenericCalculation.Sockets
             Logger?.Invoke(msg);
         }
 
-        private void bw_DoWork(Object sender, DoWorkEventArgs e)
+        public static int calculTest(int nb1, int nb2) 
         {
-            Console.WriteLine("mabite");
+            Console.WriteLine("PAR LA" + nb1 + nb2);
+            int nb3 = nb1 + nb2;
+            return nb3;
+        }
+
+        public static void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //progbar1.Value = 0;
+            //llCurFil.Content = "";
+            //System.Windows.Forms.MessageBox.Show("I'm done!");
+            Console.WriteLine("I'm done!");
         }
     }
 }

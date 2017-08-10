@@ -197,7 +197,7 @@ namespace NetworkAndGenericCalculation.Sockets
             String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
-            ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 15000, 15000);
+            ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 150, 0);
 
 
             Send(clientSockets[0], chunkToUse);

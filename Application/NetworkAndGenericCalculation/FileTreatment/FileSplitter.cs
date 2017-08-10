@@ -23,7 +23,7 @@ namespace NetworkAndGenericCalculation.FileTreatment
                 int index = 0;
                 while (input.Position < input.Length)
                 {
-                    using (Stream output = File.Create("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt" + index))
+                    using (Stream output = File.Create("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt" + index))
                     
                         using (MemoryStream ms = new MemoryStream())
                         {
