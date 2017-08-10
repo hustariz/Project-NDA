@@ -26,7 +26,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
     public class Client
     {
-        Socket ClientSocket { get; set; }
+        private static Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] Buffer { get; set; }
         private int Attempts { get; set; }
@@ -178,11 +178,58 @@ namespace NetworkAndGenericCalculation.Sockets
                     //string track = StringFormat("bw{0}", i)
 
                     
-                    //BackgroundWorker i = new BackgroundWorker();
-                    //backGroundworkerList.Add(bw2);
+                    BackgroundWorker bw2 = new BackgroundWorker()
+                    {
+                        WorkerSupportsCancellation = true,
+                        WorkerReportsProgress = true
+                    };
+                    backGroundworkerList.Add(bw2);
 
                 }
 
+
+                foreach(BackgroundWorker bc in backGroundworkerList)
+                {
+                    bc.DoWork += (o, a) =>
+                    {
+                        //Console.WriteLine("MABITE");
+                        Thread.Sleep(1000);
+                        finalresult = calculTest(2, 4);
+
+                    };
+
+                    bc.RunWorkerCompleted += (o, a) =>
+                    {
+                        Console.WriteLine(finalresult);
+                    };
+
+                    bc.RunWorkerAsync();
+                }
+
+                BackgroundWorker bcChecker = new BackgroundWorker()
+                {
+                    WorkerSupportsCancellation = true,
+                    WorkerReportsProgress = true
+                };
+
+                bcChecker.DoWork += (o, a) =>
+                {
+                    //Console.WriteLine("MABITE");
+                    monitoringBW();
+
+                };
+
+                bcChecker.RunWorkerCompleted += (o, a) =>
+                {
+                    var data = new byte[bytesRead];
+                    Send(ClientSocket, data);
+                    Console.WriteLine("Tout le monde a fini");
+                };
+
+
+                bcChecker.RunWorkerAsync();
+
+                /*
                 BackgroundWorker bw = new BackgroundWorker()
                 {
                     WorkerSupportsCancellation = true,
@@ -208,7 +255,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 bw.RunWorkerAsync();
                 
-
+                */
 
                 if (bytesRead > 0)
                  {
@@ -266,12 +313,48 @@ namespace NetworkAndGenericCalculation.Sockets
             return nb3;
         }
 
-        public static void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public static void monitoringBW()
         {
-            //progbar1.Value = 0;
-            //llCurFil.Content = "";
-            //System.Windows.Forms.MessageBox.Show("I'm done!");
-            Console.WriteLine("I'm done!");
+
+            foreach(BackgroundWorker bc in backGroundworkerList)
+            {
+                while (bc.IsBusy)
+                {
+                    //Console.WriteLine("workers are busy");
+                    Thread.Sleep(1000);
+                    monitoringBW();
+                }
+            }
         }
+
+        private static void Send(Socket handler, byte[] chunkToUse)
+        {
+
+            // Begin sending the data to the remote device.
+            handler.BeginSend(chunkToUse, 0, chunkToUse.Length, 0,
+                new AsyncCallback(SendCallback), handler);
+        }
+
+        private static void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.
+                Socket handler = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.
+                int bytesSent = handler.EndSend(ar);
+                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+
+                //handler.Shutdown(SocketShutdown.Both);
+                //handler.Close();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
     }
 }

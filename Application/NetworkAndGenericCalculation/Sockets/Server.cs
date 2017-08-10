@@ -119,11 +119,13 @@ namespace NetworkAndGenericCalculation.Sockets
                 clientSockets.Remove(handler);
                 return;
             }
-            byte[] recBuf = new byte[received];
+
+             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
             SLog("Received Text : " + text);
 
+            /*
             if (text.ToLower() == "get time") // Client requested time
             {
                 SLog("Text is a get time request");
@@ -156,7 +158,7 @@ namespace NetworkAndGenericCalculation.Sockets
             catch (Exception e)
             {
                 Console.WriteLine(e);
-            }
+            }*/
         }
 
         private static void SendCallback(IAsyncResult ar)
