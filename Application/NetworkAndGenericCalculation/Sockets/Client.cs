@@ -344,7 +344,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();

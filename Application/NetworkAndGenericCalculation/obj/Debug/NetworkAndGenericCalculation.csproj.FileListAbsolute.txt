@@ -21,3 +21,4 @@ E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\
 E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\bin\Debug\NetworkAndGenericCalculation.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.dll
 E:\Dev\ProjectC#\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\NetworkAndGenericCalculation\obj\Debug\NetworkAndGenericCalculation.csprojResolveAssemblyReference.cache

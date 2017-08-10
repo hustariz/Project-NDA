@@ -16,6 +16,8 @@ using System.Windows.Forms;
 
 namespace NetworkAndGenericCalculation.Sockets
 {
+
+
     public class Server
     {
 
@@ -95,17 +97,23 @@ namespace NetworkAndGenericCalculation.Sockets
                 return;
             }
             clientSockets.Add(listener);
-            listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
+            StateObject state = new StateObject();
+            state.workSocket = listener;
+            listener.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+           new AsyncCallback(ReceiveCallback), state);
+            //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
             //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, SplitAndSend, listener);
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
-            serverSocket.BeginAccept(AcceptCallback, null);
+            serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
         // Receive the message from the client and do action following the input
         public void ReceiveCallback(IAsyncResult ar)
         {
-            Socket handler = (Socket)ar.AsyncState;
+            StateObject state = (StateObject)ar.AsyncState;
+            Socket handler = state.workSocket;
+
             int received;
             try
             {
@@ -120,7 +128,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 return;
             }
 
-             byte[] recBuf = new byte[received];
+            byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
             SLog("Received Text : " + text);
@@ -196,7 +204,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend()
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
             ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 150, 0);

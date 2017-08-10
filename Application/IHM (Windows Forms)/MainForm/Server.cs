@@ -22,7 +22,7 @@ namespace MainForms
         // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
-            txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
+            this.txt_status_srv.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
 
         public void CreateNodeGrdStatus(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
