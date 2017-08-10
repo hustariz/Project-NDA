@@ -35,6 +35,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private IPAddress ServAddress { get; set; }
         private Node nodeClient { get; set; }
         private static String response = String.Empty;
+        public static List<BackgroundWorker> backGroundworkerList { get; set; }
+
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -78,7 +80,9 @@ namespace NetworkAndGenericCalculation.Sockets
             Log(nodeClient.NetworkAdress);
             Log("Connected");
             Receive(ClientSocket);
-            receiveDone.WaitOne();
+
+           
+           // receiveDone.WaitOne();
         }
 
         private static void Receive(Socket client)
@@ -164,29 +168,46 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 int finalresult = 0;
 
+
+                backGroundworkerList = new List<BackgroundWorker>();
+
+                
+
+                for(int i = 0; i < 4; i++)
+                {
+                    //string track = StringFormat("bw{0}", i)
+
+                    
+                    //BackgroundWorker i = new BackgroundWorker();
+                    //backGroundworkerList.Add(bw2);
+
+                }
+
                 BackgroundWorker bw = new BackgroundWorker()
                 {
                     WorkerSupportsCancellation = true,
                     WorkerReportsProgress = true
-
                 };
+
                 bw.DoWork += (o, a) =>
                 {
                     Console.WriteLine("MABITE");
-                    calculTest(2, 4);
+                    finalresult = calculTest(2, 4);
+                    //finalresult = (int)a.Result;
+                    //Console.WriteLine(finalresult);
                 };
 
-                ;
-
+               
                 bw.RunWorkerCompleted += (o, a) =>
                 {
-                    Console.WriteLine("MABITE2");
+                    
+                    Console.WriteLine(finalresult);
                 };
 
                 //bw.RunWorkerCompleted += worker_RunWorkerCompleted;
 
                 bw.RunWorkerAsync();
-
+                
 
 
                 if (bytesRead > 0)
