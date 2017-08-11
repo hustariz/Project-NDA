@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace NetworkAndGenericCalculation.Sockets
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.
-        public const int BufferSize = 2048;
+        public const int BufferSize = 5;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         // Received data string.
@@ -37,6 +38,15 @@ namespace NetworkAndGenericCalculation.Sockets
         private static String response = String.Empty;
         public static List<BackgroundWorker> backGroundworkerList { get; set; }
 
+        private int nbBGW;
+        public int NbBGW
+        {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            get { return nbBGW; }
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set { nbBGW = value; }
+        }
+
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -52,7 +62,7 @@ namespace NetworkAndGenericCalculation.Sockets
            
             ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Logger = logger;
-            BUFFER_SIZE = 2048;
+            BUFFER_SIZE = 5;
             Buffer = new byte[BUFFER_SIZE];
             Attempts = 0;
         }
@@ -159,7 +169,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 // from the asynchronous state object.
                 StateObject state = (StateObject)ar.AsyncState;
                 Socket client = state.workSocket;
-
+                //processInput(state);
                 //Socket client = (Socket)ar.AsyncState;
 
                 // Read data from the remote device.
@@ -171,12 +181,8 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 backGroundworkerList = new List<BackgroundWorker>();
 
-                
-
                 for(int i = 0; i < 4; i++)
                 {
-                    //string track = StringFormat("bw{0}", i)
-
                     
                     BackgroundWorker bw2 = new BackgroundWorker()
                     {
@@ -194,13 +200,15 @@ namespace NetworkAndGenericCalculation.Sockets
                     {
                         //Console.WriteLine("MABITE");
                         Thread.Sleep(1000);
-                        finalresult = calculTest(2, 4);
-
+                        //finalresult = calculTest(2, 4);
+                        a.Result = calculTest(2, 4);
+                        //Console.WriteLine();
                     };
 
                     bc.RunWorkerCompleted += (o, a) =>
                     {
-                        Console.WriteLine(finalresult);
+                        int moncul =  (int)a.Result;
+                        Console.WriteLine(moncul);
                     };
 
                     bc.RunWorkerAsync();
@@ -222,7 +230,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 bcChecker.RunWorkerCompleted += (o, a) =>
                 {
                     var data = new byte[bytesRead];
-                    byte[] buffer = Encoding.ASCII.GetBytes("caca");
+                    byte[] buffer = Encoding.ASCII.GetBytes("inominepatre et filie es spiritus sancti");
                     Send(ClientSocket, buffer);
                     Console.WriteLine("Tout le monde a fini");
                 };
@@ -288,6 +296,8 @@ namespace NetworkAndGenericCalculation.Sockets
                 Console.WriteLine(e.ToString());
             }
         }
+
+        //public abstract void processInput(StateObject state);
 
         // Receive and convert data into a string to print it
         public void ReceiveResponse()

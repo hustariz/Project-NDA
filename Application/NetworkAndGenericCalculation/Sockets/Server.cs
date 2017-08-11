@@ -108,6 +108,8 @@ namespace NetworkAndGenericCalculation.Sockets
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult ar)
         {
+            // Signal the main thread to continue.
+            //allDone.Set();
 
             Socket listener = (Socket)ar.AsyncState;
             try
@@ -150,11 +152,12 @@ namespace NetworkAndGenericCalculation.Sockets
                     // There might be more data, so store the data received so far.
                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, received));
                     Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, received));
-
+                   Receive(handler);
+                    //receiveDone.Set();
                     // Get the rest of the data.
-                    /*handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                        new AsyncCallback(ReceiveCallback), state);*/
-                    receiveDone.Set();
+                    //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    //    new AsyncCallback(ReceiveCallback), state);
+
                 }
                 else
                 {
@@ -166,8 +169,8 @@ namespace NetworkAndGenericCalculation.Sockets
                     }
                     // Signal that all bytes have been received.
                     //Console.WriteLine("FIN");
-                    
 
+                    receiveDone.Set();
                     //
                 }
             }
@@ -253,7 +256,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend()
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
             ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 150, 0);

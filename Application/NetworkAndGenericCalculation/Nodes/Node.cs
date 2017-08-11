@@ -31,7 +31,6 @@ namespace NetworkAndGenericCalculation.Nodes
         }
 
 
-
         public IList<IWorker> Workers { get; protected set; }
 
         public string NetworkAdress { get; protected set; }
