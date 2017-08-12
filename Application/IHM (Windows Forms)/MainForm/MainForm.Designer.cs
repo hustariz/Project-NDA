@@ -34,6 +34,12 @@ namespace MainForms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.grp_box_data_process = new System.Windows.Forms.GroupBox();
+            this.btn_start_process = new System.Windows.Forms.Button();
+            this.cbb_module_to_process = new System.Windows.Forms.ComboBox();
+            this.lbl_module_to_execute = new System.Windows.Forms.Label();
+            this.txt_file_path = new System.Windows.Forms.TextBox();
+            this.btn_load_genome = new System.Windows.Forms.Button();
             this.nmr_local_thread = new System.Windows.Forms.NumericUpDown();
             this.lbl_local_thread = new System.Windows.Forms.Label();
             this.grd_node_data = new System.Windows.Forms.DataGridView();
@@ -59,20 +65,15 @@ namespace MainForms
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tmr_grid_data_update = new System.Windows.Forms.Timer(this.components);
-            this.grp_box_data_process = new System.Windows.Forms.GroupBox();
-            this.btn_start_process = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.lbl_module_to_execute = new System.Windows.Forms.Label();
-            this.txt_file_path = new System.Windows.Forms.TextBox();
-            this.btn_load_genome = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.grp_box_data_process.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmr_local_thread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.grp_box_data_process.SuspendLayout();
             this.SuspendLayout();
             // 
             // Server
@@ -105,6 +106,63 @@ namespace MainForms
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // grp_box_data_process
+            // 
+            this.grp_box_data_process.Controls.Add(this.btn_start_process);
+            this.grp_box_data_process.Controls.Add(this.cbb_module_to_process);
+            this.grp_box_data_process.Controls.Add(this.lbl_module_to_execute);
+            this.grp_box_data_process.Controls.Add(this.txt_file_path);
+            this.grp_box_data_process.Controls.Add(this.btn_load_genome);
+            this.grp_box_data_process.Location = new System.Drawing.Point(9, 402);
+            this.grp_box_data_process.Name = "grp_box_data_process";
+            this.grp_box_data_process.Size = new System.Drawing.Size(461, 78);
+            this.grp_box_data_process.TabIndex = 19;
+            this.grp_box_data_process.TabStop = false;
+            this.grp_box_data_process.Text = "Input Processing";
+            // 
+            // btn_start_process
+            // 
+            this.btn_start_process.Location = new System.Drawing.Point(342, 19);
+            this.btn_start_process.Name = "btn_start_process";
+            this.btn_start_process.Size = new System.Drawing.Size(119, 48);
+            this.btn_start_process.TabIndex = 28;
+            this.btn_start_process.Text = "Start Processing";
+            this.btn_start_process.UseVisualStyleBackColor = true;
+            // 
+            // cbb_module_to_process
+            // 
+            this.cbb_module_to_process.FormattingEnabled = true;
+            this.cbb_module_to_process.Location = new System.Drawing.Point(110, 46);
+            this.cbb_module_to_process.Name = "cbb_module_to_process";
+            this.cbb_module_to_process.Size = new System.Drawing.Size(226, 21);
+            this.cbb_module_to_process.TabIndex = 27;
+            // 
+            // lbl_module_to_execute
+            // 
+            this.lbl_module_to_execute.AutoSize = true;
+            this.lbl_module_to_execute.Location = new System.Drawing.Point(6, 49);
+            this.lbl_module_to_execute.Name = "lbl_module_to_execute";
+            this.lbl_module_to_execute.Size = new System.Drawing.Size(98, 13);
+            this.lbl_module_to_execute.TabIndex = 26;
+            this.lbl_module_to_execute.Text = "Module to perform :";
+            // 
+            // txt_file_path
+            // 
+            this.txt_file_path.Location = new System.Drawing.Point(110, 18);
+            this.txt_file_path.Name = "txt_file_path";
+            this.txt_file_path.Size = new System.Drawing.Size(226, 20);
+            this.txt_file_path.TabIndex = 25;
+            // 
+            // btn_load_genome
+            // 
+            this.btn_load_genome.Location = new System.Drawing.Point(6, 16);
+            this.btn_load_genome.Name = "btn_load_genome";
+            this.btn_load_genome.Size = new System.Drawing.Size(98, 23);
+            this.btn_load_genome.TabIndex = 24;
+            this.btn_load_genome.Text = "Load Genome";
+            this.btn_load_genome.UseVisualStyleBackColor = true;
+            this.btn_load_genome.Click += new System.EventHandler(this.btn_load_genome_Click);
             // 
             // nmr_local_thread
             // 
@@ -363,61 +421,9 @@ namespace MainForms
             this.tmr_grid_data_update.Interval = 1000;
             this.tmr_grid_data_update.Tick += new System.EventHandler(this.tmr_grid_data_update_Tick);
             // 
-            // grp_box_data_process
+            // openFileDialog1
             // 
-            this.grp_box_data_process.Controls.Add(this.btn_start_process);
-            this.grp_box_data_process.Controls.Add(this.comboBox1);
-            this.grp_box_data_process.Controls.Add(this.lbl_module_to_execute);
-            this.grp_box_data_process.Controls.Add(this.txt_file_path);
-            this.grp_box_data_process.Controls.Add(this.btn_load_genome);
-            this.grp_box_data_process.Location = new System.Drawing.Point(9, 402);
-            this.grp_box_data_process.Name = "grp_box_data_process";
-            this.grp_box_data_process.Size = new System.Drawing.Size(461, 78);
-            this.grp_box_data_process.TabIndex = 19;
-            this.grp_box_data_process.TabStop = false;
-            this.grp_box_data_process.Text = "Input Processing";
-            // 
-            // btn_start_process
-            // 
-            this.btn_start_process.Location = new System.Drawing.Point(107, 51);
-            this.btn_start_process.Name = "btn_start_process";
-            this.btn_start_process.Size = new System.Drawing.Size(220, 23);
-            this.btn_start_process.TabIndex = 28;
-            this.btn_start_process.Text = "Start Processing";
-            this.btn_start_process.UseVisualStyleBackColor = true;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(333, 18);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(122, 21);
-            this.comboBox1.TabIndex = 27;
-            // 
-            // lbl_module_to_execute
-            // 
-            this.lbl_module_to_execute.AutoSize = true;
-            this.lbl_module_to_execute.Location = new System.Drawing.Point(279, 21);
-            this.lbl_module_to_execute.Name = "lbl_module_to_execute";
-            this.lbl_module_to_execute.Size = new System.Drawing.Size(48, 13);
-            this.lbl_module_to_execute.TabIndex = 26;
-            this.lbl_module_to_execute.Text = "Module :";
-            // 
-            // txt_file_path
-            // 
-            this.txt_file_path.Location = new System.Drawing.Point(112, 18);
-            this.txt_file_path.Name = "txt_file_path";
-            this.txt_file_path.Size = new System.Drawing.Size(150, 20);
-            this.txt_file_path.TabIndex = 25;
-            // 
-            // btn_load_genome
-            // 
-            this.btn_load_genome.Location = new System.Drawing.Point(6, 16);
-            this.btn_load_genome.Name = "btn_load_genome";
-            this.btn_load_genome.Size = new System.Drawing.Size(100, 23);
-            this.btn_load_genome.TabIndex = 24;
-            this.btn_load_genome.Text = "Load Genome";
-            this.btn_load_genome.UseVisualStyleBackColor = true;
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // MainForm
             // 
@@ -433,14 +439,14 @@ namespace MainForms
             this.Server.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.grp_box_data_process.ResumeLayout(false);
+            this.grp_box_data_process.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmr_local_thread)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.grp_box_data_process.ResumeLayout(false);
-            this.grp_box_data_process.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -477,10 +483,11 @@ namespace MainForms
         private System.Windows.Forms.Label lbl_local_thread;
         private System.Windows.Forms.GroupBox grp_box_data_process;
         private System.Windows.Forms.Button btn_start_process;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cbb_module_to_process;
         private System.Windows.Forms.Label lbl_module_to_execute;
         private System.Windows.Forms.TextBox txt_file_path;
         private System.Windows.Forms.Button btn_load_genome;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

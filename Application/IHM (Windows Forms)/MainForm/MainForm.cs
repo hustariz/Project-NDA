@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using MainForms;
 using System.Threading;
 using NetworkAndGenericCalculation.Sockets;
+using System.IO;
 
 namespace MainForms
 {
@@ -22,6 +23,8 @@ namespace MainForms
         private Server server;
         private Client client;
         private String ipServer, ipClient;
+        private List <String> modules;
+
 
         public MainForm()
         {
@@ -48,7 +51,18 @@ namespace MainForms
             client = new Client(this.CLog);
             clientController = new ClientController(this, client);
 
+            //Initialisation of the combobox
+            modules = new List<string>();
+            modules.Add("1. Quantitative analysis");
+            modules.Add("2. Genomic Sequence Search");
+            modules.Add("3. Gene Search");
 
+            foreach (String module in modules)
+            {
+                cbb_module_to_process.Items.Add(module);
+            }
+
+            //Fill the grid with the determined column's name
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
             grd_node_data.Columns.Add("nodeState", "State");
             grd_node_data.Columns.Add("nodeWorkersNumber", "Worker(s)");
@@ -77,6 +91,24 @@ namespace MainForms
             servController = controller;
         }
 
+        private void btn_load_genome_Click(object sender, EventArgs e)
+        {
+            int size = -1;
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string file = openFileDialog1.FileName;
+                txt_file_path.Text = file;
+                try
+                {
+                    string text = File.ReadAllText(file);
+                    size = text.Length;
+                }
+                catch (IOException)
+                {
+                }
+            }
+        }
 
         public void SetClientController(ClientController controller)
         {
