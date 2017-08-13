@@ -119,11 +119,16 @@ namespace NetworkAndGenericCalculation.Sockets
             try
             {
                 listener = serverSocket.EndAccept(ar);
+                
             }
             catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
             {
                 return;
             }
+            IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
+            Console.WriteLine("toto");
+            
+
             clientSockets.Add(listener);
             StateObject state = new StateObject();
             state.workSocket = listener;
@@ -257,7 +262,7 @@ namespace NetworkAndGenericCalculation.Sockets
             ServLogger?.Invoke(msg);
         }
 
-        public void SplitAndSend()
+        public void SplitAndSend(String method)
         {
             FileSplitter moncul = new FileSplitter();
             String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
@@ -265,8 +270,14 @@ namespace NetworkAndGenericCalculation.Sockets
             //ChunkSplit chunkToUse = new ChunkSplit();
             ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 150, 0);
 
+            DataInput dataI = new DataInput()
+            {
+                Method = method,
+                Data = chunkToUse
+                //NodeGUID = NodeGUID
+            };
 
-            Send(clientSockets[0], chunkToUse);
+            //Send(clientSockets[0], chunkToUse);
             sendDone.WaitOne();
             //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
 
@@ -285,12 +296,24 @@ namespace NetworkAndGenericCalculation.Sockets
 
         }
 
-        private static void Send(Socket handler, ChunkSplit chunkToUse)
+        private static void Send(Socket client, DataInput obj)
         {
 
-            // Begin sending the data to the remote device.
-            handler.BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, 0,
-                new AsyncCallback(SendCallback), handler);
+            byte[] data = Format.Serialize(obj);
+
+            try
+            {
+                Console.WriteLine("Send data : " + obj + " to : " + client);
+                client.BeginSend(data, 0, data.Length, 0,
+                    new AsyncCallback(SendCallback), client);
+            }
+            catch (SocketException ex)
+            {
+                /// Client Down ///
+                if (!client.Connected)
+                    Console.WriteLine("Client " + client.RemoteEndPoint.ToString() + " Disconnected");
+                Console.WriteLine(ex.ToString());
+            }
         }
 
 

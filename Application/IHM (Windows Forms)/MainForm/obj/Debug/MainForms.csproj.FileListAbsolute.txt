@@ -20,17 +20,9 @@ C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\o
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csprojResolveAssemblyReference.cache
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.MainForm.resources
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
@@ -42,3 +34,7 @@ E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csprojResolveAssemblyReference.cache
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.MainForm.resources
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache

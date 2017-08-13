@@ -31,5 +31,11 @@ namespace GenomicTreatment
             
             //= new Tuple<String, IReducer>("toto",);
         }
+
+        private List<Tuple<char, int>> Methodprocess()
+        {
+            List<Tuple<char, int>> toto = new List<Tuple<char, int>>();
+            return toto;
+        }
     }
 }

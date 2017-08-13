@@ -44,7 +44,9 @@
     <Compile Include="Chunk\Chunk.cs" />
     <Compile Include="Chunk\ChunkSplit.cs" />
     <Compile Include="Chunk\ChunkState.cs" />
+    <Compile Include="Chunk\DataInput.cs" />
     <Compile Include="FileTreatment\FileSplitter.cs" />
+    <Compile Include="FileTreatment\Format.cs" />
     <Compile Include="FileTreatment\IDataReader.cs" />
     <Compile Include="MapReduce\KVPair.cs" />
     <Compile Include="MapReduce\Map.cs" />

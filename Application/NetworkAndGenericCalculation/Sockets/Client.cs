@@ -1,4 +1,6 @@
-﻿using NetworkAndGenericCalculation.MapReduce;
+﻿using NetworkAndGenericCalculation.Chunk;
+using NetworkAndGenericCalculation.FileTreatment;
+using NetworkAndGenericCalculation.MapReduce;
 using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
@@ -344,12 +346,24 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        private static void Send(Socket handler, byte[] chunkToUse)
+        private static void Send(Socket handler, DataInput obj)
         {
 
-            // Begin sending the data to the remote device.
-            handler.BeginSend(chunkToUse, 0, chunkToUse.Length, 0,
-                new AsyncCallback(SendCallback), handler);
+            byte[] data = Format.Serialize(obj);
+
+            try
+            {
+                Console.WriteLine("Send data : " + obj + " to : " + handler);
+                handler.BeginSend(data, 0, data.Length, 0,
+                    new AsyncCallback(SendCallback), handler);
+            }
+            catch (SocketException ex)
+            {
+                /// Client Down ///
+                if (!handler.Connected)
+                    Console.WriteLine("Client " + handler.RemoteEndPoint.ToString() + " Disconnected");
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private static void SendCallback(IAsyncResult ar)
