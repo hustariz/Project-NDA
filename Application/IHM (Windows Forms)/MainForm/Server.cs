@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -63,6 +64,26 @@ namespace MainForms
         {
             servController.updateNodeGridData();            
         }
+
+        private void btn_load_genome_Click(object sender, EventArgs e)
+        {
+            int size = -1;
+            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+            if (result == DialogResult.OK) // Test result.
+            {
+                string file = openFileDialog1.FileName;
+                txt_file_path.Text = file;
+                try
+                {
+                    string text = File.ReadAllText(file);
+                    size = text.Length;
+                }
+                catch (IOException)
+                {
+                }
+            }
+        }
+
 
         // Server's button event handlers
         private void btn_start_srv_Click(object sender, EventArgs e)

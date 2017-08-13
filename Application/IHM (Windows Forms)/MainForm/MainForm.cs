@@ -91,25 +91,6 @@ namespace MainForms
             servController = controller;
         }
 
-        private void btn_load_genome_Click(object sender, EventArgs e)
-        {
-            int size = -1;
-            DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
-            if (result == DialogResult.OK) // Test result.
-            {
-                string file = openFileDialog1.FileName;
-                txt_file_path.Text = file;
-                try
-                {
-                    string text = File.ReadAllText(file);
-                    size = text.Length;
-                }
-                catch (IOException)
-                {
-                }
-            }
-        }
-
         public void SetClientController(ClientController controller)
         {
             clientController = controller;
