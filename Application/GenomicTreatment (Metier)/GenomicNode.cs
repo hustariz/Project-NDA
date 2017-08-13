@@ -9,26 +9,19 @@ namespace GenomicTreatment
 {
    /* public class GenomicNode : Client
     {
+        public GenomicNode(Action<string> logger) : base(logger)
+        {
+        }
+
         public override void processInput(StateObject state)
         {
 
-            switch (state)
-            {
-                case:
 
 
-
-            }
+            
         }
 
-        public void Module1DoWork()
-        {
 
-        }
-
-        public void Module1DoWork()
-        {
-
-        }
+   
     }*/
 }
