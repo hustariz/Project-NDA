@@ -40,6 +40,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node nodeClient { get; set; }
         private static String response = String.Empty;
         public static List<BackgroundWorker> backGroundworkerList { get; set; }
+        private static List<Byte[]> toto { get; set; }
         //public static StateObject state { get; set; }
 
         private int nbBGW;
@@ -169,143 +170,179 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             try
             {
-                // Retrieve the state object and the client socket 
-                // from the asynchronous state object.
                 StateObject state = (StateObject)ar.AsyncState;
                 Socket client = state.workSocket;
-                //processInput(state);
-                //Socket client = (Socket)ar.AsyncState;
-
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
-
-                //processInput();
-
-                int finalresult = 0;
-
-                byte[] coucou = new byte[bytesRead];
-
-                ProcessInput(coucou);
-
-                backGroundworkerList = new List<BackgroundWorker>();
-
-                for(int i = 0; i < 4; i++)
+                Console.WriteLine("Number of bytes received : " + bytesRead);
+                toto = new List<byte[]>();
+                if (bytesRead == 4096)
                 {
+                    byte[] coucou = new byte[bytesRead];
+                    toto.Add(coucou);
+                }
+                else
+                {
+                    DataInput input;
+                    if (toto.Count > 0)
+                    {
+                        byte[] data = toto
+                                     .SelectMany(a => a)
+                                     .ToArray();
+                        input = Format.Deserialize<DataInput>(data);
+                    }
+                    else
+                    {
+                        input = Format.Deserialize<DataInput>(new byte[bytesRead]);
+                    }
+                    Object result = ProcessInput(input);
                     
-                    BackgroundWorker bw2 = new BackgroundWorker()
-                    {
-                        WorkerSupportsCancellation = true,
-                        WorkerReportsProgress = true
-                    };
-                    backGroundworkerList.Add(bw2);
-
                 }
-
-
-                foreach(BackgroundWorker bc in backGroundworkerList)
-                {
-                    bc.DoWork += (o, a) =>
-                    {
-                        //Console.WriteLine("MABITE");
-                        Thread.Sleep(1000);
-                        //finalresult = calculTest(2, 4);
-                        a.Result = calculTest(2, 4);
-                        //Console.WriteLine();
-                    };
-
-                    bc.RunWorkerCompleted += (o, a) =>
-                    {
-                        int moncul =  (int)a.Result;
-                        Console.WriteLine(moncul);
-                    };
-
-                    bc.RunWorkerAsync();
-                }
-
-                BackgroundWorker bcChecker = new BackgroundWorker()
-                {
-                    WorkerSupportsCancellation = true,
-                    WorkerReportsProgress = true
-                };
-
-                bcChecker.DoWork += (o, a) =>
-                {
-                    //Console.WriteLine("MABITE");
-                    monitoringBW();
-
-                };
-
-                bcChecker.RunWorkerCompleted += (o, a) =>
-                {
-                    var data = new byte[bytesRead];
-                    byte[] buffer = Encoding.ASCII.GetBytes("inominepatre et filie es spiritus sancti");
-                    Send(ClientSocket, buffer);
-                    Console.WriteLine("Tout le monde a fini");
-                };
-
-                
-                bcChecker.RunWorkerAsync();
-
-                /*
-                BackgroundWorker bw = new BackgroundWorker()
-                {
-                    WorkerSupportsCancellation = true,
-                    WorkerReportsProgress = true
-                };
-
-                bw.DoWork += (o, a) =>
-                {
-                    Console.WriteLine("MABITE");
-                    finalresult = calculTest(2, 4);
-                    //finalresult = (int)a.Result;
-                    //Console.WriteLine(finalresult);
-                };
-
-               
-                bw.RunWorkerCompleted += (o, a) =>
-                {
-                    
-                    Console.WriteLine(finalresult);
-                };
-
-                //bw.RunWorkerCompleted += worker_RunWorkerCompleted;
-
-                bw.RunWorkerAsync();
-                
-                */
-
-                if (bytesRead > 0)
-                 {
-                     // There might be more data, so store the data received so far.
-                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                     Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                     // Get the rest of the data.
-                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                         new AsyncCallback(ReceiveCallback), state);
-                 }
-                 else
-                 {
-                     // All the data has arrived; put it in response.
-                     if (state.sb.Length > 1)
-                     {
-                        
-                        response = state.sb.ToString();
-                     }
-                    // Signal that all bytes have been received.
-                    //Console.WriteLine("FIN");
-                    receiveDone.Set();
-
-                    //
-                }
-
+                Receive(client);
             }
-            catch (Exception e)
+            catch (SocketException e)
             {
                 Console.WriteLine(e.ToString());
             }
+            //try
+            //{
+            /*// Retrieve the state object and the client socket 
+            // from the asynchronous state object.
+            StateObject state = (StateObject)ar.AsyncState;
+            Socket client = state.workSocket;
+            //processInput(state);
+            //Socket client = (Socket)ar.AsyncState;
+
+            // Read data from the remote device.
+            int bytesRead = client.EndReceive(ar);
+
+            //processInput();
+
+            int finalresult = 0;
+
+            byte[] coucou = new byte[bytesRead];
+
+            ProcessInput(coucou);
+
+            backGroundworkerList = new List<BackgroundWorker>();
+
+            for(int i = 0; i < 4; i++)
+            {
+
+                BackgroundWorker bw2 = new BackgroundWorker()
+                {
+                    WorkerSupportsCancellation = true,
+                    WorkerReportsProgress = true
+                };
+                backGroundworkerList.Add(bw2);
+
+            }
+
+
+            foreach(BackgroundWorker bc in backGroundworkerList)
+            {
+                bc.DoWork += (o, a) =>
+                {
+                    //Console.WriteLine("MABITE");
+                    Thread.Sleep(1000);
+                    //finalresult = calculTest(2, 4);
+                    a.Result = calculTest(2, 4);
+                    //Console.WriteLine();
+                };
+
+                bc.RunWorkerCompleted += (o, a) =>
+                {
+                    int moncul =  (int)a.Result;
+                    Console.WriteLine(moncul);
+                };
+
+                bc.RunWorkerAsync();
+            }
+
+            BackgroundWorker bcChecker = new BackgroundWorker()
+            {
+                WorkerSupportsCancellation = true,
+                WorkerReportsProgress = true
+            };
+
+            bcChecker.DoWork += (o, a) =>
+            {
+                //Console.WriteLine("MABITE");
+                monitoringBW();
+
+            };
+
+            bcChecker.RunWorkerCompleted += (o, a) =>
+            {
+                var data = new byte[bytesRead];
+                byte[] buffer = Encoding.ASCII.GetBytes("inominepatre et filie es spiritus sancti");
+               // Send(ClientSocket, buffer);
+                Console.WriteLine("Tout le monde a fini");
+            };
+
+
+            bcChecker.RunWorkerAsync();
+
+            /*
+            BackgroundWorker bw = new BackgroundWorker()
+            {
+                WorkerSupportsCancellation = true,
+                WorkerReportsProgress = true
+            };
+
+            bw.DoWork += (o, a) =>
+            {
+                Console.WriteLine("MABITE");
+                finalresult = calculTest(2, 4);
+                //finalresult = (int)a.Result;
+                //Console.WriteLine(finalresult);
+            };
+
+
+            bw.RunWorkerCompleted += (o, a) =>
+            {
+
+                Console.WriteLine(finalresult);
+            };
+
+            //bw.RunWorkerCompleted += worker_RunWorkerCompleted;
+
+            bw.RunWorkerAsync();
+
+            */
+
+            /*if (bytesRead > 0)
+             {
+                 // There might be more data, so store the data received so far.
+                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                 Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                 // Get the rest of the data.
+                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                     new AsyncCallback(ReceiveCallback), state);
+             }
+             else
+             {
+                 // All the data has arrived; put it in response.
+                 if (state.sb.Length > 1)
+                 {
+
+                    response = state.sb.ToString();
+                 }
+                // Signal that all bytes have been received.
+                //Console.WriteLine("FIN");
+                receiveDone.Set();
+
+                //
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }*/
         }
 
-        public abstract void ProcessInput(byte[] coucou);
+        public abstract Object ProcessInput(Object coucou);
 
         // Receive and convert data into a string to print it
         public void ReceiveResponse()
@@ -391,7 +428,7 @@ namespace NetworkAndGenericCalculation.Sockets
         {
 
             Tuple<Object,Reduce> reduded = (Tuple<Object,Reduce>)e.Result;
-            reduded.Item2.reduce(reduded.Item1);
+            //reduded.Item2.reduce(reduded.Item1);
         }
 
     }

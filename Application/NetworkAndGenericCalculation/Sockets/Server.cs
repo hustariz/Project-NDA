@@ -18,14 +18,14 @@ namespace NetworkAndGenericCalculation.Sockets
 {
 
 
-    public class Server<T>
+    public class Server
     {
 
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
         private static List<Node> nodeConnected { get; set; }
-        private static List<T> clientConnected { get; set; }
+        //private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
         private Action<string> ServLogger { get; set; }
@@ -33,6 +33,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private int LocalPort { get; set; }
         private IPAddress LocalAddress { get; set; }
         private static String response = String.Empty;
+        private static List<String> ipListe { get; set; }
+        private List<Tuple<List<int>, Node>> Nodes;
 
         private Node localnode { get; set; }
 
@@ -125,9 +127,10 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 return;
             }
-            IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
-            Console.WriteLine("toto");
             
+            IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
+            //String ipAddress = remoteIpEndPoint.Address;
+            //ipListe.Add(ipAddress);
 
             clientSockets.Add(listener);
             StateObject state = new StateObject();
@@ -265,19 +268,26 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend(String method)
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
             ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 150, 0);
 
             DataInput dataI = new DataInput()
             {
+                TaskId = 1,
+                SubTaskId = 2,
                 Method = method,
-                Data = chunkToUse
-                //NodeGUID = NodeGUID
+                Data = chunkToUse,
+                NodeGUID = "192.168.31.26"
             };
+            
+            foreach(Socket clientSocket in clientSockets)
+            {
 
-            //Send(clientSockets[0], chunkToUse);
+                Send(clientSockets[0], dataI);
+            }
+            
             sendDone.WaitOne();
             //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
 

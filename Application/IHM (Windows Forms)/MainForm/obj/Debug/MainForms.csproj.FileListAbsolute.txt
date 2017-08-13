@@ -20,9 +20,6 @@ C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\o
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
 C:\Users\Porridge\Desktop\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
-C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
@@ -38,3 +35,13 @@ C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\Ma
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.MainForm.resources
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll.config
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb

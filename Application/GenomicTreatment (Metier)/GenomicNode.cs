@@ -16,7 +16,7 @@ namespace GenomicTreatment
         }
 
 
-        public override void ProcessInput(Byte[] coucou)
+        public override Object ProcessInput(Object coucou)
         {
             throw new NotImplementedException();
         }

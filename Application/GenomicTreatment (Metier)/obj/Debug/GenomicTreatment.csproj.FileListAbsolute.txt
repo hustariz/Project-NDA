@@ -7,3 +7,10 @@ E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\Gen
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csprojResolveAssemblyReference.cache
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.Properties.Resources.resources
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csproj.GenerateResource.Cache
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.dll.config
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.dll
+C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.pdb

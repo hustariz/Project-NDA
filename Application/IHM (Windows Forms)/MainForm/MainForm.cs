@@ -80,7 +80,7 @@ namespace MainForms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            server.SplitAndSend();
+            server.SplitAndSend("toto");
         }
 
         public void SetClientController(ClientController controller)

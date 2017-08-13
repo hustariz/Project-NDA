@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetworkAndGenericCalculation.Chunk
 {
+    [Serializable]
     public class DataInput
     {
         //public String ClientGUID;
@@ -17,7 +18,7 @@ namespace NetworkAndGenericCalculation.Chunk
 
         public override string ToString()
         {
-            return "Data -> Method : " + Method + " ClientGuid : " + ClientGUID + " NodeGuid : " + NodeGUID + " TaskId  : " + TaskId + " Data : " + Data;
+            return "Data -> Method : " + Method  + " NodeGuid : " + NodeGUID + " TaskId  : " + TaskId + " Data : " + Data;
         }
     }
 }
