@@ -18,13 +18,14 @@ namespace NetworkAndGenericCalculation.Sockets
 {
 
 
-    public class Server
+    public class Server<T>
     {
 
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
         private static List<Node> nodeConnected { get; set; }
+        private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
         private Action<string> ServLogger { get; set; }
@@ -112,6 +113,9 @@ namespace NetworkAndGenericCalculation.Sockets
             //allDone.Set();
 
             Socket listener = (Socket)ar.AsyncState;
+
+           
+
             try
             {
                 listener = serverSocket.EndAccept(ar);
@@ -269,8 +273,6 @@ namespace NetworkAndGenericCalculation.Sockets
             // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
 
 
-
-
             // Serveur envoyer la méthode / Texte
             // Thread
             // Si node available
@@ -290,6 +292,9 @@ namespace NetworkAndGenericCalculation.Sockets
             handler.BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, 0,
                 new AsyncCallback(SendCallback), handler);
         }
+
+
+
 
     }
 }

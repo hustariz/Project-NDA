@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using MainForms;
 using System.Threading;
 using NetworkAndGenericCalculation.Sockets;
+using GenomicTreatment;
 
 namespace MainForms
 {
@@ -45,7 +46,7 @@ namespace MainForms
 
             server = new Server(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
             servController = new ServController(this, server);
-            client = new Client(this.CLog);
+            client = new GenomicNode(this.CLog);
             clientController = new ClientController(this, client);
 
 

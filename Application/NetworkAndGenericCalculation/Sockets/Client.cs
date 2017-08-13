@@ -1,4 +1,5 @@
-﻿using NetworkAndGenericCalculation.Nodes;
+﻿using NetworkAndGenericCalculation.MapReduce;
+using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +26,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public StringBuilder sb = new StringBuilder();
     }
 
-    public class Client
+    public abstract class Client
     {
         private static Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -37,6 +38,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node nodeClient { get; set; }
         private static String response = String.Empty;
         public static List<BackgroundWorker> backGroundworkerList { get; set; }
+        //public static StateObject state { get; set; }
 
         private int nbBGW;
         public int NbBGW
@@ -95,7 +97,7 @@ namespace NetworkAndGenericCalculation.Sockets
            // receiveDone.WaitOne();
         }
 
-        private static void Receive(Socket client)
+        private void Receive(Socket client)
         {
             try
             {
@@ -144,7 +146,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
 
 
-        public static void AcceptCallback(IAsyncResult ar)
+        public void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
             allDone.Set();
@@ -161,7 +163,7 @@ namespace NetworkAndGenericCalculation.Sockets
         }
 
 
-        private static void ReceiveCallback(IAsyncResult ar)
+        private void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
@@ -174,10 +176,14 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
-            
+
+                //processInput();
 
                 int finalresult = 0;
 
+                byte[] coucou = new byte[bytesRead];
+
+                ProcessInput(coucou);
 
                 backGroundworkerList = new List<BackgroundWorker>();
 
@@ -235,7 +241,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     Console.WriteLine("Tout le monde a fini");
                 };
 
-
+                
                 bcChecker.RunWorkerAsync();
 
                 /*
@@ -297,7 +303,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        //public abstract void processInput(StateObject state);
+        public abstract void ProcessInput(byte[] coucou);
 
         // Receive and convert data into a string to print it
         public void ReceiveResponse()
@@ -365,6 +371,13 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        private void Bw_OnWorkComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            Tuple<Object,Reduce> reduded = (Tuple<Object,Reduce>)e.Result;
+            reduded.Item2.reduce(reduded.Item1);
         }
 
     }

@@ -106,6 +106,10 @@
     <None Include="Resources\Logo_Cesi_Alternance.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GenomicTreatment %28Metier%29\GenomicTreatment.csproj">
+      <Project>{7960BA82-3A89-4407-B86C-DF486209274F}</Project>
+      <Name>GenomicTreatment</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NetworkAndGenericCalculation\NetworkAndGenericCalculation.csproj">
       <Project>{cbd0dc09-eb8f-49c5-85e2-46de04ed18d9}</Project>
       <Name>NetworkAndGenericCalculation</Name>
