@@ -21,7 +21,7 @@ namespace NetworkAndGenericCalculation.Sockets
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.
-        public const int BufferSize = 5;
+        public const int BufferSize = 4096;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         // Received data string.
@@ -174,6 +174,8 @@ namespace NetworkAndGenericCalculation.Sockets
                 Socket client = state.workSocket;
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
+
+
                 Console.WriteLine("Number of bytes received : " + bytesRead);
                 toto = new List<byte[]>();
                 if (bytesRead == 4096)

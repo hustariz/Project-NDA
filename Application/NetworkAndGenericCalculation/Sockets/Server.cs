@@ -268,10 +268,11 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend(String method)
         {
             FileSplitter moncul = new FileSplitter();
-            String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
-            ChunkSplit chunkToUse = moncul.SplitIntoChunks(fileTosend, 150, 0);
+            String chunkToUse = moncul.SplitIntoChunks(fileTosend, 4096, 0);
 
             DataInput dataI = new DataInput()
             {

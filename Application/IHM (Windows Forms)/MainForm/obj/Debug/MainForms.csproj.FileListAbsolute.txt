@@ -45,3 +45,6 @@ C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\Ma
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
 C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.pdb
+E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll.config

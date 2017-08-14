@@ -52,7 +52,7 @@ namespace NetworkAndGenericCalculation.FileTreatment
         }
 
 
-        public ChunkSplit SplitIntoChunks(string text, int chunkSize, int offsets)
+        public String SplitIntoChunks(string text, int chunkSize, int offsets)
         {
 
 
@@ -62,8 +62,9 @@ namespace NetworkAndGenericCalculation.FileTreatment
             int size = Math.Min(chunkSize, text.Length - offset);
             moncul = Encoding.ASCII.GetBytes(text.Substring(offset, size));
             offset += size;
+            String revoie = text.Substring(offset, size);
             ChunkSplit chunkToSend = new ChunkSplit(moncul, offset);
-            return chunkToSend;
+            return revoie;
         }
 
         public List<string> Moncul(string str, int chunks)
