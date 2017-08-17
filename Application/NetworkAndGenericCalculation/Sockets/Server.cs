@@ -23,7 +23,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
-        private static List<Socket> clientSockets { get; set; }
+        private static List<Client> clientSockets { get; set; }
         private static List<Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -50,7 +50,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<string,string, int, int, float, float> gridupdater)
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            clientSockets = new List<Socket>();
+            clientSockets = new List<Client>();
             LocalPort = portNumber;
             LocalAddress = host;
             BUFFER_SIZE = 2048;
@@ -114,13 +114,13 @@ namespace NetworkAndGenericCalculation.Sockets
             // Signal the main thread to continue.
             //allDone.Set();
 
-            Socket listener = (Socket)ar.AsyncState;
+            Client listener = (Client)ar.AsyncState;
 
            
 
             try
             {
-                listener = serverSocket.EndAccept(ar);
+                listener.ClientSocket = serverSocket.EndAccept(ar);
                 
             }
             catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
@@ -128,14 +128,14 @@ namespace NetworkAndGenericCalculation.Sockets
                 return;
             }
             
-            IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
+            IPEndPoint remoteIpEndPoint = listener.ClientSocket.RemoteEndPoint as IPEndPoint;
             //String ipAddress = remoteIpEndPoint.Address;
             //ipListe.Add(ipAddress);
 
             clientSockets.Add(listener);
             StateObject state = new StateObject();
-            state.workSocket = listener;
-            Receive(listener);
+            state.workSocket = listener.ClientSocket;
+            Receive(listener.ClientSocket);
             /*listener.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
            new AsyncCallback(ReceiveCallback), state);*/
             //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
@@ -361,10 +361,14 @@ namespace NetworkAndGenericCalculation.Sockets
                 NodeGUID = "192.168.31.26"
             };
             
-            foreach(Socket clientSocket in clientSockets)
+            foreach(Client clientSocket in clientSockets)
             {
-
-                Send(clientSockets[0], dataI);
+                //voir pour mettre à jour la liste automatiquement
+                if (clientSocket.isAvailable)
+                {
+                    Send(clientSocket.ClientSocket, dataI);
+                }
+                
             }
             
             //sendDone.WaitOne();

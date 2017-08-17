@@ -32,7 +32,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
     public abstract class Client
     {
-        private static Socket ClientSocket { get; set; }
+        public Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] Buffer { get; set; }
         private int Attempts { get; set; }
