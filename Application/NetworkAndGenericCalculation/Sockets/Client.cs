@@ -5,6 +5,7 @@ using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -24,6 +25,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public const int BufferSize = 4096;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
+        public List<byte[]> data = new List<byte[]>();
         // Received data string.
         public StringBuilder sb = new StringBuilder();
     }
@@ -41,6 +43,12 @@ namespace NetworkAndGenericCalculation.Sockets
         private static String response = String.Empty;
         public static List<BackgroundWorker> backGroundworkerList { get; set; }
         private static List<Byte[]> toto { get; set; }
+        public int i = 0;
+        private PerformanceCounter processorCounter;
+        private PerformanceCounter memoryCounter;
+        public bool isAvailable { get; set; }
+        public String NodeID;
+
         //public static StateObject state { get; set; }
 
         private int nbBGW;
@@ -70,6 +78,9 @@ namespace NetworkAndGenericCalculation.Sockets
             BUFFER_SIZE = 5;
             Buffer = new byte[BUFFER_SIZE];
             Attempts = 0;
+            processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
+            
         }
 
         //Open a Socket Connection with a server
@@ -94,6 +105,10 @@ namespace NetworkAndGenericCalculation.Sockets
             }
             Log(nodeClient.NetworkAdress);
             Log("Connected");
+            this.isAvailable = true;
+
+            //Send methods to serveur
+
             Receive(ClientSocket);
 
            
@@ -170,42 +185,69 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             try
             {
+                // Retrieve the state object and the client socket 
+                // from the asynchronous state object.
                 StateObject state = (StateObject)ar.AsyncState;
                 Socket client = state.workSocket;
+
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
 
+                byte[] coucou = new byte[bytesRead];
 
-                Console.WriteLine("Number of bytes received : " + bytesRead);
-                toto = new List<byte[]>();
-                if (bytesRead == 4096)
-                {
-                    byte[] coucou = new byte[bytesRead];
-                    toto.Add(coucou);
-                }
-                else
-                {
-                    DataInput input;
-                    if (toto.Count > 0)
+                //String lala = Encoding.ASCII.GetString(coucou);
+
+                //Console.WriteLine(lala);
+                state.data.Add(state.buffer);
+
+
+                 //input = null;
+                    try
                     {
-                        byte[] data = toto
-                                     .SelectMany(a => a)
-                                     .ToArray();
-                        input = Format.Deserialize<DataInput>(data);
-                    }
-                    else
+                        byte[] data = state.data
+                                         .SelectMany(a => a)
+                                         .ToArray();
+                    DataInput input = Format.Deserialize<DataInput>(data);
+
+                    // Receive après inputmabite
+                    ProcessInput(input);
+
+
+                    /*
+                    DataInput dataI = new DataInput()
                     {
-                        input = Format.Deserialize<DataInput>(new byte[bytesRead]);
+                        TaskId = 1,
+                        SubTaskId = 2,
+                        Method = "loulou",
+                        Data = "TA GUEULE",
+                        NodeGUID = "192.168.31.26"
+                    };*/
+
+                    Receive(client);
+
+                       
                     }
-                    Object result = ProcessInput(input);
-                    
+                    catch(Exception e)
+                    {
+                    //Console.WriteLine(e.ToString());
+                    this.i++;
+                    Console.WriteLine(this.i);
+                    state.data.Add(state.buffer);
+                    //Receive(client);
+                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReceiveCallback), state);
                 }
-                Receive(client);
+
+                //Console.WriteLine("LLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                //Console.WriteLine(input.Method);
+
             }
-            catch (SocketException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
+
+            
             //try
             //{
             /*// Retrieve the state object and the client socket 
@@ -277,8 +319,7 @@ namespace NetworkAndGenericCalculation.Sockets
             bcChecker.RunWorkerCompleted += (o, a) =>
             {
                 var data = new byte[bytesRead];
-                byte[] buffer = Encoding.ASCII.GetBytes("inominepatre et filie es spiritus sancti");
-               // Send(ClientSocket, buffer);
+                
                 Console.WriteLine("Tout le monde a fini");
             };
 
@@ -344,7 +385,9 @@ namespace NetworkAndGenericCalculation.Sockets
         }*/
         }
 
-        public abstract Object ProcessInput(Object coucou);
+        public abstract Object ProcessInput(DataInput coucou);
+
+        public abstract List<String> nodeMethods();
 
         // Receive and convert data into a string to print it
         public void ReceiveResponse()
@@ -405,6 +448,14 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        /*private static void Send(Socket handler, byte[] chunkToUse)
+        {
+
+            // Begin sending the data to the remote device.
+            handler.BeginSend(chunkToUse, 0, chunkToUse.Length, 0,
+                new AsyncCallback(SendCallback), handler);
+        }*/
+
         private static void SendCallback(IAsyncResult ar)
         {
             try
@@ -429,8 +480,18 @@ namespace NetworkAndGenericCalculation.Sockets
         private void Bw_OnWorkComplete(object sender, RunWorkerCompletedEventArgs e)
         {
 
+            //Send(ClientSocket, dataI);
             Tuple<Object,Reduce> reduded = (Tuple<Object,Reduce>)e.Result;
             //reduded.Item2.reduce(reduded.Item1);
+        }
+
+        public float ProcessorUsage => processorCounter.NextValue();
+        public float MemoryUsage => memoryCounter.NextValue();
+
+
+        protected void genGUID()
+        {
+            NodeID = "NODE" + ":" + ServAddress + ":" + ServPort;
         }
 
     }

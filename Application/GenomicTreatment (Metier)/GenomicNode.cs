@@ -1,4 +1,5 @@
-﻿using NetworkAndGenericCalculation.MapReduce;
+﻿using NetworkAndGenericCalculation.Chunk;
+using NetworkAndGenericCalculation.MapReduce;
 using NetworkAndGenericCalculation.Sockets;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,36 @@ namespace GenomicTreatment
         {
         }
 
-
-        public override Object ProcessInput(Object coucou)
+        public override List<string> nodeMethods()
         {
+            throw new NotImplementedException();
+        }
+
+        public override Object ProcessInput(DataInput dateReceived)
+        {
+
+            switch (dateReceived.Method)
+            {
+                case "method1":
+                    // Divisé le fichier 
+
+                    // 
+
+                    BackgroundWorker bc = new BackgroundWorker();
+                    bc.DoWork += backgroundWorker1_DoWork;
+                    bc.RunWorkerAsync("coucou");
+                    break;
+            }
+
             throw new NotImplementedException();
         }
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
             // INT = TaskID
+            String test = (String)e.Argument;
+            Console.WriteLine(test);
+
             Tuple<String, Reduce, int> tuplou = (Tuple<String, Reduce, int>)e.Argument;
             // doit renvoyer une liste de tuple de char/int
             List<Tuple<char, int>> listProccesed =  Methodprocess();

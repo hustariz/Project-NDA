@@ -148,7 +148,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
 
         // Receive the message from the client and do action following the input
-        public void ReceiveCallback(IAsyncResult ar)
+        /*public void ReceiveCallback(IAsyncResult ar)
         {
 
             StateObject state = (StateObject)ar.AsyncState;
@@ -162,8 +162,10 @@ namespace NetworkAndGenericCalculation.Sockets
                 if (received > 0)
                 {
                     // There might be more data, so store the data received so far.
+                    Console.WriteLine("MONCUL");
                     state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, received));
                     Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, received));
+                    
                    Receive(handler);
                     //receiveDone.Set();
                     // Get the rest of the data.
@@ -230,8 +232,74 @@ namespace NetworkAndGenericCalculation.Sockets
             catch (Exception e)
             {
                 Console.WriteLine(e);
-            }*/
+            }
+        }*/
+
+        private void ReceiveCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the state object and the client socket 
+                // from the asynchronous state object.
+                StateObject state = (StateObject)ar.AsyncState;
+                Socket client = state.workSocket;
+
+                // Read data from the remote device.
+                int bytesRead = client.EndReceive(ar);
+
+                byte[] coucou = new byte[bytesRead];
+
+                //String lala = Encoding.ASCII.GetString(coucou);
+
+                //Console.WriteLine(lala);
+                state.data.Add(state.buffer);
+
+                DataInput input = null;
+
+                try
+                {
+                    byte[] data = state.data
+                                     .SelectMany(a => a)
+                                     .ToArray();
+                     input = Format.Deserialize<DataInput>(data);
+                     Console.WriteLine(input.Method);
+                    // Receive après inputmabite
+
+                    Receive(client);
+                }
+                catch (Exception e)
+                {
+                    //Console.WriteLine(e.ToString());
+                    state.data.Add(state.buffer);
+                    client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReceiveCallback), state);
+                }
+
+                ;
+
+                /*DataInput dataI = new DataInput()
+                {
+                    TaskId = 1,
+                    SubTaskId = 2,
+                    Method = "loulou",
+                    Data = "TA GUEULE",
+                    NodeGUID = "192.168.31.26"
+                };
+
+
+
+                Send(ClientSocket, dataI);*/
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+
         }
+
+
 
         private static void SendCallback(IAsyncResult ar)
         {
@@ -289,7 +357,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 Send(clientSockets[0], dataI);
             }
             
-            sendDone.WaitOne();
+            //sendDone.WaitOne();
             //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
 
             // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);

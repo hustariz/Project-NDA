@@ -86,20 +86,14 @@ namespace NetworkAndGenericCalculation.FileTreatment
         public static T Deserialize<T>(byte[] data)
         {
             object obj = null;
-            try
-            {
+
                 byte[] uncompressed = Decompress(data);
                 BinaryFormatter bf = new BinaryFormatter();
                 using (MemoryStream ms = new MemoryStream(uncompressed))
                 {
                     obj = bf.Deserialize(ms);
                 }
-            }
-            catch (SerializationException ex)
-            {
-                Console.WriteLine("Deserialize Error : " + ex);
-            }
-
+    
             return (T)obj;
         }
     }
