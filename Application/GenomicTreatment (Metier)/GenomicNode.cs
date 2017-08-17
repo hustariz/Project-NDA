@@ -18,8 +18,14 @@ namespace GenomicTreatment
 
         public override List<string> nodeMethods()
         {
-            throw new NotImplementedException();
+            List<string> methodList = new List<string>();
+            methodList.Add("CountOccurence");
+            methodList.Add("CountBasePairs");
+
+            return methodList;
+          
         }
+
 
         public override Object ProcessInput(DataInput dateReceived)
         {

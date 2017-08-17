@@ -266,6 +266,16 @@ namespace NetworkAndGenericCalculation.Sockets
                     // Receive après inputmabite
 
                     Receive(client);
+
+                    if(input.Method == "MethodLIST")
+                    {
+                        //A mettre dans la combobox
+                        List<String> methodReceive = (List<string>)input.Data;
+                        foreach(String method in methodReceive)
+                        {
+                            Console.WriteLine(method);
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -275,7 +285,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     new AsyncCallback(ReceiveCallback), state);
                 }
 
-                ;
+                
 
                 /*DataInput dataI = new DataInput()
                 {

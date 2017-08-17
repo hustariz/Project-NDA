@@ -80,6 +80,7 @@ namespace NetworkAndGenericCalculation.Sockets
             Attempts = 0;
             processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
+            //Ajouter le NodeId
             
         }
 
@@ -108,9 +109,16 @@ namespace NetworkAndGenericCalculation.Sockets
             this.isAvailable = true;
 
             //Send methods to serveur
-
+            List<string> methodList = nodeMethods();
+            DataInput dataI = new DataInput()
+            {
+                Method = "MethodLIST",
+                Data = methodList,
+                NodeGUID = "Récupérer le nodeGUID"
+            };
+            Send(ClientSocket, dataI);
             Receive(ClientSocket);
-
+            
            
            // receiveDone.WaitOne();
         }
