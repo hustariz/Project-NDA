@@ -20,9 +20,18 @@ namespace NetworkAndGenericCalculation.Nodes
             throw new NotImplementedException();
         }
 
-        public override object ProcessInput(DataInput coucou)
+        public override object ProcessInput(DataInput dataI)
         {
-            throw new NotImplementedException();
+            switch (dataI.Method)
+            {
+                case "IdentNode":
+                    NodeID = (String)dataI.Data;
+                    break;
+            }
+
+
+
+            return null;
         }
     }
 }

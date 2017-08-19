@@ -16,6 +16,10 @@ namespace GenomicTreatment
         {
         }
 
+        /// <summary>
+        /// Liste des méthodes de calculs génomiques
+        /// </summary>
+        /// <returns></returns>
         public override List<string> nodeMethods()
         {
             List<string> methodList = new List<string>();
@@ -30,7 +34,7 @@ namespace GenomicTreatment
         public new Object ProcessInput(DataInput dateReceived)
         {
 
-            base.ProcessInput(dateReceived);
+            ProcessInput(dateReceived);
             switch (dateReceived.Method)
             {
                 case "method1":
@@ -46,6 +50,7 @@ namespace GenomicTreatment
 
             throw new NotImplementedException();
         }
+
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {

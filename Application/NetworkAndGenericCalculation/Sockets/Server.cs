@@ -18,7 +18,9 @@ using System.Windows.Forms;
 namespace NetworkAndGenericCalculation.Sockets
 {
 
-
+    /// <summary>
+    /// Orchestrateur
+    /// </summary>
     public class Server
     {
 
@@ -76,7 +78,10 @@ namespace NetworkAndGenericCalculation.Sockets
             
 
         }
-
+        /// <summary>
+        /// Fonction permettant de recevoir les données du Client Socket passé en paramètre
+        /// </summary>
+        /// <param name="client"></param>
         private void Receive(Socket client)
         {
             try
@@ -150,7 +155,7 @@ namespace NetworkAndGenericCalculation.Sockets
             nodesConnected.Add(nodeConnected);
 
             
-
+            //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
             DataInput dataI = new DataInput()
               {
                   TaskId = 1,
@@ -177,27 +182,25 @@ namespace NetworkAndGenericCalculation.Sockets
                 StateObject state = (StateObject)ar.AsyncState;
                 Socket client = state.workSocket;
 
-                // Read data from the remote device.
-                int bytesRead = client.EndReceive(ar);
-
-                byte[] coucou = new byte[bytesRead];
-
-           
+                //On ajoute le buffer récupéré à la liste
                 state.data.Add(state.buffer);
 
                 DataInput input = null;
 
                 try
                 {
+                    //On désérialise la data
                     byte[] data = state.data
                                      .SelectMany(a => a)
                                      .ToArray();
                      input = Format.Deserialize<DataInput>(data);
+
+                    //TODO : remove
                      Console.WriteLine(input.Method);
-                    // Receive après inputmabite
 
                     Receive(client);
 
+                    //On récupère la méthod liste pour remplir la combobox du serveur
                     if(input.Method == "MethodLIST")
                     {
                         //A mettre dans la combobox
@@ -210,8 +213,9 @@ namespace NetworkAndGenericCalculation.Sockets
                 }
                 catch (Exception e)
                 {
-                    //Console.WriteLine(e.ToString());
+                    // TODO : Nécessaire ?
                     state.data.Add(state.buffer);
+                    //Le ReceiveCallback est rappelé si rien n'a été récupéré plus tôt
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
@@ -225,7 +229,10 @@ namespace NetworkAndGenericCalculation.Sockets
         }
 
 
-
+        /// <summary>
+        /// Fonction Async permettant d'envoyer des données aux Nodes connectés
+        /// </summary>
+        /// <param name="ar"></param>
         private static void SendCallback(IAsyncResult ar)
         {
             try
@@ -260,13 +267,15 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public void SplitAndSend(String method)
         {
-            FileSplitter moncul = new FileSplitter();
-            //String fileTosend = moncul.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
-            String fileTosend = moncul.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            FileSplitter fileSplitted = new FileSplitter();
+            String fileTosend = fileSplitted.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            // TODO : remplacer par le choix fait dans la combobox du Serveur
+            //String fileTosend = fileSplitted.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
-            String chunkToUse = moncul.SplitIntoChunks(fileTosend, 4096, 0);
+            String chunkToUse = fileSplitted.SplitIntoChunks(fileTosend, 4096, 0);
 
+            //Création d'un nouveau DataInput à envoyer aux Nodes
             DataInput dataI = new DataInput()
             {
                 TaskId = 1,

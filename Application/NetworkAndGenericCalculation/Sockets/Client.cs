@@ -408,7 +408,7 @@ namespace NetworkAndGenericCalculation.Sockets
         }*/
         }
 
-        public Object ProcessInput(DataInput dataI) {
+        /*public Object ProcessInput(DataInput dataI) {
 
             switch (dataI.Method)
             {
@@ -421,15 +421,19 @@ namespace NetworkAndGenericCalculation.Sockets
 
             return null;
 
-        }
+        }*/
 
         public abstract List<String> nodeMethods();
+
+        public abstract object ProcessInput(DataInput dataI);
+
+        ///bullshit
+        ///
+        ///public abstract object ProcessInput(DataInput coucou);
 
         // Receive and convert data into a string to print it
         public void ReceiveResponse()
         {
-
-            Console.WriteLine("PAR LA");
             int received = ClientSocket.Receive(Buffer, SocketFlags.None);
             if (received == 0) return;
             var data = new byte[received];
@@ -484,14 +488,10 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        /*private static void Send(Socket handler, byte[] chunkToUse)
-        {
-
-            // Begin sending the data to the remote device.
-            handler.BeginSend(chunkToUse, 0, chunkToUse.Length, 0,
-                new AsyncCallback(SendCallback), handler);
-        }*/
-
+        /// <summary>
+        /// Fonction permettant d'envoyer en asynchrone les données vers le serveur
+        /// </summary>
+        /// <param name="ar"></param>
         private static void SendCallback(IAsyncResult ar)
         {
             try
@@ -503,9 +503,6 @@ namespace NetworkAndGenericCalculation.Sockets
                 int bytesSent = handler.EndSend(ar);
                 Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
-
             }
             catch (Exception e)
             {
@@ -513,6 +510,11 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        /// <summary>
+        /// Fonction executée lorsque l'ensemble des workers ont terminé leur job
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Bw_OnWorkComplete(object sender, RunWorkerCompletedEventArgs e)
         {
 
@@ -524,7 +526,9 @@ namespace NetworkAndGenericCalculation.Sockets
         public float ProcessorUsage => processorCounter.NextValue();
         public float MemoryUsage => memoryCounter.NextValue();
 
-
+        /// <summary>
+        /// Fonction générant l'ID d'un Node
+        /// </summary>
         protected void genGUID()
         {
             NodeID = "NODE" + ":" + serveurAdress + ":" + serverNodePort;
