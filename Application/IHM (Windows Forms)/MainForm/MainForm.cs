@@ -82,14 +82,16 @@ namespace MainForms
             Console.WriteLine("   Asynchronous I/O threads: {0:N0}", io);
 
             Console.WriteLine("The number of processors " +
-    "on this computer is {0}.",
-    Environment.ProcessorCount);
+            "on this computer is {0}.",
+            Environment.ProcessorCount);
+            nmr_local_thread.Maximum = Environment.ProcessorCount;
         }
 
         public void SetServController(ServController controller)
         {
             servController = controller;
         }
+
 
         public void SetClientController(ClientController controller)
         {

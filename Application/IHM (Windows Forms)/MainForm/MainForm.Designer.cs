@@ -114,6 +114,7 @@ namespace MainForms
             this.grp_box_data_process.Controls.Add(this.lbl_module_to_execute);
             this.grp_box_data_process.Controls.Add(this.txt_file_path);
             this.grp_box_data_process.Controls.Add(this.btn_load_genome);
+            this.grp_box_data_process.Enabled = false;
             this.grp_box_data_process.Location = new System.Drawing.Point(9, 402);
             this.grp_box_data_process.Name = "grp_box_data_process";
             this.grp_box_data_process.Size = new System.Drawing.Size(461, 78);
@@ -166,30 +167,17 @@ namespace MainForms
             // 
             // nmr_local_thread
             // 
-            this.nmr_local_thread.Location = new System.Drawing.Point(333, 14);
-            this.nmr_local_thread.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.nmr_local_thread.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.nmr_local_thread.Enabled = false;
+            this.nmr_local_thread.Location = new System.Drawing.Point(333, 13);
             this.nmr_local_thread.Name = "nmr_local_thread";
             this.nmr_local_thread.Size = new System.Drawing.Size(36, 20);
             this.nmr_local_thread.TabIndex = 18;
             this.nmr_local_thread.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nmr_local_thread.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // lbl_local_thread
             // 
             this.lbl_local_thread.AutoSize = true;
+            this.lbl_local_thread.Enabled = false;
             this.lbl_local_thread.Location = new System.Drawing.Point(234, 16);
             this.lbl_local_thread.Name = "lbl_local_thread";
             this.lbl_local_thread.Size = new System.Drawing.Size(93, 13);
