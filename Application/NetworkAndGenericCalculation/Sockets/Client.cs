@@ -408,7 +408,7 @@ namespace NetworkAndGenericCalculation.Sockets
         }*/
         }
 
-        /*public Object ProcessInput(DataInput dataI) {
+        public Object ProcessInput(DataInput dataI) {
 
             switch (dataI.Method)
             {
@@ -421,11 +421,11 @@ namespace NetworkAndGenericCalculation.Sockets
 
             return null;
 
-        }*/
+        }
 
         public abstract List<String> nodeMethods();
 
-        public abstract object ProcessInput(DataInput dataI);
+        //public abstract object ProcessInput(DataInput dataI);
 
         ///bullshit
         ///
