@@ -28,7 +28,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public StringBuilder sb = new StringBuilder();
     }
 
-    public abstract class Client
+    public class Client
     {
         public Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -79,7 +79,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public Client(Action<string> logger)
         {
            
-            //ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Logger = logger;
             //BUFFER_SIZE = 4096;
             //Buffer = new byte[BUFFER_SIZE];
@@ -408,28 +408,26 @@ namespace NetworkAndGenericCalculation.Sockets
         }*/
         }
 
-        public Object ProcessInput(DataInput dataI) {
+        public virtual Object ProcessInput(DataInput dataI) {
 
             switch (dataI.Method)
             {
                 case "IdentNode":
                     NodeID = (String)dataI.Data;
+                    Console.WriteLine(NodeID);
                     break;
             }
-
-                
 
             return null;
 
         }
 
-        public abstract List<String> nodeMethods();
+        public List<String> nodeMethods() {
+
+            return null;
+        }
 
         //public abstract object ProcessInput(DataInput dataI);
-
-        ///bullshit
-        ///
-        ///public abstract object ProcessInput(DataInput coucou);
 
         // Receive and convert data into a string to print it
         public void ReceiveResponse()
@@ -461,7 +459,6 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 while (bc.IsBusy)
                 {
-                    //Console.WriteLine("workers are busy");
                     Thread.Sleep(1000);
                     monitoringBW();
                 }

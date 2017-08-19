@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace NetworkAndGenericCalculation.MapReduce
 {
-    public interface IMapper<T> : IDisposable
+    public interface IMapper
     {
         int Length { get; }
         int ChunkDefaultLength { get; }
         int ChunkCount { get; }
         bool IsActive { get; }
         int ChunkRemainsLength { get; }
-        Chunk<T> NextChunk();
+
+        object map(string Method);
+
+        //Chunk<T> NextChunk();
     }
 }

@@ -20,7 +20,7 @@ namespace GenomicTreatment
         /// Liste des méthodes de calculs génomiques
         /// </summary>
         /// <returns></returns>
-        public override List<string> nodeMethods()
+        public new List<string> nodeMethods()
         {
             List<string> methodList = new List<string>();
             methodList.Add("CountOccurence");
@@ -31,10 +31,10 @@ namespace GenomicTreatment
         }
 
 
-        public new Object ProcessInput(DataInput dateReceived)
+        public override Object ProcessInput(DataInput dateReceived)
         {
 
-            ProcessInput(dateReceived);
+            base.ProcessInput(dateReceived);
             switch (dateReceived.Method)
             {
                 case "method1":
@@ -48,7 +48,7 @@ namespace GenomicTreatment
                     break;
             }
 
-            throw new NotImplementedException();
+            return null;
         }
 
 

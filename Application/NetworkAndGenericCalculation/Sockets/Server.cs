@@ -1,5 +1,6 @@
 ﻿using NetworkAndGenericCalculation.Chunk;
 using NetworkAndGenericCalculation.FileTreatment;
+using NetworkAndGenericCalculation.MapReduce;
 using NetworkAndGenericCalculation.Nodes;
 
 using System;
@@ -21,13 +22,13 @@ namespace NetworkAndGenericCalculation.Sockets
     /// <summary>
     /// Orchestrateur
     /// </summary>
-    public class Server
+    public class Server : IMapper, IReducer
     {
 
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
-        private List<Client> nodesConnected { get; set; }
+        public List<Client> nodesConnected { get; set; }
         //private static List<Client> clientSockets { get; set; }
         private static List<Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
@@ -42,6 +43,17 @@ namespace NetworkAndGenericCalculation.Sockets
         private List<Tuple<List<int>, Node>> Nodes;
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
+        private int fileState { get; set; }
+
+        public int Length => throw new NotImplementedException();
+
+        public int ChunkDefaultLength => throw new NotImplementedException();
+
+        public int ChunkCount => throw new NotImplementedException();
+
+        public bool IsActive => throw new NotImplementedException();
+
+        public int ChunkRemainsLength => throw new NotImplementedException();
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -149,8 +161,9 @@ namespace NetworkAndGenericCalculation.Sockets
             // Envoi du port pour MAJ nodeID
 
 
-            GenericNode nodeConnected = new GenericNode(ipAddress,port,name);
+            Client nodeConnected = new Client(ipAddress,port,name);
             nodeConnected.NodeID = createNodeId(ipAddress, port, name);
+            nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
             nodesConnected.Add(nodeConnected);
 
@@ -166,8 +179,8 @@ namespace NetworkAndGenericCalculation.Sockets
               };
 
             Receive(listener);
-            Send(listener, dataI);       
-          
+            Send(listener, dataI);
+            map("2");
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
@@ -268,29 +281,35 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend(String method)
         {
             FileSplitter fileSplitted = new FileSplitter();
-            String fileTosend = fileSplitted.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //String fileTosend = fileSplitted.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
             // TODO : remplacer par le choix fait dans la combobox du Serveur
-            //String fileTosend = fileSplitted.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            String fileTosend = fileSplitted.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             //ChunkSplit chunkToUse = new ChunkSplit();
-            String chunkToUse = fileSplitted.SplitIntoChunks(fileTosend, 4096, 0);
-
-            //Création d'un nouveau DataInput à envoyer aux Nodes
-            DataInput dataI = new DataInput()
-            {
-                TaskId = 1,
-                SubTaskId = 2,
-                Method = method,
-                Data = chunkToUse,
-                NodeGUID = "192.168.31.26"
-            };
+         
             
-            foreach(Socket clientSocket in clientSockets)
+            foreach(Client clientSocket in nodesConnected)
             {
+
+                Tuple<int,string> chunkToUse = fileSplitted.SplitIntoChunks(fileTosend, 4096, fileState);
+
+                fileState = chunkToUse.Item1;
+                //Création d'un nouveau DataInput à envoyer aux Nodes
+                DataInput dataI = new DataInput()
+                {
+                    TaskId = 1,
+                    SubTaskId = 2,
+                    Method = method,
+                    Data = chunkToUse.Item2,
+                    NodeGUID = "192.168.31.26"
+                };
                 //voir pour mettre à jour la liste automatiquement
-               
-                    Send(clientSocket, dataI);
-                
+
+                if (clientSocket.isAvailable)
+                {
+                    Send(clientSocket.ClientSocket, dataI);
+                    clientSocket.isAvailable = false;
+                }
                 
             }
             
@@ -337,8 +356,16 @@ namespace NetworkAndGenericCalculation.Sockets
             return adress + ":" + port + ":" + name + ":";
         }
 
+        public virtual Object map(string MethodMap)
+        {
+            Console.WriteLine("OK SERVEUR BRO");
+            return null;
+        }
 
+        public object reduce()
+        {
 
-
+            throw new NotImplementedException();
+        }
     }
 }

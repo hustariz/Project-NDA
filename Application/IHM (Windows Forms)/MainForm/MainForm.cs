@@ -44,7 +44,7 @@ namespace MainForms
                 }
             }
 
-            server = new Server(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
+            server = new GenomicServeur(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
             servController = new ServController(this, server);
             client = new GenomicNode(this.CLog);
             //IPEndPoint remoteIpEndPoint = client.ClientSocket.RemoteEndPoint as IPEndPoint;
@@ -71,22 +71,19 @@ namespace MainForms
             Console.WriteLine("   Asynchronous I/O threads: {0:N0}", io);
 
             Console.WriteLine("The number of processors " +
-    "on this computer is {0}.",
-    Environment.ProcessorCount);
+            "on this computer is {0}.",
+            Environment.ProcessorCount);
         }
 
         public void SetServController(ServController controller)
         {
             servController = controller;
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             server.SplitAndSend("method1");
-        }
-
-        private void btn_connection_client_Click(object sender, EventArgs e)
-        {
 
         }
 
