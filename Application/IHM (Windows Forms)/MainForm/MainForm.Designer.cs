@@ -34,7 +34,16 @@ namespace MainForms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+<<<<<<< HEAD
             this.button1 = new System.Windows.Forms.Button();
+=======
+            this.grp_box_data_process = new System.Windows.Forms.GroupBox();
+            this.btn_start_process = new System.Windows.Forms.Button();
+            this.cbb_module_to_process = new System.Windows.Forms.ComboBox();
+            this.lbl_module_to_execute = new System.Windows.Forms.Label();
+            this.txt_file_path = new System.Windows.Forms.TextBox();
+            this.btn_load_genome = new System.Windows.Forms.Button();
+>>>>>>> Developp
             this.nmr_local_thread = new System.Windows.Forms.NumericUpDown();
             this.lbl_local_thread = new System.Windows.Forms.Label();
             this.grd_node_data = new System.Windows.Forms.DataGridView();
@@ -60,8 +69,10 @@ namespace MainForms
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tmr_grid_data_update = new System.Windows.Forms.Timer(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.Server.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.grp_box_data_process.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmr_local_thread)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -81,7 +92,11 @@ namespace MainForms
             // 
             // tabPage1
             // 
+<<<<<<< HEAD
             this.tabPage1.Controls.Add(this.button1);
+=======
+            this.tabPage1.Controls.Add(this.grp_box_data_process);
+>>>>>>> Developp
             this.tabPage1.Controls.Add(this.nmr_local_thread);
             this.tabPage1.Controls.Add(this.lbl_local_thread);
             this.tabPage1.Controls.Add(this.grd_node_data);
@@ -100,6 +115,7 @@ namespace MainForms
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+<<<<<<< HEAD
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(360, 266);
@@ -110,33 +126,79 @@ namespace MainForms
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+=======
+            // grp_box_data_process
+            // 
+            this.grp_box_data_process.Controls.Add(this.btn_start_process);
+            this.grp_box_data_process.Controls.Add(this.cbb_module_to_process);
+            this.grp_box_data_process.Controls.Add(this.lbl_module_to_execute);
+            this.grp_box_data_process.Controls.Add(this.txt_file_path);
+            this.grp_box_data_process.Controls.Add(this.btn_load_genome);
+            this.grp_box_data_process.Enabled = false;
+            this.grp_box_data_process.Location = new System.Drawing.Point(9, 402);
+            this.grp_box_data_process.Name = "grp_box_data_process";
+            this.grp_box_data_process.Size = new System.Drawing.Size(461, 78);
+            this.grp_box_data_process.TabIndex = 19;
+            this.grp_box_data_process.TabStop = false;
+            this.grp_box_data_process.Text = "Input Processing";
+            // 
+            // btn_start_process
+            // 
+            this.btn_start_process.Location = new System.Drawing.Point(342, 19);
+            this.btn_start_process.Name = "btn_start_process";
+            this.btn_start_process.Size = new System.Drawing.Size(119, 48);
+            this.btn_start_process.TabIndex = 28;
+            this.btn_start_process.Text = "Start Processing";
+            this.btn_start_process.UseVisualStyleBackColor = true;
+            // 
+            // cbb_module_to_process
+            // 
+            this.cbb_module_to_process.FormattingEnabled = true;
+            this.cbb_module_to_process.Location = new System.Drawing.Point(110, 46);
+            this.cbb_module_to_process.Name = "cbb_module_to_process";
+            this.cbb_module_to_process.Size = new System.Drawing.Size(226, 21);
+            this.cbb_module_to_process.TabIndex = 27;
+            // 
+            // lbl_module_to_execute
+            // 
+            this.lbl_module_to_execute.AutoSize = true;
+            this.lbl_module_to_execute.Location = new System.Drawing.Point(6, 49);
+            this.lbl_module_to_execute.Name = "lbl_module_to_execute";
+            this.lbl_module_to_execute.Size = new System.Drawing.Size(98, 13);
+            this.lbl_module_to_execute.TabIndex = 26;
+            this.lbl_module_to_execute.Text = "Module to perform :";
+            // 
+            // txt_file_path
+            // 
+            this.txt_file_path.Location = new System.Drawing.Point(110, 18);
+            this.txt_file_path.Name = "txt_file_path";
+            this.txt_file_path.Size = new System.Drawing.Size(226, 20);
+            this.txt_file_path.TabIndex = 25;
+            // 
+            // btn_load_genome
+            // 
+            this.btn_load_genome.Location = new System.Drawing.Point(6, 16);
+            this.btn_load_genome.Name = "btn_load_genome";
+            this.btn_load_genome.Size = new System.Drawing.Size(98, 23);
+            this.btn_load_genome.TabIndex = 24;
+            this.btn_load_genome.Text = "Load Genome";
+            this.btn_load_genome.UseVisualStyleBackColor = true;
+            this.btn_load_genome.Click += new System.EventHandler(this.btn_load_genome_Click);
+>>>>>>> Developp
             // 
             // nmr_local_thread
             // 
-            this.nmr_local_thread.Location = new System.Drawing.Point(333, 14);
-            this.nmr_local_thread.Maximum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.nmr_local_thread.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.nmr_local_thread.Enabled = false;
+            this.nmr_local_thread.Location = new System.Drawing.Point(333, 13);
             this.nmr_local_thread.Name = "nmr_local_thread";
             this.nmr_local_thread.Size = new System.Drawing.Size(36, 20);
             this.nmr_local_thread.TabIndex = 18;
             this.nmr_local_thread.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nmr_local_thread.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // lbl_local_thread
             // 
             this.lbl_local_thread.AutoSize = true;
+            this.lbl_local_thread.Enabled = false;
             this.lbl_local_thread.Location = new System.Drawing.Point(234, 16);
             this.lbl_local_thread.Name = "lbl_local_thread";
             this.lbl_local_thread.Size = new System.Drawing.Size(93, 13);
@@ -175,7 +237,7 @@ namespace MainForms
             this.txt_status_srv.Multiline = true;
             this.txt_status_srv.Name = "txt_status_srv";
             this.txt_status_srv.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_status_srv.Size = new System.Drawing.Size(460, 273);
+            this.txt_status_srv.Size = new System.Drawing.Size(460, 189);
             this.txt_status_srv.TabIndex = 13;
             // 
             // txt_port
@@ -368,6 +430,10 @@ namespace MainForms
             this.tmr_grid_data_update.Interval = 1000;
             this.tmr_grid_data_update.Tick += new System.EventHandler(this.tmr_grid_data_update_Tick);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -382,6 +448,8 @@ namespace MainForms
             this.Server.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.grp_box_data_process.ResumeLayout(false);
+            this.grp_box_data_process.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmr_local_thread)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grd_node_data)).EndInit();
             this.tabPage2.ResumeLayout(false);
@@ -422,7 +490,17 @@ namespace MainForms
         private System.Windows.Forms.Timer tmr_grid_data_update;
         private System.Windows.Forms.NumericUpDown nmr_local_thread;
         private System.Windows.Forms.Label lbl_local_thread;
+<<<<<<< HEAD
         private System.Windows.Forms.Button button1;
+=======
+        private System.Windows.Forms.GroupBox grp_box_data_process;
+        private System.Windows.Forms.Button btn_start_process;
+        private System.Windows.Forms.ComboBox cbb_module_to_process;
+        private System.Windows.Forms.Label lbl_module_to_execute;
+        private System.Windows.Forms.TextBox txt_file_path;
+        private System.Windows.Forms.Button btn_load_genome;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+>>>>>>> Developp
     }
 }
 

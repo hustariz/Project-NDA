@@ -12,7 +12,11 @@ using System.Windows.Forms;
 using MainForms;
 using System.Threading;
 using NetworkAndGenericCalculation.Sockets;
+<<<<<<< HEAD
 using GenomicTreatment;
+=======
+using System.IO;
+>>>>>>> Developp
 
 namespace MainForms
 {
@@ -23,6 +27,8 @@ namespace MainForms
         private Server server;
         private Client client;
         private String ipServer, ipClient;
+        private List <String> modules;
+
 
         public MainForm()
         {
@@ -51,7 +57,18 @@ namespace MainForms
             //Console.WriteLine(remoteIpEndPoint.Address);
             clientController = new ClientController(this, client);
 
+            //Initialisation of the combobox
+            modules = new List<string>();
+            modules.Add("1. Quantitative analysis");
+            modules.Add("2. Genomic Sequence Search");
+            modules.Add("3. Gene Search");
 
+            foreach (String module in modules)
+            {
+                cbb_module_to_process.Items.Add(module);
+            }
+
+            //Fill the grid with the determined column's name
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
             grd_node_data.Columns.Add("nodeState", "State");
             grd_node_data.Columns.Add("nodeWorkersNumber", "Worker(s)");
@@ -73,6 +90,10 @@ namespace MainForms
             Console.WriteLine("The number of processors " +
             "on this computer is {0}.",
             Environment.ProcessorCount);
+<<<<<<< HEAD
+=======
+            nmr_local_thread.Maximum = Environment.ProcessorCount;
+>>>>>>> Developp
         }
 
         public void SetServController(ServController controller)
