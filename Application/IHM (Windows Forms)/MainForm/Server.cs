@@ -52,6 +52,14 @@ namespace MainForms
         public void SLog(string message)
         {
             AppendSrvStatus(message);
+            if (message == "Client connected, waiting for request...")
+            {
+                grp_box_data_process.Enabled = true;
+            }
+            else if (message == "Client disconnected")
+            {
+                grp_box_data_process.Enabled = false;
+            }
         }
         public void Nlog(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
         {
