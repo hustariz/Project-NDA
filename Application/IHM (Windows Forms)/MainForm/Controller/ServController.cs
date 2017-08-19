@@ -31,10 +31,10 @@ namespace MainForms
             serverSocket.SetupServer();
         }
 
-        public void ConnectNode(int threadCount, String IP)
-        {
-            serverSocket.ConnectNode(threadCount, IP);
-        }
+        //public void ConnectNode(int threadCount, String IP)
+        //{
+        //    serverSocket.ConnectNode(threadCount, IP);
+        //}
 
         public void updateNodeGridData()
         {

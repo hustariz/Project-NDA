@@ -44,6 +44,12 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
+        private string nodeAdress;
+        private string nodeState;
+        private int nodeActiveWThread;
+        private int nodeWorkerCount;
+        private float nodeProcessorUsage;
+        private float nodeMemoryUsage;
 
         public int Length => throw new NotImplementedException();
 
@@ -112,20 +118,18 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        public void ConnectNode(int threadCount, String IP)
-        {
-            SLog("Setting up local node...");
-            localnode = new Node(threadCount, IP);
-            SLog("Connected : " + localnode.ToString());
-            nodeConnected.Add(localnode);
+        //public void ConnectNode(int threadCount, String IP)
+        //{
+        //    SLog("Setting up local node...");
+        //    localnode = new Node(threadCount, IP);
+        //    SLog("Connected : " + localnode.ToString());
+        //    nodeConnected.Add(localnode);
 
-        }
+        //}
 
         public void updateNodeGridData()
         {
-            string nodeState = "Active";
-            if (localnode.isAvailable) nodeState = "Inactive";
-            NLog(localnode.ToString(), nodeState, localnode.ActualWorker, localnode.Workers.Count, localnode.ProcessorUsage, localnode.MemoryUsage);
+            NLog(nodeAdress, nodeState, nodeActiveWThread, nodeWorkerCount, nodeProcessorUsage, nodeMemoryUsage);
         }
 
         //Accept the connection of multiple client
@@ -167,9 +171,17 @@ namespace NetworkAndGenericCalculation.Sockets
             nodeConnected.ClientSocket = listener;
             nodesConnected.Add(nodeConnected);
 
-            
-            //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
-            DataInput dataI = new DataInput()
+            nodeAdress = nodeConnected.ToString();
+            nodeState = "Active";
+            if (nodeConnected.isAvailable) nodeState = "Inactive";
+            nodeActiveWThread = nodeConnected.NbBGW;
+            nodeWorkerCount = nodeConnected.NbBGW;
+            nodeProcessorUsage = nodeConnected.ProcessorUsage;
+            nodeMemoryUsage = nodeConnected.MemoryUsage;
+
+
+        //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
+        DataInput dataI = new DataInput()
               {
                   TaskId = 1,
                   SubTaskId = 2,

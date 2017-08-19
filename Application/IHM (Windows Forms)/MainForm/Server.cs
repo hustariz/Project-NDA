@@ -77,7 +77,6 @@ namespace MainForms
             }));
 
             servController.SetupServer();
-            servController.ConnectNode(Convert.ToInt32(nmr_local_thread.Value), ipServer);
 
         }
     }
