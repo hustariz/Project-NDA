@@ -1,6 +1,7 @@
 ﻿using NetworkAndGenericCalculation.Chunk;
 using NetworkAndGenericCalculation.FileTreatment;
 using NetworkAndGenericCalculation.Nodes;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,9 @@ namespace NetworkAndGenericCalculation.Sockets
 
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
-        private static List<Client> clientSockets { get; set; }
+        private static List<Socket> clientSockets { get; set; }
+        private List<Client> nodesConnected { get; set; }
+        //private static List<Client> clientSockets { get; set; }
         private static List<Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -35,8 +38,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private static String response = String.Empty;
         private static List<String> ipListe { get; set; }
         private List<Tuple<List<int>, Node>> Nodes;
-
         private Node localnode { get; set; }
+        private int nbConnectedNode { get; set; }
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -50,7 +53,8 @@ namespace NetworkAndGenericCalculation.Sockets
         public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<string,string, int, int, float, float> gridupdater)
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            clientSockets = new List<Client>();
+            clientSockets = new List<Socket>();
+            nodesConnected = new List<Client>();
             LocalPort = portNumber;
             LocalAddress = host;
             BUFFER_SIZE = 2048;
@@ -68,7 +72,6 @@ namespace NetworkAndGenericCalculation.Sockets
             serverSocket.Bind(new IPEndPoint(LocalAddress, LocalPort));
             serverSocket.Listen(1);
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback),serverSocket);
-            //serverSocket.BeginAccept(SplitAndSend, serverSocket);
             SLog("Server setup complete");
             
 
@@ -114,13 +117,15 @@ namespace NetworkAndGenericCalculation.Sockets
             // Signal the main thread to continue.
             //allDone.Set();
 
-            Client listener = (Client)ar.AsyncState;
+            Socket listener = (Socket)ar.AsyncState;
 
-           
+            //Client clientConnected = new GenomicNode(listener);
+
+            //clientConnected.isAvailable = true;
 
             try
             {
-                listener.ClientSocket = serverSocket.EndAccept(ar);
+                listener = serverSocket.EndAccept(ar);
                 
             }
             catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
@@ -128,112 +133,40 @@ namespace NetworkAndGenericCalculation.Sockets
                 return;
             }
             
-            IPEndPoint remoteIpEndPoint = listener.ClientSocket.RemoteEndPoint as IPEndPoint;
-            //String ipAddress = remoteIpEndPoint.Address;
-            //ipListe.Add(ipAddress);
+            IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
+            String ipAddress = remoteIpEndPoint.Address.ToString();
+            String port = remoteIpEndPoint.Port.ToString();
+            String name = "Node "+nbConnectedNode;
 
-            clientSockets.Add(listener);
-            StateObject state = new StateObject();
-            state.workSocket = listener.ClientSocket;
-            Receive(listener.ClientSocket);
-            /*listener.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-           new AsyncCallback(ReceiveCallback), state);*/
-            //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, listener);
-            //listener.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, SplitAndSend, listener);
+            // TODO
+            // Création d'un node 
+            // Ajout du node à la liste
+            // Envoi du port pour MAJ nodeID
+
+
+            GenericNode nodeConnected = new GenericNode(ipAddress,port,name);
+            nodeConnected.NodeID = createNodeId(ipAddress, port, name);
+            nodeConnected.ClientSocket = listener;
+            nodesConnected.Add(nodeConnected);
+
+            
+
+            DataInput dataI = new DataInput()
+              {
+                  TaskId = 1,
+                  SubTaskId = 2,
+                  Method = "IdentNode",
+                  Data = nodeConnected.NodeID,
+                  NodeGUID = "192.168.31.26"
+              };
+
+            Receive(listener);
+            Send(listener, dataI);       
+          
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
-
-
-
-        // Receive the message from the client and do action following the input
-        /*public void ReceiveCallback(IAsyncResult ar)
-        {
-
-            StateObject state = (StateObject)ar.AsyncState;
-            Socket handler = state.workSocket;
-            int received = handler.EndReceive(ar);
-            try
-            {
-                
-                
-
-                if (received > 0)
-                {
-                    // There might be more data, so store the data received so far.
-                    Console.WriteLine("MONCUL");
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, received));
-                    Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, received));
-                    
-                   Receive(handler);
-                    //receiveDone.Set();
-                    // Get the rest of the data.
-                    //handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    //    new AsyncCallback(ReceiveCallback), state);
-
-                }
-                else
-                {
-                    // All the data has arrived; put it in response.
-                    if (state.sb.Length > 1)
-                    {
-
-                        response = state.sb.ToString();
-                    }
-                    // Signal that all bytes have been received.
-                    //Console.WriteLine("FIN");
-
-                    receiveDone.Set();
-                    //
-                }
-            }
-            catch (SocketException)
-            {
-                SLog("Client forcefully disconnected");
-                // Don't shutdown because the socket may be disposed and its disconnected anyway.
-                handler.Close();
-                clientSockets.Remove(handler);
-                return;
-            }
-            
-
-
-            /*
-            if (text.ToLower() == "get time") // Client requested time
-            {
-                SLog("Text is a get time request");
-                byte[] callback = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
-                //SendCallback(ar, callback);
-                SLog("Time sent to client");
-            }
-            else if (text.ToLower() == "exit") // Client wants to exit gracefully
-            {
-                // Always Shutdown before closing
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
-                clientSockets.Remove(handler);
-                SLog("Client disconnected");
-                return;
-            }
-            else
-            {
-                SLog("Text is an invalid request");
-
-                byte[] callback = Encoding.ASCII.GetBytes("Invalid request : please send 'get time'");
-                //Send callback to the client
-                //SendCallback(ar, callback);
-                SLog("Warning Sent");
-            }
-            try
-            {
-                handler.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, handler);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }*/
 
         private void ReceiveCallback(IAsyncResult ar)
         {
@@ -249,9 +182,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 byte[] coucou = new byte[bytesRead];
 
-                //String lala = Encoding.ASCII.GetString(coucou);
-
-                //Console.WriteLine(lala);
+           
                 state.data.Add(state.buffer);
 
                 DataInput input = null;
@@ -284,22 +215,6 @@ namespace NetworkAndGenericCalculation.Sockets
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
-
-                
-
-                /*DataInput dataI = new DataInput()
-                {
-                    TaskId = 1,
-                    SubTaskId = 2,
-                    Method = "loulou",
-                    Data = "TA GUEULE",
-                    NodeGUID = "192.168.31.26"
-                };
-
-
-
-                Send(ClientSocket, dataI);*/
-
             }
             catch (Exception e)
             {
@@ -361,13 +276,12 @@ namespace NetworkAndGenericCalculation.Sockets
                 NodeGUID = "192.168.31.26"
             };
             
-            foreach(Client clientSocket in clientSockets)
+            foreach(Socket clientSocket in clientSockets)
             {
                 //voir pour mettre à jour la liste automatiquement
-                if (clientSocket.isAvailable)
-                {
-                    Send(clientSocket.ClientSocket, dataI);
-                }
+               
+                    Send(clientSocket, dataI);
+                
                 
             }
             
@@ -407,6 +321,11 @@ namespace NetworkAndGenericCalculation.Sockets
                     Console.WriteLine("Client " + client.RemoteEndPoint.ToString() + " Disconnected");
                 Console.WriteLine(ex.ToString());
             }
+        }
+
+        public String createNodeId(string adress, string port, string name)
+        {
+            return adress + ":" + port + ":" + name + ":";
         }
 
 

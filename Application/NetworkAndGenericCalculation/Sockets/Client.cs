@@ -1,7 +1,6 @@
 ﻿using NetworkAndGenericCalculation.Chunk;
 using NetworkAndGenericCalculation.FileTreatment;
 using NetworkAndGenericCalculation.MapReduce;
-using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +11,6 @@ using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NetworkAndGenericCalculation.Sockets
 {
@@ -37,9 +35,11 @@ namespace NetworkAndGenericCalculation.Sockets
         private static byte[] Buffer { get; set; }
         private int Attempts { get; set; }
         private Action<string> Logger { get; set; }
-        private int ServPort { get; set; }
-        private IPAddress ServAddress { get; set; }
-        private Node nodeClient { get; set; }
+        private string NodePort { get; set; }
+        private string nodeAdress { get; set; }
+        private IPAddress serveurAdress { get; set; }
+        private int serverNodePort { get; set; }
+        //private Node nodeClient { get; set; }
         private static String response = String.Empty;
         public static List<BackgroundWorker> backGroundworkerList { get; set; }
         private static List<Byte[]> toto { get; set; }
@@ -48,6 +48,12 @@ namespace NetworkAndGenericCalculation.Sockets
         private PerformanceCounter memoryCounter;
         public bool isAvailable { get; set; }
         public String NodeID;
+        private string nodeName { get; set; }
+        
+
+        // Tout doux
+        //public listMethod()
+
 
         //public static StateObject state { get; set; }
 
@@ -73,23 +79,32 @@ namespace NetworkAndGenericCalculation.Sockets
         public Client(Action<string> logger)
         {
            
-            ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Logger = logger;
-            BUFFER_SIZE = 5;
-            Buffer = new byte[BUFFER_SIZE];
-            Attempts = 0;
+            //BUFFER_SIZE = 4096;
+            //Buffer = new byte[BUFFER_SIZE];
+            //Attempts = 0;
             processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
             //Ajouter le NodeId
             
         }
 
+        public Client(String adress, String port, String name)
+        {
+            nodeAdress = adress;
+            NodePort = port;
+            nodeName = name;
+
+        }
+
+
         //Open a Socket Connection with a server
         public void ConnectToServer(IPAddress host, int port)
         {
-            nodeClient = new Node(4, host.ToString());
-            ServAddress = host;
-            ServPort = port;
+            //nodeClient = new Node(4, host.ToString());
+            serveurAdress = host;
+            serverNodePort = port;
             while (!ClientSocket.Connected)
             {
                 try
@@ -104,9 +119,9 @@ namespace NetworkAndGenericCalculation.Sockets
                     Log("SocketException");
                 }
             }
-            Log(nodeClient.NetworkAdress);
+            //Log(nodeClient.NetworkAdress);
             Log("Connected");
-            this.isAvailable = true;
+            //this.isAvailable = true;
 
             //Send methods to serveur
             List<string> methodList = nodeMethods();
@@ -393,7 +408,20 @@ namespace NetworkAndGenericCalculation.Sockets
         }*/
         }
 
-        public abstract Object ProcessInput(DataInput coucou);
+        public Object ProcessInput(DataInput dataI) {
+
+            switch (dataI.Method)
+            {
+                case "IdentNode":
+                    NodeID = (String)dataI.Data;
+                    break;
+            }
+
+                
+
+            return null;
+
+        }
 
         public abstract List<String> nodeMethods();
 
@@ -499,7 +527,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
         protected void genGUID()
         {
-            NodeID = "NODE" + ":" + ServAddress + ":" + ServPort;
+            NodeID = "NODE" + ":" + serveurAdress + ":" + serverNodePort;
         }
 
     }

@@ -53,6 +53,7 @@
     <Compile Include="MapReduce\IMapper.cs" />
     <Compile Include="MapReduce\MapReduce.cs" />
     <Compile Include="MapReduce\Reduce.cs" />
+    <Compile Include="Nodes\GenericNode.cs" />
     <Compile Include="Nodes\INode.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

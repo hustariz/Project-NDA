@@ -94,7 +94,7 @@ namespace MainForms
             this.tabPage1.Controls.Add(this.btn_start_srv);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(476, 486);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Server";
@@ -103,7 +103,7 @@ namespace MainForms
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(360, 266);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(56, 19);
             this.button1.TabIndex = 19;
@@ -236,7 +236,7 @@ namespace MainForms
             this.tabPage2.Controls.Add(this.btn_connection_client);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(476, 486);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Client";

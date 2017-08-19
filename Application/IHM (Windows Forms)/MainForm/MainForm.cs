@@ -47,6 +47,8 @@ namespace MainForms
             server = new Server(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
             servController = new ServController(this, server);
             client = new GenomicNode(this.CLog);
+            //IPEndPoint remoteIpEndPoint = client.ClientSocket.RemoteEndPoint as IPEndPoint;
+            //Console.WriteLine(remoteIpEndPoint.Address);
             clientController = new ClientController(this, client);
 
 
@@ -81,6 +83,11 @@ namespace MainForms
         private void button1_Click(object sender, EventArgs e)
         {
             server.SplitAndSend("method1");
+        }
+
+        private void btn_connection_client_Click(object sender, EventArgs e)
+        {
+
         }
 
         public void SetClientController(ClientController controller)

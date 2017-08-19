@@ -27,9 +27,10 @@ namespace GenomicTreatment
         }
 
 
-        public override Object ProcessInput(DataInput dateReceived)
+        public new Object ProcessInput(DataInput dateReceived)
         {
 
+            base.ProcessInput(dateReceived);
             switch (dateReceived.Method)
             {
                 case "method1":
@@ -52,10 +53,10 @@ namespace GenomicTreatment
             String test = (String)e.Argument;
             Console.WriteLine(test);
 
-            Tuple<String, Reduce, int> tuplou = (Tuple<String, Reduce, int>)e.Argument;
+            //Tuple<String, Reduce, int> tuplou = (Tuple<String, Reduce, int>)e.Argument;
             // doit renvoyer une liste de tuple de char/int
-            List<Tuple<char, int>> listProccesed =  Methodprocess();
-            e.Result = new Tuple<Object, Reduce>(listProccesed,tuplou.Item2);
+            //List<Tuple<char, int>> listProccesed =  Methodprocess();
+            //e.Result = new Tuple<Object, Reduce>(listProccesed,tuplou.Item2);
             
             //= new Tuple<String, IReducer>("toto",);
         }
