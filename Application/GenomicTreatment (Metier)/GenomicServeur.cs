@@ -11,7 +11,7 @@ namespace GenomicTreatment
 {
     public class GenomicServeur : Server
     {
-        public GenomicServeur(IPAddress host, int portNumber, Action<string> servLogger, Action<string, string, int, int, float, float> gridupdater) : base(host, portNumber, servLogger, gridupdater)
+        public GenomicServeur(IPAddress host, int portNumber, Action<string> servLogger, Action<int, string, string, float, float> gridupdater) : base(host, portNumber, servLogger, gridupdater)
         {
 
         }

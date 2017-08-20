@@ -35,7 +35,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
         private Action<string> ServLogger { get; set; }
-        private Action<string, string, int, int, float, float> GridUpdater { get; set; }
+        private Action<int, string, string, float, float> GridUpdater { get; set; }
         private int LocalPort { get; set; }
         private IPAddress LocalAddress { get; set; }
         private static String response = String.Empty;
@@ -50,6 +50,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private int nodeWorkerCount;
         private float nodeProcessorUsage;
         private float nodeMemoryUsage;
+        private string nodeName;
+        private Boolean clientConnected;
 
         public int Length => throw new NotImplementedException();
 
@@ -70,7 +72,7 @@ namespace NetworkAndGenericCalculation.Sockets
             new ManualResetEvent(false);
 
 
-        public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<string,string, int, int, float, float> gridupdater)
+        public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<int, string,string, float, float> gridupdater)
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSockets = new List<Socket>();
@@ -127,9 +129,22 @@ namespace NetworkAndGenericCalculation.Sockets
 
         //}
 
-        public void updateNodeGridData()
+        public void updateNodeGridData(string name, string ipAddress, bool isAvailable, float processorUsage, float memoryUsage)
         {
-            NLog(nodeAdress, nodeState, nodeActiveWThread, nodeWorkerCount, nodeProcessorUsage, nodeMemoryUsage);
+            if (clientConnected)
+            {
+
+                nodeState = "Active";
+                if (isAvailable) nodeState = "Inactive";
+                nodeProcessorUsage = processorUsage;
+                nodeMemoryUsage = memoryUsage;
+                for (int i = 0; i < nodesConnected.Count; i++) {
+                    nodeName = "Node : " + i + " [" + (nodesConnected[i].nodeAdress + ":" + nodesConnected[i].NodePort + "]");
+                    NLog(i, nodeName, nodesConnected[i].isAvailable.ToString(), nodesConnected[i].ProcessorUsage, nodesConnected[i].MemoryUsage);
+                }
+              
+            }
+
         }
 
         //Accept the connection of multiple client
@@ -170,18 +185,13 @@ namespace NetworkAndGenericCalculation.Sockets
             nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
             nodesConnected.Add(nodeConnected);
+            clientConnected = true;
 
-            nodeAdress = nodeConnected.ToString();
-            nodeState = "Active";
-            if (nodeConnected.isAvailable) nodeState = "Inactive";
-            nodeActiveWThread = nodeConnected.NbBGW;
-            nodeWorkerCount = nodeConnected.NbBGW;
-            nodeProcessorUsage = nodeConnected.ProcessorUsage;
-            nodeMemoryUsage = nodeConnected.MemoryUsage;
+            updateNodeGridData(name, ipAddress, nodeConnected.isAvailable, nodeConnected.ProcessorUsage, nodeConnected.MemoryUsage);
 
 
-        //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
-        DataInput dataI = new DataInput()
+          //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
+          DataInput dataI = new DataInput()
               {
                   TaskId = 1,
                   SubTaskId = 2,
@@ -279,9 +289,9 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        internal void NLog(string nodeAdress, string nodeState, int nodeActiveWThread, int nodeWorkerCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        internal void NLog(int nodeID, string nodeAdress, string nodeState, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            GridUpdater?.Invoke(nodeAdress, nodeState, nodeActiveWThread, nodeWorkerCount, nodeProcessorUsage, nodeMemoryUsage);
+            GridUpdater?.Invoke(nodeID, nodeAdress, nodeState, nodeProcessorUsage, nodeMemoryUsage);
         }
 
 

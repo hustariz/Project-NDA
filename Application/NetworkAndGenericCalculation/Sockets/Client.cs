@@ -35,8 +35,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private static byte[] Buffer { get; set; }
         private int Attempts { get; set; }
         private Action<string> Logger { get; set; }
-        private string NodePort { get; set; }
-        private string nodeAdress { get; set; }
+        public string NodePort { get; set; }
+        public string nodeAdress { get; set; }
         private IPAddress serveurAdress { get; set; }
         private int serverNodePort { get; set; }
         //private Node nodeClient { get; set; }
@@ -48,7 +48,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private PerformanceCounter memoryCounter;
         public bool isAvailable { get; set; }
         public String NodeID;
-        private string nodeName { get; set; }
+        public string nodeName { get; set; }
         
 
         // Tout doux
@@ -95,6 +95,8 @@ namespace NetworkAndGenericCalculation.Sockets
             nodeAdress = adress;
             NodePort = port;
             nodeName = name;
+            processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
 
         }
 
@@ -530,6 +532,5 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             NodeID = "NODE" + ":" + serveurAdress + ":" + serverNodePort;
         }
-
     }
 }

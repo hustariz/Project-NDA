@@ -15,6 +15,9 @@ namespace MainForms
     {
         private MainForm view;
         private Server serverSocket;
+        private string nodeName, nodeAdress;
+        private bool isAvailable;
+        private float processorUsage, memoryUsage;
 
         
 
@@ -38,7 +41,28 @@ namespace MainForms
 
         public void updateNodeGridData()
         {
-            serverSocket.updateNodeGridData();
+
+            for (int i = 0; i < serverSocket.nodesConnected.Count; i++)
+            {
+                nodeName = serverSocket.nodesConnected[i].NodeID;
+                nodeAdress = serverSocket.nodesConnected[i].nodeAdress;
+                isAvailable = serverSocket.nodesConnected[i].isAvailable;
+                processorUsage = serverSocket.nodesConnected[i].ProcessorUsage;
+                memoryUsage = serverSocket.nodesConnected[i].MemoryUsage;
+                serverSocket.updateNodeGridData(nodeName, nodeAdress, isAvailable, processorUsage, memoryUsage);
+            }
+        
+        }
+
+        public int getNodeCount()
+        {
+            int count = 0;
+            for (int i = 0; i < serverSocket.nodesConnected.Count; i++)
+            {
+                count += 1;
+            }
+
+            return count;
         }
 
         public void sendFile()

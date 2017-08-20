@@ -19,7 +19,8 @@ namespace MainForms
     {
 
         //if true doesn't create another row in Nlog
-        bool gridCreated = false;
+        int compteurNode = -1;
+        bool clientConnected = false;
         // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
@@ -29,25 +30,22 @@ namespace MainForms
             }), null);
         }
 
-        public void CreateNodeGrdStatus(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void CreateNodeGrdStatus(string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
-                grd_node_data.Rows.Add(nodeAdress, nodeStatus, nodeActiveWThread + "/" + nodeWThreadCount, nodeProcessorUsage + "%", nodeMemoryUsage + "MB");
-                gridCreated = true;
+                grd_node_data.Rows.Add(nodeAdress, nodeStatus, nodeProcessorUsage + "%", nodeMemoryUsage + "MB");         
             }));
         }
 
 
-        public void AppendGrdStatus(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void AppendGrdStatus(int nodeId, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
-                foreach (DataGridViewRow row in grd_node_data.Rows)
+                for (int i = 0; i< grd_node_data.RowCount; i++)
                 {
-                    //Local or Distant node
-                    //INode node = (INode)row.Cells[0].Value;
-                    row.SetValues(nodeAdress, nodeStatus, nodeActiveWThread + "/" + nodeWThreadCount, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
+                    grd_node_data.Rows[nodeId].SetValues(nodeAdress, nodeStatus, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
                 }
             }));
         }
@@ -57,6 +55,7 @@ namespace MainForms
             AppendSrvStatus(message);
             if (message == "Client connected, waiting for request...")
             {
+                clientConnected = true;
                 grp_box_data_process.Enabled = true;
             }
             else if (message == "Client disconnected")
@@ -64,16 +63,25 @@ namespace MainForms
                 grp_box_data_process.Enabled = false;
             }
         }
-        public void Nlog(string nodeAdress, string nodeStatus, int nodeActiveWThread, int nodeWThreadCount, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void Nlog(int nodeID, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            if (!gridCreated) CreateNodeGrdStatus(nodeAdress, nodeStatus, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
-            AppendGrdStatus(nodeAdress, nodeStatus, nodeActiveWThread, nodeWThreadCount, nodeProcessorUsage, nodeMemoryUsage);
+            Console.WriteLine(nodeAdress + nodeStatus + nodeProcessorUsage + nodeMemoryUsage);
+            for (int i = 0; i < servController.getNodeCount(); i++)
+            {
+                if (compteurNode < i && clientConnected)
+                {
+                    Console.WriteLine("Test : " + i);
+                    CreateNodeGrdStatus(nodeAdress, nodeStatus, nodeProcessorUsage, nodeMemoryUsage);
+                    compteurNode += 1;
+                }
+                AppendGrdStatus(nodeID, nodeAdress, nodeStatus, nodeProcessorUsage, nodeMemoryUsage);
+            }
         }
 
         // Update the data grid, timer = 1s
         private void tmr_grid_data_update_Tick(object sender, EventArgs e)
         {
-            servController.updateNodeGridData();            
+            if (clientConnected) servController.updateNodeGridData();
         }
 
         private void btn_load_genome_Click(object sender, EventArgs e)

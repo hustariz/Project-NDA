@@ -21,3 +21,10 @@ E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\Net
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.dll
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.dll.config
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.pdb
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.dll
+C:\Users\Porridge\Desktop\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.pdb

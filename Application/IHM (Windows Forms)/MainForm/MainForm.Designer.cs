@@ -34,16 +34,13 @@ namespace MainForms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Server = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-<<<<<<< HEAD
             this.button1 = new System.Windows.Forms.Button();
-=======
             this.grp_box_data_process = new System.Windows.Forms.GroupBox();
             this.btn_start_process = new System.Windows.Forms.Button();
             this.cbb_module_to_process = new System.Windows.Forms.ComboBox();
             this.lbl_module_to_execute = new System.Windows.Forms.Label();
             this.txt_file_path = new System.Windows.Forms.TextBox();
             this.btn_load_genome = new System.Windows.Forms.Button();
->>>>>>> Developp
             this.nmr_local_thread = new System.Windows.Forms.NumericUpDown();
             this.lbl_local_thread = new System.Windows.Forms.Label();
             this.grd_node_data = new System.Windows.Forms.DataGridView();
@@ -92,11 +89,8 @@ namespace MainForms
             // 
             // tabPage1
             // 
-<<<<<<< HEAD
             this.tabPage1.Controls.Add(this.button1);
-=======
             this.tabPage1.Controls.Add(this.grp_box_data_process);
->>>>>>> Developp
             this.tabPage1.Controls.Add(this.nmr_local_thread);
             this.tabPage1.Controls.Add(this.lbl_local_thread);
             this.tabPage1.Controls.Add(this.grd_node_data);
@@ -115,7 +109,6 @@ namespace MainForms
             this.tabPage1.Text = "Server";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-<<<<<<< HEAD
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(360, 266);
@@ -126,7 +119,7 @@ namespace MainForms
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
-=======
+            // 
             // grp_box_data_process
             // 
             this.grp_box_data_process.Controls.Add(this.btn_start_process);
@@ -184,7 +177,6 @@ namespace MainForms
             this.btn_load_genome.Text = "Load Genome";
             this.btn_load_genome.UseVisualStyleBackColor = true;
             this.btn_load_genome.Click += new System.EventHandler(this.btn_load_genome_Click);
->>>>>>> Developp
             // 
             // nmr_local_thread
             // 
@@ -418,7 +410,9 @@ namespace MainForms
             // 
             // pictureBox1
             // 
+            this.pictureBox1.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.ErrorImage")));
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox1.InitialImage")));
             this.pictureBox1.Location = new System.Drawing.Point(16, 60);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(102, 490);
@@ -490,9 +484,7 @@ namespace MainForms
         private System.Windows.Forms.Timer tmr_grid_data_update;
         private System.Windows.Forms.NumericUpDown nmr_local_thread;
         private System.Windows.Forms.Label lbl_local_thread;
-<<<<<<< HEAD
         private System.Windows.Forms.Button button1;
-=======
         private System.Windows.Forms.GroupBox grp_box_data_process;
         private System.Windows.Forms.Button btn_start_process;
         private System.Windows.Forms.ComboBox cbb_module_to_process;
@@ -500,7 +492,6 @@ namespace MainForms
         private System.Windows.Forms.TextBox txt_file_path;
         private System.Windows.Forms.Button btn_load_genome;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
->>>>>>> Developp
     }
 }
 

@@ -12,11 +12,8 @@ using System.Windows.Forms;
 using MainForms;
 using System.Threading;
 using NetworkAndGenericCalculation.Sockets;
-<<<<<<< HEAD
 using GenomicTreatment;
-=======
 using System.IO;
->>>>>>> Developp
 
 namespace MainForms
 {
@@ -71,7 +68,6 @@ namespace MainForms
             //Fill the grid with the determined column's name
             grd_node_data.Columns.Add("nodeAddress&Name", "Node");
             grd_node_data.Columns.Add("nodeState", "State");
-            grd_node_data.Columns.Add("nodeWorkersNumber", "Worker(s)");
             grd_node_data.Columns.Add("nodeCpuUsage", "CPU");
             grd_node_data.Columns.Add("nodeMemoryUsage", "Memory");
             grd_node_data.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
@@ -90,10 +86,9 @@ namespace MainForms
             Console.WriteLine("The number of processors " +
             "on this computer is {0}.",
             Environment.ProcessorCount);
-<<<<<<< HEAD
-=======
+
             nmr_local_thread.Maximum = Environment.ProcessorCount;
->>>>>>> Developp
+
         }
 
         public void SetServController(ServController controller)
