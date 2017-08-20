@@ -41,10 +41,10 @@ namespace GenomicTreatment
                     // Divisé le fichier 
 
                     // 
-
+                    string dataToProcess = (String)dateReceived.Data;
                     BackgroundWorker bc = new BackgroundWorker();
                     bc.DoWork += backgroundWorker1_DoWork;
-                    bc.RunWorkerAsync("coucou");
+                    bc.RunWorkerAsync(dataToProcess);
                     break;
             }
 

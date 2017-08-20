@@ -16,9 +16,9 @@ namespace GenomicTreatment
 
         }
 
-        public override Object map(string Methodmap)
+        public override Object map(string Methodmap, string[] text, int chunkSize, int offsets)
         {
-            base.map(Methodmap);
+            base.map(Methodmap,text,chunkSize,offsets);
             switch (Methodmap)
             {
                 case "1" :
@@ -26,8 +26,41 @@ namespace GenomicTreatment
                     Console.WriteLine("J'suis MAP");
 
                     break;
+
+                case "Method1":
+                    Tuple<int, string[]> mapDone = mapForMethodOne(text,chunkSize, offsets);
+                    return mapDone;
             }
+
+
             return null;
+        }
+
+        private Tuple<int,string[]> mapForMethodOne(string[] text, int howManyLine, int lastIndex)
+        {
+
+
+            
+            string[] pairs;
+            List<string> pairsList = new List<string>();
+            List<char[]> charList = new List<char[]>();
+            int i = 0;
+
+            for(i = 0 ; i < howManyLine ; i++)
+            {
+                if(!text[lastIndex+i].StartsWith("#"))
+                {
+                    foreach (char c in text[lastIndex + i].Split('\t')[3].ToCharArray())
+                    {
+                        pairsList.Add(c.ToString());
+                        Console.WriteLine(c.ToString());
+                    }
+                }
+            }
+
+            pairs = pairsList.ToArray<string>();
+            Tuple<int, string[]> chunkTosend = new Tuple<int, string[]>(lastIndex+i , pairs);
+            return chunkTosend;
         }
     }
 }

@@ -6,6 +6,7 @@ using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -44,6 +45,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
+        
 
         public int Length => throw new NotImplementedException();
 
@@ -180,7 +182,6 @@ namespace NetworkAndGenericCalculation.Sockets
 
             Receive(listener);
             Send(listener, dataI);
-            map("2");
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
@@ -284,16 +285,24 @@ namespace NetworkAndGenericCalculation.Sockets
             //String fileTosend = fileSplitted.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
             // TODO : remplacer par le choix fait dans la combobox du Serveur
             String fileTosend = fileSplitted.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-
+            string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
             //ChunkSplit chunkToUse = new ChunkSplit();
-         
-            
-            foreach(Client clientSocket in nodesConnected)
-            {
 
-                Tuple<int,string> chunkToUse = fileSplitted.SplitIntoChunks(fileTosend, 4096, fileState);
+            int FileLength = file.Length;
+
+            foreach (Client clientSocket in nodesConnected)
+            {
+                if(FileLength == fileState)
+                {
+                    break;
+                }
+
+                Tuple<int, string[]> chunkToUse = (Tuple<int,string[]>)map("Method1", file, 10, fileState);
+                
 
                 fileState = chunkToUse.Item1;
+
+                //Console.WriteLine(chunkToUse.Item1);
                 //Création d'un nouveau DataInput à envoyer aux Nodes
                 DataInput dataI = new DataInput()
                 {
@@ -356,7 +365,7 @@ namespace NetworkAndGenericCalculation.Sockets
             return adress + ":" + port + ":" + name + ":";
         }
 
-        public virtual Object map(string MethodMap)
+        public virtual Object map(string MethodMap, string[] text, int chunkSize, int offsets)
         {
             Console.WriteLine("OK SERVEUR BRO");
             return null;
