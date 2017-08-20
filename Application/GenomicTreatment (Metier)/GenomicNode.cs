@@ -63,34 +63,31 @@ namespace GenomicTreatment
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            Interlocked.Increment(ref counter);
-            // INT = TaskID
-            //String test = (String)e.Argument;
-            //Console.WriteLine(test);
+            try
+            {
+                BackgroundWorker worker = sender as BackgroundWorker;
 
-            string[] dataTab = (string[])e.Argument;
+                Interlocked.Increment(ref counter);
 
-            List<Tuple<char, int>> workReduced = new List<Tuple<char, int>>();
+                string[] dataTab = (string[])e.Argument;
 
-            workReduced = CountBases(dataTab);
+                List<Tuple<char, int>> workReduced = new List<Tuple<char, int>>();
 
-            
+                workReduced = CountBases(dataTab);
 
-            ReduceMethod1(reduceResult, workReduced);
+                ReduceMethod1(workReduced, workReduced);
 
-            //Tuple<String, Reduce, int> tuplou = (Tuple<String, Reduce, int>)e.Argument;
-            // doit renvoyer une liste de tuple de char/int
-            //List<Tuple<char, int>> listProccesed =  Methodprocess();
-            //e.Result = new Tuple<Object, Reduce>(listProccesed,tuplou.Item2);
+                e.Result = workReduced;
+            }
+            catch (Exception ex)
+            {
+                // here  catch your exception and decide what to do                  
+                throw ex;
+            }
+           
 
-            //= new Tuple<String, IReducer>("toto",);
         }
 
-        /// <summary>
-        /// Fonction executée lorsque l'ensemble des workers ont terminé leur job
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Bw_OnWorkComplete(object sender, RunWorkerCompletedEventArgs e)
         {
 
@@ -107,10 +104,6 @@ namespace GenomicTreatment
                     NodeGUID = dataReceived.NodeGUID
                 };
                 Send(ClientSocket, dataI);
-
-                //reduce global
-                //stocker les résultats et si all finis reduce global 
-                //send
             }
         }
 
@@ -200,23 +193,28 @@ namespace GenomicTreatment
 
             if (listGlobale == null || listGlobale.Count == 0)
             {
-                return listMapped;
-            }
-            foreach (Tuple<char, int> inputpl in listMapped)
+
+                listGlobale = listMapped;
+
+            } else
             {
-                bool present = false;
-                for (int i = 0; i < listGlobale.Count; i++)
+                foreach (Tuple<char, int> inputpl in listMapped)
                 {
-                    if (listGlobale[i].Item1 == inputpl.Item1)
+                    bool present = false;
+                    for (int i = 0; i < listGlobale.Count; i++)
                     {
-                        present = true;
-                        listGlobale[i] = new Tuple<char, int>(listGlobale[i].Item1, listGlobale[i].Item2 + inputpl.Item2);
+                        if (listGlobale[i].Item1 == inputpl.Item1)
+                        {
+                            present = true;
+                            listGlobale[i] = new Tuple<char, int>(listGlobale[i].Item1, listGlobale[i].Item2 + inputpl.Item2);
+                        }
                     }
+                    if (!present)
+                        listGlobale.Add(inputpl);
                 }
-                if (!present)
-                    listGlobale.Add(inputpl);
             }
 
+          
             return listGlobale;
 
         }
