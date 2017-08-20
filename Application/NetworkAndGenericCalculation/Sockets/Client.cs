@@ -28,7 +28,8 @@ namespace NetworkAndGenericCalculation.Sockets
         public StringBuilder sb = new StringBuilder();
     }
 
-    public class Client
+
+    public class Client : IMapper, IReducer
     {
         public Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -216,9 +217,6 @@ namespace NetworkAndGenericCalculation.Sockets
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
 
-                byte[] coucou = new byte[bytesRead];
-
-                //String lala = Encoding.ASCII.GetString(coucou);
 
                 //Console.WriteLine(lala);
                 state.data.Add(state.buffer);
@@ -416,6 +414,8 @@ namespace NetworkAndGenericCalculation.Sockets
                     NodeID = (String)dataI.Data;
                     Console.WriteLine(NodeID);
                     break;
+               
+                
             }
 
             return null;
@@ -465,7 +465,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        private static void Send(Socket handler, DataInput obj)
+        public static void Send(Socket handler, DataInput obj)
         {
 
             byte[] data = Format.Serialize(obj);
@@ -507,21 +507,19 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        /// <summary>
-        /// Fonction executée lorsque l'ensemble des workers ont terminé leur job
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Bw_OnWorkComplete(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-            //Send(ClientSocket, dataI);
-            Tuple<Object,Reduce> reduded = (Tuple<Object,Reduce>)e.Result;
-            //reduded.Item2.reduce(reduded.Item1);
-        }
 
         public float ProcessorUsage => processorCounter.NextValue();
         public float MemoryUsage => memoryCounter.NextValue();
+
+        public int Length => throw new NotImplementedException();
+
+        public int ChunkDefaultLength => throw new NotImplementedException();
+
+        public int ChunkCount => throw new NotImplementedException();
+
+        public bool IsActive => throw new NotImplementedException();
+
+        public int ChunkRemainsLength => throw new NotImplementedException();
 
         /// <summary>
         /// Fonction générant l'ID d'un Node
@@ -531,5 +529,16 @@ namespace NetworkAndGenericCalculation.Sockets
             NodeID = "NODE" + ":" + serveurAdress + ":" + serverNodePort;
         }
 
+        public virtual object map(string Method, string[] text, int chunkSize, int offsets)
+        {
+            return null;
+        }
+
+        public virtual object reduce()
+        {
+            throw new NotImplementedException();
+        }
+
+        
     }
 }

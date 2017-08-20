@@ -45,6 +45,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
+
         
 
         public int Length => throw new NotImplementedException();
@@ -56,6 +57,10 @@ namespace NetworkAndGenericCalculation.Sockets
         public bool IsActive => throw new NotImplementedException();
 
         public int ChunkRemainsLength => throw new NotImplementedException();
+
+        public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
+
+        public int subTaskCount { get; set; }
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -78,6 +83,7 @@ namespace NetworkAndGenericCalculation.Sockets
             ServLogger = servLogger;
             GridUpdater = gridupdater;
             nodeConnected = new List<Node>();
+            tasksInProcess = new List<Tuple<string, int, string, int>>();
 
         }
 
@@ -209,21 +215,10 @@ namespace NetworkAndGenericCalculation.Sockets
                                      .ToArray();
                      input = Format.Deserialize<DataInput>(data);
 
-                    //TODO : remove
-                     Console.WriteLine(input.Method);
-
                     Receive(client);
-
+                    ProcessInput(input);
                     //On récupère la méthod liste pour remplir la combobox du serveur
-                    if(input.Method == "MethodLIST")
-                    {
-                        //A mettre dans la combobox
-                        List<String> methodReceive = (List<string>)input.Data;
-                        foreach(String method in methodReceive)
-                        {
-                            Console.WriteLine(method);
-                        }
-                    }
+                   
                 }
                 catch (Exception e)
                 {
@@ -282,13 +277,13 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend(String method)
         {
             FileSplitter fileSplitted = new FileSplitter();
-            //String fileTosend = fileSplitted.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
-            // TODO : remplacer par le choix fait dans la combobox du Serveur
-            String fileTosend = fileSplitted.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+
+            //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
             //ChunkSplit chunkToUse = new ChunkSplit();
 
             int FileLength = file.Length;
+            
 
             foreach (Client clientSocket in nodesConnected)
             {
@@ -297,7 +292,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     break;
                 }
 
-                Tuple<int, string[]> chunkToUse = (Tuple<int,string[]>)map("Method1", file, 10, fileState);
+                Tuple<int, string[]> chunkToUse = (Tuple<int,string[]>)map("Method1", file, 100, fileState);
                 
 
                 fileState = chunkToUse.Item1;
@@ -307,15 +302,17 @@ namespace NetworkAndGenericCalculation.Sockets
                 DataInput dataI = new DataInput()
                 {
                     TaskId = 1,
-                    SubTaskId = 2,
+                    SubTaskId = subTaskCount++,
                     Method = method,
                     Data = chunkToUse.Item2,
-                    NodeGUID = "192.168.31.26"
+                    NodeGUID = clientSocket.NodeID
                 };
                 //voir pour mettre à jour la liste automatiquement
 
                 if (clientSocket.isAvailable)
                 {
+                    tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
+
                     Send(clientSocket.ClientSocket, dataI);
                     clientSocket.isAvailable = false;
                 }
@@ -376,5 +373,25 @@ namespace NetworkAndGenericCalculation.Sockets
 
             throw new NotImplementedException();
         }
+        public virtual List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
+        {
+            return null;
+        }
+
+        public virtual void ProcessInput(DataInput input)
+        {
+            if (input.Method == "MethodLIST")
+            {
+                //A mettre dans la combobox
+                List<String> methodReceive = (List<string>)input.Data;
+                foreach (String method in methodReceive)
+                {
+                    Console.WriteLine(method);
+                }
+            }
+        }
+
     }
+
+    
 }
