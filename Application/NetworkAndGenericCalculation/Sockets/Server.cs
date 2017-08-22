@@ -251,7 +251,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+                //Console.WriteLine("Sent {0} bytes to client.", bytesSent);
 
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
@@ -274,67 +274,104 @@ namespace NetworkAndGenericCalculation.Sockets
             ServLogger?.Invoke(msg);
         }
 
-        public void SplitAndSend(String method)
+        public void SplitAndSend()
         {
+
+
+            String method = "method1";
             FileSplitter fileSplitted = new FileSplitter();
 
-            //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
             //ChunkSplit chunkToUse = new ChunkSplit();
 
             int FileLength = file.Length;
-            
+            int nbOfLine = 500;
 
-            foreach (Client clientSocket in nodesConnected)
+            int nbLine = FileLength / nodesConnected.Count;
+
+            while(FileLength != fileState)
             {
-                if(FileLength == fileState)
+                foreach (Client clientSocket in nodesConnected)
                 {
-                    break;
+                    if (FileLength == fileState)
+                    {
+                        break;
+                    }
+
+                    if (fileState + nbOfLine > FileLength)
+                    {
+                        nbOfLine = FileLength - fileState;
+                        Console.WriteLine(fileState);
+                    }
+
+                    Tuple<int, string[]> chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+
+
+                    fileState = chunkToUse.Item1;
+                    Console.WriteLine(fileState);
+                    
+                    //Console.WriteLine(chunkToUse.Item1);
+                    //Création d'un nouveau DataInput à envoyer aux Nodes
+                    DataInput dataI = new DataInput()
+                    {
+                        TaskId = 1,
+                        SubTaskId = subTaskCount++,
+                        Method = method,
+                        Data = chunkToUse.Item2,
+                        NodeGUID = clientSocket.NodeID
+                    };
+                    //voir pour mettre à jour la liste automatiquement
+
+                    if (clientSocket.isAvailable)
+                    {
+                        tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
+                        Console.WriteLine( clientSocket.NodeID);
+                        Send(clientSocket.ClientSocket, dataI);
+                        clientSocket.isAvailable = false;
+                    }
+                    else
+                    {
+                        Thread.Sleep(100);
+                    }
+                    
                 }
 
-                Tuple<int, string[]> chunkToUse = (Tuple<int,string[]>)map("Method1", file, 100, fileState);
-                
 
-                fileState = chunkToUse.Item1;
+               
+                //sendDone.WaitOne();
+                //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
 
-                //Console.WriteLine(chunkToUse.Item1);
-                //Création d'un nouveau DataInput à envoyer aux Nodes
-                DataInput dataI = new DataInput()
-                {
-                    TaskId = 1,
-                    SubTaskId = subTaskCount++,
-                    Method = method,
-                    Data = chunkToUse.Item2,
-                    NodeGUID = clientSocket.NodeID
-                };
-                //voir pour mettre à jour la liste automatiquement
+                // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
 
-                if (clientSocket.isAvailable)
-                {
-                    tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
 
-                    Send(clientSocket.ClientSocket, dataI);
-                    clientSocket.isAvailable = false;
-                }
-                
+                // Serveur envoyer la méthode / Texte
+                // Thread
+                // Si node available
+                // Envoyer un tableau chunk
+                // Si pas worker 
+                // Thread.sleep
+                // jusqu'à un événement worker dispo
+
+                //chunkToUse.chunkBytes
+
             }
-            
-            //sendDone.WaitOne();
-            //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
-
-            // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
 
 
-            // Serveur envoyer la méthode / Texte
-            // Thread
-            // Si node available
-            // Envoyer un tableau chunk
-            // Si pas worker 
-            // Thread.sleep
-            // jusqu'à un événement worker dispo
+        }
 
-            //chunkToUse.chunkBytes
+        public void touchatoncul()
+        {
+            Thread myThread;
 
+            // Instanciation du thread, on spécifie dans le 
+            // délégué ThreadStart le nom de la méthode qui
+            // sera exécutée lorsque l'on appele la méthode
+            // Start() de notre thread.
+            myThread = new Thread(new ThreadStart(SplitAndSend));
+
+            // Lancement du thread
+            myThread.Start();
         }
 
         private static void Send(Socket client, DataInput obj)
@@ -344,7 +381,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
             try
             {
-                Console.WriteLine("Send data : " + obj + " to : " + client);
+                //Console.WriteLine("Send data : " + obj + " to : " + client);
                 client.BeginSend(data, 0, data.Length, 0,
                     new AsyncCallback(SendCallback), client);
             }
@@ -364,7 +401,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public virtual Object map(string MethodMap, string[] text, int chunkSize, int offsets)
         {
-            Console.WriteLine("OK SERVEUR BRO");
+            //Console.WriteLine("OK SERVEUR BRO");
             return null;
         }
 

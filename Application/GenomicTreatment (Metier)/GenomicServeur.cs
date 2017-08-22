@@ -38,7 +38,18 @@ namespace GenomicTreatment
 
                     ReduceMethod1(globalResultMethod1, (List<Tuple<char, int>>)dateReceived.Data);
 
-                    for(int i =0; i < tasksInProcess.Count; i++)
+                    for (int i = 0; i < nodesConnected.Count; i++)
+                    {
+                        if(nodesConnected[i].NodeID == dateReceived.NodeGUID)
+                        {
+                            nodesConnected[i].isAvailable = true;
+                        }
+                    }
+
+                    
+                    
+
+                    /*for(int i =0; i < tasksInProcess.Count; i++)
                     {
                         if(tasksInProcess[i].Item1 == dateReceived.NodeGUID && tasksInProcess[i].Item4 == dateReceived.SubTaskId)
                         {
@@ -47,13 +58,14 @@ namespace GenomicTreatment
 
                             
                     }
+
                     foreach(Tuple<char, int> datiti in (List<Tuple<char, int>>)globalResultMethod1)
                     {
                         Console.WriteLine("datiti : " + datiti.Item1 + " " + datiti.Item2);
                     }
 
-                        tasksInProcess.Add(new Tuple<string, int, string, int>(dateReceived.NodeGUID, 1, "done", subTaskCount));
-                    break;
+                        tasksInProcess.Add(new Tuple<string, int, string, int>(dateReceived.NodeGUID, 1, "done", subTaskCount)); */
+                    break; 
             }
 
            
@@ -67,7 +79,6 @@ namespace GenomicTreatment
                 case "1" :
 
                     Console.WriteLine("J'suis MAP");
-
                     break;
 
                 case "Method1":

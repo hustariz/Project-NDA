@@ -16,6 +16,8 @@ namespace GenomicTreatment
         public int counter = 0;
         public List<Tuple<char, int>> reduceResult { get; set; }
         public DataInput dataReceived { get; set; }
+        public int increment;
+
         public GenomicNode(Action<string> logger) : base(logger)
         {
         }
@@ -48,11 +50,11 @@ namespace GenomicTreatment
                     // 
                     map("method1", (string[])dateReceived.Data, 0, 0);
 
-                    char[] dataToProcess = (char[])dateReceived.Data;
-                    BackgroundWorker bc = new BackgroundWorker();
-                    bc.DoWork += backgroundWorker1_DoWork;
-                    bc.RunWorkerCompleted += Bw_OnWorkComplete;
-                    bc.RunWorkerAsync(dataToProcess);
+                    //char[] dataToProcess = (char[])dateReceived.Data;
+                    //BackgroundWorker bc = new BackgroundWorker();
+                    //bc.DoWork += backgroundWorker1_DoWork;
+                    //bc.RunWorkerCompleted += Bw_OnWorkComplete;
+                    //bc.RunWorkerAsync(dataToProcess);
                     break;
 
             }
@@ -65,19 +67,14 @@ namespace GenomicTreatment
         {
             try
             {
+                Console.WriteLine(increment++);
                 BackgroundWorker worker = sender as BackgroundWorker;
-
                 Interlocked.Increment(ref counter);
-
                 string[] dataTab = (string[])e.Argument;
-
                 List<Tuple<char, int>> workReduced = new List<Tuple<char, int>>();
-
                 workReduced = CountBases(dataTab);
-
-                ReduceMethod1(workReduced, workReduced);
-
-                e.Result = workReduced;
+                reduceResult = ReduceMethod1(reduceResult, workReduced);
+                //e.Result = workReduced;
             }
             catch (Exception ex)
             {
@@ -140,12 +137,17 @@ namespace GenomicTreatment
                 {
                     dataToReduce.Add(new Tuple<char, int>(data, 1));
                 }
+
+
             } 
+
+            /*
             foreach(Tuple<char,int> data in dataToReduce)
             {
                 Console.WriteLine("Truc qui compte mon cul : "+data.Item1+" "+data.Item2);
-            }
+            }*/
             return dataToReduce;
+            
         }
 
         private List<Tuple<char, int>> Methodprocess()
@@ -170,6 +172,7 @@ namespace GenomicTreatment
                     //string dataToProcess = (String)dateReceived.Data;
                     BackgroundWorker bc = new BackgroundWorker();
                     bc.DoWork += backgroundWorker1_DoWork;
+                    bc.RunWorkerCompleted += Bw_OnWorkComplete;
                     bc.RunWorkerAsync(text);
                     break;
             }
@@ -191,31 +194,52 @@ namespace GenomicTreatment
         public List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
         {
 
-            if (listGlobale == null || listGlobale.Count == 0)
+
+            List<Tuple<char, int>> newListGlobal = listGlobale;
+
+            if (newListGlobal == null || newListGlobal.Count == 0)
             {
 
-                listGlobale = listMapped;
+                newListGlobal = listMapped;
 
             } else
             {
-                foreach (Tuple<char, int> inputpl in listMapped)
+                /* foreach (Tuple<char, int> inputpl in listMapped)
+                 {
+                     bool present = false;
+                     for (int i = 0; i < newListGlobal.Count; i++)
+                     {
+                         if (newListGlobal[i].Item1 == inputpl.Item1)
+                         {
+                             present = true;
+                             newListGlobal[i] = new Tuple<char, int>(newListGlobal[i].Item1, newListGlobal[i].Item2 + inputpl.Item2);
+                         }
+                     }
+                     if (!present)
+                         newListGlobal.Add(inputpl);
+                 }*/
+
+                for (int i = 0; i < listMapped.Count; i++)
                 {
                     bool present = false;
-                    for (int i = 0; i < listGlobale.Count; i++)
+                    for (int e = 0; e < newListGlobal.Count; e++)
                     {
-                        if (listGlobale[i].Item1 == inputpl.Item1)
+                        if (newListGlobal[e].Item1 == listMapped[i].Item1)
                         {
                             present = true;
-                            listGlobale[i] = new Tuple<char, int>(listGlobale[i].Item1, listGlobale[i].Item2 + inputpl.Item2);
+                            newListGlobal[e] = new Tuple<char, int>(newListGlobal[i].Item1, newListGlobal[i].Item2 + listMapped[i].Item2);
                         }
                     }
                     if (!present)
-                        listGlobale.Add(inputpl);
+                        newListGlobal.Add(listMapped[i]);
                 }
             }
 
+
+           
+
           
-            return listGlobale;
+            return newListGlobal;
 
         }
     }

@@ -251,8 +251,6 @@ namespace NetworkAndGenericCalculation.Sockets
                     catch(Exception e)
                     {
                     //Console.WriteLine(e.ToString());
-                    this.i++;
-                    Console.WriteLine(this.i);
                     state.data.Add(state.buffer);
                     //Receive(client);
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
@@ -445,13 +443,6 @@ namespace NetworkAndGenericCalculation.Sockets
             Logger?.Invoke(msg);
         }
 
-        public static int calculTest(int nb1, int nb2) 
-        {
-            Console.WriteLine("PAR LA" + nb1 + nb2);
-            int nb3 = nb1 + nb2;
-            return nb3;
-        }
-
         public static void monitoringBW()
         {
 
@@ -472,7 +463,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
             try
             {
-                Console.WriteLine("Send data : " + obj + " to : " + handler);
+                //Console.WriteLine("Send data : " + obj + " to : " + handler);
                 handler.BeginSend(data, 0, data.Length, 0,
                     new AsyncCallback(SendCallback), handler);
             }
@@ -498,7 +489,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+               // Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
             }
             catch (Exception e)
