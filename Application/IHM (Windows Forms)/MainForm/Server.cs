@@ -30,6 +30,7 @@ namespace MainForms
             }), null);
         }
 
+        //Create Row each time a node connect to the server.
         public void CreateNodeGrdStatus(string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
@@ -38,7 +39,7 @@ namespace MainForms
             }));
         }
 
-
+        //Refresh row with NodeId related to the actual node's Row.
         public void AppendGrdStatus(int nodeId, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
@@ -50,6 +51,7 @@ namespace MainForms
             }));
         }
 
+        //Receive data from server throught log system to refresh the server status box.
         public void SLog(string message)
         {
             AppendSrvStatus(message);
@@ -63,17 +65,20 @@ namespace MainForms
                 grp_box_data_process.Enabled = false;
             }
         }
+        //Receive data from server throught log system to create and refresh NodeDataGrid.
         public void Nlog(int nodeID, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Console.WriteLine(nodeAdress + nodeStatus + nodeProcessorUsage + nodeMemoryUsage);
             for (int i = 0; i < servController.getNodeCount(); i++)
             {
+                //Create Row
                 if (compteurNode < i && clientConnected)
                 {
                     Console.WriteLine("Test : " + i);
                     CreateNodeGrdStatus(nodeAdress, nodeStatus, nodeProcessorUsage, nodeMemoryUsage);
                     compteurNode += 1;
                 }
+                //Refresh all Row
                 AppendGrdStatus(nodeID, nodeAdress, nodeStatus, nodeProcessorUsage, nodeMemoryUsage);
             }
         }

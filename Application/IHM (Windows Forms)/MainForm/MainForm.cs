@@ -46,7 +46,7 @@ namespace MainForms
 
                 }
             }
-
+            //Initialise with the log for the IHM to access return from server
             server = new GenomicServeur(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
             servController = new ServController(this, server);
             client = new GenomicNode(this.CLog);
