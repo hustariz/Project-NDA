@@ -31,7 +31,6 @@ namespace GenomicTreatment
             List<string> methodList = new List<string>();
             methodList.Add("CountOccurence");
             methodList.Add("CountBasePairs");
-
             return methodList;
           
         }
@@ -45,16 +44,7 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "method1":
-                    // Divisé le fichier 
-
-                    // 
                     map("method1", (string[])dateReceived.Data, 0, 0);
-
-                    //char[] dataToProcess = (char[])dateReceived.Data;
-                    //BackgroundWorker bc = new BackgroundWorker();
-                    //bc.DoWork += backgroundWorker1_DoWork;
-                    //bc.RunWorkerCompleted += Bw_OnWorkComplete;
-                    //bc.RunWorkerAsync(dataToProcess);
                     break;
 
             }
@@ -67,18 +57,14 @@ namespace GenomicTreatment
         {
             try
             {
-                Console.WriteLine(increment++);
-                BackgroundWorker worker = sender as BackgroundWorker;
                 Interlocked.Increment(ref counter);
                 string[] dataTab = (string[])e.Argument;
                 List<Tuple<char, int>> workReduced = new List<Tuple<char, int>>();
                 workReduced = CountBases(dataTab);
                 reduceResult = ReduceMethod1(reduceResult, workReduced);
-                //e.Result = workReduced;
             }
             catch (Exception ex)
-            {
-                // here  catch your exception and decide what to do                  
+            {            
                 throw ex;
             }
            
@@ -92,6 +78,12 @@ namespace GenomicTreatment
 
             if (counter == 0)
             {
+
+                foreach (Tuple<char, int> dataTa in reduceResult)
+                {
+                    Console.WriteLine("dataTa Client: " + dataTa.Item1 + " " + dataTa.Item2);
+                }
+
                 DataInput dataI = new DataInput()
                 {
                     TaskId = dataReceived.TaskId,
@@ -101,6 +93,8 @@ namespace GenomicTreatment
                     NodeGUID = dataReceived.NodeGUID
                 };
                 Send(ClientSocket, dataI);
+
+                reduceResult = null;
             }
         }
 
@@ -137,15 +131,7 @@ namespace GenomicTreatment
                 {
                     dataToReduce.Add(new Tuple<char, int>(data, 1));
                 }
-
-
             } 
-
-            /*
-            foreach(Tuple<char,int> data in dataToReduce)
-            {
-                Console.WriteLine("Truc qui compte mon cul : "+data.Item1+" "+data.Item2);
-            }*/
             return dataToReduce;
             
         }
@@ -163,21 +149,23 @@ namespace GenomicTreatment
             switch (Method)
             {
                 case "1":
-
                     Console.WriteLine("J'suis MAP");
-
                     break;
 
                 case "method1":
-                    //string dataToProcess = (String)dateReceived.Data;
-                    BackgroundWorker bc = new BackgroundWorker();
-                    bc.DoWork += backgroundWorker1_DoWork;
-                    bc.RunWorkerCompleted += Bw_OnWorkComplete;
-                    bc.RunWorkerAsync(text);
-                    break;
+                    List<string[]> tabToprocess = Split(text,text.Length);
+                    int e = 0;
+                    for(int i = 0; i < tabToprocess.Count; i++)
+                    {
+                        Console.WriteLine(e++);
+                        BackgroundWorker bc = new BackgroundWorker();
+                        bc.DoWork += backgroundWorker1_DoWork;
+                        bc.RunWorkerCompleted += Bw_OnWorkComplete;
+                        bc.RunWorkerAsync(tabToprocess[i]);
+                    }
+
+                    break; 
             }
-
-
             return null;
         }
 
@@ -193,32 +181,12 @@ namespace GenomicTreatment
 
         public List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
         {
-
-
             List<Tuple<char, int>> newListGlobal = listGlobale;
-
             if (newListGlobal == null || newListGlobal.Count == 0)
             {
-
                 newListGlobal = listMapped;
-
             } else
             {
-                /* foreach (Tuple<char, int> inputpl in listMapped)
-                 {
-                     bool present = false;
-                     for (int i = 0; i < newListGlobal.Count; i++)
-                     {
-                         if (newListGlobal[i].Item1 == inputpl.Item1)
-                         {
-                             present = true;
-                             newListGlobal[i] = new Tuple<char, int>(newListGlobal[i].Item1, newListGlobal[i].Item2 + inputpl.Item2);
-                         }
-                     }
-                     if (!present)
-                         newListGlobal.Add(inputpl);
-                 }*/
-
                 for (int i = 0; i < listMapped.Count; i++)
                 {
                     bool present = false;
@@ -234,13 +202,29 @@ namespace GenomicTreatment
                         newListGlobal.Add(listMapped[i]);
                 }
             }
-
-
-           
-
-          
             return newListGlobal;
+        }
 
+        public List<string[]> Split(string[] array, int index)
+        {
+
+            string[] out1 = array.Take(index/2).ToArray();
+            string[] out2 = array.Skip(index/2).ToArray();
+            string[] tab1 = out1.Take(out1.Length/2).ToArray();
+            string[] tab2 = out1.Skip(out1.Length/2).ToArray();
+            string[] tab3 = out2.Take(out2.Length/2).ToArray();
+            string[] tab4 = out2.Skip(out2.Length/2).ToArray();
+
+            List<string[]> tabToprcess = new List<string[]>();
+
+            tabToprcess.Add(tab1);
+            tabToprcess.Add(tab2);
+            tabToprcess.Add(tab3);
+            tabToprcess.Add(tab4);
+
+            Console.WriteLine(tab1.Length+" : "+ tab2.Length+" : "+ tab3.Length + " : "+ tab4.Length);
+
+            return tabToprcess;
         }
     }
 }

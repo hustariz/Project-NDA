@@ -139,15 +139,7 @@ namespace NetworkAndGenericCalculation.Sockets
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult ar)
         {
-            // Signal the main thread to continue.
-            //allDone.Set();
-
             Socket listener = (Socket)ar.AsyncState;
-
-            //Client clientConnected = new GenomicNode(listener);
-
-            //clientConnected.isAvailable = true;
-
             try
             {
                 listener = serverSocket.EndAccept(ar);
@@ -215,6 +207,8 @@ namespace NetworkAndGenericCalculation.Sockets
                                      .ToArray();
                      input = Format.Deserialize<DataInput>(data);
 
+                    //Console.WriteLine("method input : " + input.Method);
+
                     Receive(client);
                     ProcessInput(input);
                     //On récupère la méthod liste pour remplir la combobox du serveur
@@ -251,11 +245,6 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                //Console.WriteLine("Sent {0} bytes to client.", bytesSent);
-
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
-
             }
             catch (Exception e)
             {
@@ -283,35 +272,42 @@ namespace NetworkAndGenericCalculation.Sockets
 
             string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
             //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
-            //ChunkSplit chunkToUse = new ChunkSplit();
 
             int FileLength = file.Length;
-            int nbOfLine = 500;
+            int nbOfLine = 200;
 
             int nbLine = FileLength / nodesConnected.Count;
 
-            while(FileLength != fileState)
+            Tuple<int, string[]> chunkToUse = null;
+            bool isSuccess = true;
+
+
+
+            while (FileLength != fileState)
             {
                 foreach (Client clientSocket in nodesConnected)
                 {
                     if (FileLength == fileState)
                     {
+                        map("check", chunkToUse.Item2, 0, 0);
                         break;
                     }
 
                     if (fileState + nbOfLine > FileLength)
                     {
                         nbOfLine = FileLength - fileState;
+                        map("check", chunkToUse.Item2, 0, 0);
                         Console.WriteLine(fileState);
                     }
 
-                    Tuple<int, string[]> chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                    if (isSuccess)
+                    {
+                        chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                        fileState = chunkToUse.Item1;
+                        //Console.WriteLine(fileState);
 
-
-                    fileState = chunkToUse.Item1;
-                    Console.WriteLine(fileState);
+                    }
                     
-                    //Console.WriteLine(chunkToUse.Item1);
                     //Création d'un nouveau DataInput à envoyer aux Nodes
                     DataInput dataI = new DataInput()
                     {
@@ -326,38 +322,18 @@ namespace NetworkAndGenericCalculation.Sockets
                     if (clientSocket.isAvailable)
                     {
                         tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
-                        Console.WriteLine( clientSocket.NodeID);
+                        //Console.WriteLine( clientSocket.NodeID);
                         Send(clientSocket.ClientSocket, dataI);
                         clientSocket.isAvailable = false;
+                        isSuccess = true;
                     }
                     else
                     {
                         Thread.Sleep(100);
-                    }
-                    
+                        isSuccess = false;
+                    }   
                 }
-
-
-               
-                //sendDone.WaitOne();
-                //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
-
-                // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
-
-
-                // Serveur envoyer la méthode / Texte
-                // Thread
-                // Si node available
-                // Envoyer un tableau chunk
-                // Si pas worker 
-                // Thread.sleep
-                // jusqu'à un événement worker dispo
-
-                //chunkToUse.chunkBytes
-
             }
-
-
         }
 
         public void touchatoncul()
@@ -427,8 +403,5 @@ namespace NetworkAndGenericCalculation.Sockets
                 }
             }
         }
-
     }
-
-    
 }
