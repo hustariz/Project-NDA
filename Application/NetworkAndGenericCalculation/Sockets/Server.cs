@@ -142,9 +142,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     nodeName = "Node : " + i + " [" + (ClientsConnected[i].nodeAdress + ":" + ClientsConnected[i].NodePort + "]");
                     nodeProcessorUsage = ClientsConnected[i].ProcessorUsage;
                     nodeMemoryUsage = ClientsConnected[i].MemoryUsage;
-                    //i is the ID of the node, necessary for the AppendGrdStatus method in the IHM to update the right row of the node.
-                    Console.WriteLine("ServUpdate NUMBER " + i + " " + nodeProcessorUsage + " starfoullah ? ");
-
+                    //i is the ID of the node, necessary for the AppendGrdStatus method in the IHM to update the right row of the node.             
                     NLog(i, nodeName, nodeState, nodeProcessorUsage, nodeMemoryUsage);
 
                 }

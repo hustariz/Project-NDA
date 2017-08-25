@@ -46,7 +46,6 @@ namespace MainForms
             {
                 for (int i = 0; i< grd_node_data.RowCount; i++)
                 {
-                    Console.WriteLine("Grid node NUMBER" + nodeID + " " + grd_node_data.Rows[nodeID] + "CPU : " + nodeProcessorUsage);
                     grd_node_data.Rows[nodeID].SetValues(nodeAdress, nodeStatus, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
                 }
             }));
@@ -69,13 +68,11 @@ namespace MainForms
         //Receive data from server throught log system to create and refresh NodeDataGrid.
         public void Nlog(int nodeID, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            Console.WriteLine("Nlog NUMBER" + nodeID + " " + "CPU : " + nodeProcessorUsage);
             for (int i = 0; i < servController.getNodeCount(); i++)
             {
                 //Create Row
                 if (compteurNode < i && clientConnected)
                 {
-                    Console.WriteLine("Test : " + i);
                     CreateNodeGrdStatus(nodeAdress, nodeStatus, nodeProcessorUsage, nodeMemoryUsage);
                     compteurNode += 1;
                 }
