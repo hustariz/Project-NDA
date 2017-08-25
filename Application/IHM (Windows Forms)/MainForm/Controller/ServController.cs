@@ -15,11 +15,13 @@ namespace MainForms
     {
         private MainForm view;
         private Server serverSocket;
-        private string nodeName, nodeAdress;
-        private bool isAvailable;
-        private float processorUsage, memoryUsage;
+        //private string nodeName, nodeAdress;
+        //private bool isAvailable;
+        //private float processorUsage, memoryUsage;
+        private List<Node> ClientsConnected;
 
-        
+
+
 
         public ServController(MainForm view, Server serverSocket)
         {
@@ -41,23 +43,19 @@ namespace MainForms
 
         public void updateNodeGridData()
         {
-
-            for (int i = 0; i < serverSocket.nodesConnected.Count; i++)
-            {
-                nodeName = serverSocket.nodesConnected[i].NodeID;
-                nodeAdress = serverSocket.nodesConnected[i].nodeAdress;
-                isAvailable = serverSocket.nodesConnected[i].isAvailable;
-                processorUsage = serverSocket.nodesConnected[i].ProcessorUsage;
-                memoryUsage = serverSocket.nodesConnected[i].MemoryUsage;
-                serverSocket.updateNodeGridData(nodeName, nodeAdress, isAvailable, processorUsage, memoryUsage);
-            }
-        
+                //nodeName = serverSocket.ClientsConnected[i].NodeID;
+                //nodeAdress = serverSocket.ClientsConnected[i].nodeAdress;
+                //isAvailable = serverSocket.ClientsConnected[i].isAvailable;
+                //processorUsage = serverSocket.ClientsConnected[i].ProcessorUsage;
+                //memoryUsage = serverSocket.ClientsConnected[i].MemoryUsage;
+                ClientsConnected = serverSocket.ListNodesConnected;
+                serverSocket.updateNodeGridData(ClientsConnected);                  
         }
 
         public int getNodeCount()
         {
             int count = 0;
-            for (int i = 0; i < serverSocket.nodesConnected.Count; i++)
+            for (int i = 0; i < serverSocket.ListNodesConnected.Count; i++)
             {
                 count += 1;
             }

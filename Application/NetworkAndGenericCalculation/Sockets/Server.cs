@@ -28,9 +28,9 @@ namespace NetworkAndGenericCalculation.Sockets
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
-        public List<Client> nodesConnected { get; set; }
+        public List<Node> ListNodesConnected { get; set; }
         //private static List<Client> clientSockets { get; set; }
-        private static List<Node> nodeConnected { get; set; }
+        private static List<Nodes.Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
@@ -40,7 +40,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private IPAddress LocalAddress { get; set; }
         private static String response = String.Empty;
         private static List<String> ipListe { get; set; }
-        private List<Tuple<List<int>, Node>> Nodes;
+        private List<Tuple<List<int>, Nodes.Node>> Nodes;
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
@@ -76,14 +76,14 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSockets = new List<Socket>();
-            nodesConnected = new List<Client>();
+            ListNodesConnected = new List<Node>();
             LocalPort = portNumber;
             LocalAddress = host;
             BUFFER_SIZE = 2048;
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
-            nodeConnected = new List<Node>();
+            nodeConnected = new List<Nodes.Node>();
 
         }
 
@@ -129,18 +129,24 @@ namespace NetworkAndGenericCalculation.Sockets
 
         //}
 
-        public void updateNodeGridData(string name, string ipAddress, bool isAvailable, float processorUsage, float memoryUsage)
+        // Update the grid view with node Data throught a log system.
+        public void updateNodeGridData(List<Node> ClientsConnected)
         {
             if (clientConnected)
             {
-
                 nodeState = "Active";
-                if (isAvailable) nodeState = "Inactive";
-                nodeProcessorUsage = processorUsage;
-                nodeMemoryUsage = memoryUsage;
-                for (int i = 0; i < nodesConnected.Count; i++) {
-                    nodeName = "Node : " + i + " [" + (nodesConnected[i].nodeAdress + ":" + nodesConnected[i].NodePort + "]");
-                    NLog(i, nodeName, nodesConnected[i].isAvailable.ToString(), nodesConnected[i].ProcessorUsage, nodesConnected[i].MemoryUsage);
+
+                for (int i = 0; i < ClientsConnected.Count; i++) {
+
+                    if (ClientsConnected[i].isAvailable) nodeState = "Inactive";
+                    nodeName = "Node : " + i + " [" + (ClientsConnected[i].nodeAdress + ":" + ClientsConnected[i].NodePort + "]");
+                    nodeProcessorUsage = ClientsConnected[i].ProcessorUsage;
+                    nodeMemoryUsage = ClientsConnected[i].MemoryUsage;
+                    //i is the ID of the node, necessary for the AppendGrdStatus method in the IHM to update the right row of the node.
+                    Console.WriteLine("ServUpdate NUMBER " + i + " " + nodeProcessorUsage + " starfoullah ? ");
+
+                    NLog(i, nodeName, nodeState, nodeProcessorUsage, nodeMemoryUsage);
+
                 }
               
             }
@@ -180,14 +186,15 @@ namespace NetworkAndGenericCalculation.Sockets
             // Envoi du port pour MAJ nodeID
 
 
-            Client nodeConnected = new Client(ipAddress,port,name);
+            Node nodeConnected = new Node(ipAddress,port,name);
             nodeConnected.NodeID = createNodeId(ipAddress, port, name);
             nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
-            nodesConnected.Add(nodeConnected);
+            ListNodesConnected.Add(nodeConnected);
             clientConnected = true;
 
-            updateNodeGridData(name, ipAddress, nodeConnected.isAvailable, nodeConnected.ProcessorUsage, nodeConnected.MemoryUsage);
+            //call the method the first time
+            updateNodeGridData(ListNodesConnected);
 
 
           //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
@@ -289,12 +296,14 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        //Transite data for the IHM throught a log system to the nodedatagrid
         internal void NLog(int nodeID, string nodeAdress, string nodeState, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             GridUpdater?.Invoke(nodeID, nodeAdress, nodeState, nodeProcessorUsage, nodeMemoryUsage);
         }
 
 
+        //Transite data for the IHM throught a log system to the server status box
         internal void SLog(string msg)
         {
             ServLogger?.Invoke(msg);
@@ -310,7 +319,7 @@ namespace NetworkAndGenericCalculation.Sockets
             //ChunkSplit chunkToUse = new ChunkSplit();
          
             
-            foreach(Client clientSocket in nodesConnected)
+            foreach(Node clientSocket in ListNodesConnected)
             {
 
                 Tuple<int,string> chunkToUse = fileSplitted.SplitIntoChunks(fileTosend, 4096, fileState);

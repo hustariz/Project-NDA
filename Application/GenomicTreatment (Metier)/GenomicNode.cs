@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GenomicTreatment
 {
-    public class GenomicNode : Client
+    public class GenomicNode : Node
     {
         public GenomicNode(Action<string> logger) : base(logger)
         {

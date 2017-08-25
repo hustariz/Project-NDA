@@ -40,13 +40,14 @@ namespace MainForms
         }
 
         //Refresh row with NodeId related to the actual node's Row.
-        public void AppendGrdStatus(int nodeId, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
+        public void AppendGrdStatus(int nodeID, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
             Invoke(new ThreadStart(() =>
             {
                 for (int i = 0; i< grd_node_data.RowCount; i++)
                 {
-                    grd_node_data.Rows[nodeId].SetValues(nodeAdress, nodeStatus, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
+                    Console.WriteLine("Grid node NUMBER" + nodeID + " " + grd_node_data.Rows[nodeID] + "CPU : " + nodeProcessorUsage);
+                    grd_node_data.Rows[nodeID].SetValues(nodeAdress, nodeStatus, Math.Round(nodeProcessorUsage, 2) + "%", nodeMemoryUsage + "MB");
                 }
             }));
         }
@@ -68,7 +69,7 @@ namespace MainForms
         //Receive data from server throught log system to create and refresh NodeDataGrid.
         public void Nlog(int nodeID, string nodeAdress, string nodeStatus, float nodeProcessorUsage, float nodeMemoryUsage)
         {
-            Console.WriteLine(nodeAdress + nodeStatus + nodeProcessorUsage + nodeMemoryUsage);
+            Console.WriteLine("Nlog NUMBER" + nodeID + " " + "CPU : " + nodeProcessorUsage);
             for (int i = 0; i < servController.getNodeCount(); i++)
             {
                 //Create Row
