@@ -2,6 +2,7 @@
 using NetworkAndGenericCalculation.MapReduce;
 using NetworkAndGenericCalculation.Sockets;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace GenomicTreatment
     {
         public int counter = 0;
         public List<Tuple<char, int>> reduceResult { get; set; }
+        public ConcurrentBag<Tuple<char,int>> ReduceConccurent { get; set; }
         public DataInput dataReceived { get; set; }
         public int increment;
 
@@ -182,8 +184,15 @@ namespace GenomicTreatment
         public List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
         {
             List<Tuple<char, int>> newListGlobal = listGlobale;
+
+
             if (newListGlobal == null || newListGlobal.Count == 0)
             {
+                for(int i = 0; i < listMapped.Count; i++)
+                {
+                    ReduceConccurent.Add(listMapped[i]);
+                    ReduceConccurent.TryTake();
+                }
                 newListGlobal = listMapped;
             } else
             {
