@@ -158,7 +158,7 @@ namespace NetworkAndGenericCalculation.Sockets
             IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
             String ipAddress = remoteIpEndPoint.Address.ToString();
             String port = remoteIpEndPoint.Port.ToString();
-            String name = "Node "+nbConnectedNode;
+            String name = "Node "+nbConnectedNode++;
 
             // TODO
             // Création d'un node 
@@ -324,6 +324,8 @@ namespace NetworkAndGenericCalculation.Sockets
                         NodeGUID = clientSocket.NodeID
                     };
                     //voir pour mettre à jour la liste automatiquement
+
+                    
 
                     if (clientSocket.isAvailable)
                     {

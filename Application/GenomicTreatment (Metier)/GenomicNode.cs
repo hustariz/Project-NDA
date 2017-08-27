@@ -46,6 +46,7 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "method1":
+                    Console.WriteLine("SUBTASK RECEIVED : " + dateReceived.SubTaskId);
                     ReduceConccurent = new ConcurrentBag<Tuple<string, int>>();
                     reduceResult = new List<Tuple<string, int>>();
                     string[] dataReceiveded = (string[])dateReceived.Data;
@@ -67,7 +68,7 @@ namespace GenomicTreatment
                 string[] dataTab = (string[])e.Argument;
                 List<Tuple<string, int>> workReduced = new List<Tuple<string, int>>();
                 workReduced = CountBases(dataTab);
-                //Thread.Sleep(100);
+                Thread.Sleep(100);
                 //reduceResult = ReduceMethod1(reduceResult, workReduced);
                 ReduceMethod1(workReduced);
             }
@@ -123,7 +124,9 @@ namespace GenomicTreatment
                      Data = reduceResult,
                      NodeGUID = dataReceived.NodeGUID
                  };
-                 Send(ClientSocket, dataI);
+
+                Console.WriteLine("SUBTASK SENT : " + dataReceived.SubTaskId);
+                Send(ClientSocket, dataI);
 
                reduceResult = null;
                ReduceConccurent = null;
@@ -183,7 +186,9 @@ namespace GenomicTreatment
 
                 bool present = false;
 
-                Console.WriteLine("INDEX DE MERDE : " + dataToReduce.Count);
+                //Console.WriteLine("INDEX DE MERDE : " + dataToReduce.Count);
+                //Console.WriteLine("--------------");
+                Thread.Sleep(100);
                 for (i = 0; i < dataToReduce.Count; i++)
                 {
                     if (dataToReduce[i].Item1 == datas)

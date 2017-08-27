@@ -13,6 +13,7 @@ namespace GenomicTreatment
     public class GenomicServeur : Server
     {
         public List<Tuple<char, int>> globalResultMethod1 { get; set; }
+        public int increment { get; set; }
 
         public GenomicServeur(IPAddress host, int portNumber, Action<string> servLogger, Action<string, string, int, int, float, float> gridupdater) : base(host, portNumber, servLogger, gridupdater)
         {
@@ -30,13 +31,23 @@ namespace GenomicTreatment
             {
                 case "globalReduceMethod1":
 
-                    for (int e = 0; e < taskList.Count; e++{
+                    Console.WriteLine("globalReduceMethod : " + increment++);
 
-                        if(taskList[e].Item2 == dateReceived.NodeGUID || taskList[e].Item3 == dateReceived.SubTaskId)
+                    for (int e = 0; e < taskList.Count; e++) { 
+
+                        if(taskList[e].Item2 == dateReceived.NodeGUID && taskList[e].Item3 == dateReceived.SubTaskId)
                         {
-                            List<Tuple<string, int>> listReceived = (List<Tuple<string, int>>)dateReceived.Data;
+                           
+                            Console.WriteLine(taskList[e].Item1.Count);
+                            Console.WriteLine(dateReceived.NodeGUID + " : " + dateReceived.SubTaskId);
+                            List<Tuple<string, int>> listReceived = new List<Tuple<string, int>>();
+                            listReceived = (List<Tuple<string, int>>)dateReceived.Data;
+                            Console.WriteLine(listReceived.Count);
                             Tuple<List<Tuple<string, int>>, string, int, bool> newTuplou = new Tuple<List<Tuple<string, int>>, string, int, bool>(listReceived, dateReceived.NodeGUID, dateReceived.SubTaskId, true);
                             taskList[e] = newTuplou;
+
+                            Console.WriteLine("TASKLIST E : " + taskList[e].Item2 + " : " + taskList[e].Item3 + " : " + taskList[e].Item4 +" : "+ taskList[e].Item1.Count);
+
                         }
 
                     }
@@ -83,9 +94,16 @@ namespace GenomicTreatment
                     return mapDone;
 
                 case "check":
-                    foreach (Tuple<char, int> dataTa in globalResultMethod1)
+
+                    Console.WriteLine(taskList.Count);
+
+                    foreach (Tuple<List<Tuple<string, int>>, string, int, bool> newTuplou  in taskList)
                     {
-                        Console.WriteLine("dataTa : " + dataTa.Item1 + " " + dataTa.Item2);
+                        foreach(Tuple<string, int> tuplou2 in newTuplou.Item1){
+
+                            Console.WriteLine("Tuploud : ID " + newTuplou.Item2 + " SubTask:" + newTuplou.Item3 +" KEY:"+ tuplou2.Item1 + " VALUE:" + tuplou2.Item2);
+
+                        }
                     }
                     break;
             }
