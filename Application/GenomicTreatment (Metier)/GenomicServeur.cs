@@ -29,6 +29,18 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "globalReduceMethod1":
+
+                    for (int e = 0; e < taskList.Count; e++{
+
+                        if(taskList[e].Item2 == dateReceived.NodeGUID || taskList[e].Item3 == dateReceived.SubTaskId)
+                        {
+                            List<Tuple<string, int>> listReceived = (List<Tuple<string, int>>)dateReceived.Data;
+                            Tuple<List<Tuple<string, int>>, string, int, bool> newTuplou = new Tuple<List<Tuple<string, int>>, string, int, bool>(listReceived, dateReceived.NodeGUID, dateReceived.SubTaskId, true);
+                            taskList[e] = newTuplou;
+                        }
+
+                    }
+
                     //globalResultMethod1 = ReduceMethod1(globalResultMethod1, (List<Tuple<char, int>>)dateReceived.Data);
 
                     /*foreach (Tuple<char, int> dataTa in globalResultMethod1)
@@ -37,10 +49,10 @@ namespace GenomicTreatment
                     }*/
 
 
-                    foreach (Tuple<string, int> dataTa in (List<Tuple<string,int>>)dateReceived.Data)
+                   /* foreach (Tuple<string, int> dataTa in (List<Tuple<string,int>>)dateReceived.Data)
                   {
                       Console.WriteLine("dataTa Serveur: " + dataTa.Item1 + " " + dataTa.Item2);
-                  }
+                  }*/
 
 
 
@@ -51,6 +63,9 @@ namespace GenomicTreatment
                             nodesConnected[i].isAvailable = true;
                         }
                     }
+
+
+
                     break;
             }
         }
@@ -111,6 +126,7 @@ namespace GenomicTreatment
                 listGlobale = listMapped;
 
             }
+
             else
             {
                 for (int e = 0; e < listMapped.Count; e++)

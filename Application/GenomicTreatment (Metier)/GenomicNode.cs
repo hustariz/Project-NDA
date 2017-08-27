@@ -67,7 +67,7 @@ namespace GenomicTreatment
                 string[] dataTab = (string[])e.Argument;
                 List<Tuple<string, int>> workReduced = new List<Tuple<string, int>>();
                 workReduced = CountBases(dataTab);
-                Thread.Sleep(100);
+                //Thread.Sleep(100);
                 //reduceResult = ReduceMethod1(reduceResult, workReduced);
                 ReduceMethod1(workReduced);
             }

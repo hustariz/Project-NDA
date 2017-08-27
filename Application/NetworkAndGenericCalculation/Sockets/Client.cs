@@ -20,7 +20,7 @@ namespace NetworkAndGenericCalculation.Sockets
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.
-        public const int BufferSize = 15000;
+        public const int BufferSize = 8192;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         public List<byte[]> data = new List<byte[]>();

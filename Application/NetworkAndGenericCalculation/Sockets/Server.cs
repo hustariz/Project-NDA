@@ -6,6 +6,7 @@ using NetworkAndGenericCalculation.Nodes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -46,7 +47,9 @@ namespace NetworkAndGenericCalculation.Sockets
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
 
-        
+        public List<Tuple<List<Tuple<string,int>>,string,int,bool>> taskList { get; set; }
+
+
         /*
         public int Length => throw new NotImplementedException();
 
@@ -58,7 +61,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public int ChunkRemainsLength => throw new NotImplementedException();
         */
-        public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
+        //public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
         
 
         public int subTaskCount { get; set; }
@@ -79,12 +82,13 @@ namespace NetworkAndGenericCalculation.Sockets
             nodesConnected = new List<Client>();
             LocalPort = portNumber;
             LocalAddress = host;
-            BUFFER_SIZE = 15000;
+            BUFFER_SIZE = 8192;
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
             nodeConnected = new List<Node>();
-            tasksInProcess = new List<Tuple<string, int, string, int>>();
+            //tasksInProcess = new List<Tuple<string, int, string, int>>();
+            taskList = new List<Tuple<List<Tuple<string, int>>, string, int, bool>>();
 
         }
 
@@ -275,14 +279,15 @@ namespace NetworkAndGenericCalculation.Sockets
             //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             int FileLength = file.Length;
-            int nbOfLine = 3000;
+            int nbOfLine = 2000;
 
             int nbLine = FileLength / nodesConnected.Count;
 
             Tuple<int, string[]> chunkToUse = null;
             bool isSuccess = true;
 
-
+            Stopwatch st = new Stopwatch();
+            st.Start();
 
             while (FileLength != fileState)
             {
@@ -322,7 +327,8 @@ namespace NetworkAndGenericCalculation.Sockets
 
                     if (clientSocket.isAvailable)
                     {
-                        tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
+                        //tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
+                        taskList.Add(new Tuple<List<Tuple<string, int>>,string,int,bool>(new List<Tuple<string,int>>(),clientSocket.NodeID,subTaskCount,false));
                         //Console.WriteLine( clientSocket.NodeID);
                         Send(clientSocket.ClientSocket, dataI);
                         clientSocket.isAvailable = false;
@@ -335,6 +341,9 @@ namespace NetworkAndGenericCalculation.Sockets
                     }   
                 }
             }
+
+            st.Stop();
+            Console.WriteLine("TEMPS : {0}",st.Elapsed);
         }
 
         public void touchatoncul()
