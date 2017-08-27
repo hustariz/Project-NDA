@@ -15,8 +15,8 @@ namespace GenomicTreatment
     public class GenomicNode : Client
     {
         public int counter = 0;
-        public List<Tuple<char, int>> reduceResult = new List<Tuple<char, int>>();
-        public ConcurrentBag<Tuple<char, int>> ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
+        public List<Tuple<string, int>> reduceResult = new List<Tuple<string, int>>();
+        public ConcurrentBag<Tuple<string, int>> ReduceConccurent = new ConcurrentBag<Tuple<string, int>>();
         public DataInput dataReceived { get; set; }
         public int increment;
 
@@ -46,8 +46,8 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "method1":
-                    ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
-                    reduceResult = new List<Tuple<char, int>>();
+                    ReduceConccurent = new ConcurrentBag<Tuple<string, int>>();
+                    reduceResult = new List<Tuple<string, int>>();
                     string[] dataReceiveded = (string[])dateReceived.Data;
                     map("method1", dataReceiveded, 0, 0);
                     break;
@@ -65,7 +65,7 @@ namespace GenomicTreatment
                 Interlocked.Increment(ref counter);
                 Console.WriteLine(counter);
                 string[] dataTab = (string[])e.Argument;
-                List<Tuple<char, int>> workReduced = new List<Tuple<char, int>>();
+                List<Tuple<string, int>> workReduced = new List<Tuple<string, int>>();
                 workReduced = CountBases(dataTab);
                 Thread.Sleep(100);
                 //reduceResult = ReduceMethod1(reduceResult, workReduced);
@@ -88,7 +88,7 @@ namespace GenomicTreatment
             if (counter == 0)
             {
                
-                foreach (Tuple<char, int> dataTa in ReduceConccurent)
+                foreach (Tuple<string, int> dataTa in ReduceConccurent)
                 {
                     
                     //Console.WriteLine("ReduceConcurrent Client: " + dataTa.Item1 + " " + dataTa.Item2);
@@ -131,14 +131,16 @@ namespace GenomicTreatment
         }
 
 
-        private List<Tuple<char, int>> CountBases(string[] dataTab)
+        private List<Tuple<string, int>> CountBases(string[] dataTab)
         {
-            List<Tuple<char, int>> dataToReduce = new List<Tuple<char, int>>();
+            List<Tuple<string, int>> dataToReduce = new List<Tuple<string, int>>();
 
+            /*
             string finalData = "";
 
             foreach (string dataS in dataTab)
             {
+                Console.WriteLine("DATAS :" + dataS);
                 finalData += dataS;
             }
 
@@ -170,7 +172,33 @@ namespace GenomicTreatment
                 {
                     dataToReduce.Add(new Tuple<char, int>(data, 1));
                 }
-            } 
+            } */
+
+            foreach(string datas in dataTab)
+            {
+                if (dataToReduce.Count == 0 || dataToReduce == null)
+                {
+                    dataToReduce.Add(new Tuple<string, int>(datas, 1));
+                }
+
+                bool present = false;
+
+                Console.WriteLine("INDEX DE MERDE : " + dataToReduce.Count);
+                for (i = 0; i < dataToReduce.Count; i++)
+                {
+                    if (dataToReduce[i].Item1 == datas)
+                    {
+                        present = true;
+                        dataToReduce[i] = new Tuple<string, int>(dataToReduce[i].Item1, dataToReduce[i].Item2 + 1);
+                    }
+                }
+                if (!present)
+                {
+                    dataToReduce.Add(new Tuple<string, int>(datas, 1));
+                }
+            }
+
+
             return dataToReduce;
             
         }
@@ -216,13 +244,13 @@ namespace GenomicTreatment
 
         public GenomicNode(string adress, string port, string name) :base(adress,port,name)
         {
-            reduceResult = new List<Tuple<char, int>>();
+            reduceResult = new List<Tuple<string, int>>();
             //ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
 
 
         }
 
-        public void ReduceMethod1(List<Tuple<char, int>> listMapped)
+        public void ReduceMethod1(List<Tuple<string, int>> listMapped)
         {
             //List<Tuple<char, int>> newListGlobal = listGlobale;
 
@@ -278,7 +306,7 @@ namespace GenomicTreatment
             return tabToprcess;
         }
 
-        public List<Tuple<char,int>> lastReduce(Tuple<char, int> concurr, List<Tuple<char, int>> finalList)
+        public List<Tuple<string,int>> lastReduce(Tuple<string, int> concurr, List<Tuple<string, int>> finalList)
         {
 
         //List<Tuple<char, int>> finalList = new List<Tuple<char, int>>();
@@ -299,7 +327,7 @@ namespace GenomicTreatment
                     {
                         //Console.WriteLine("INSIDE FINAL LIST == : " + finalList[i].Item1 +" : " + concurr.Item1);
                         present = true;
-                        finalList[i] = new Tuple<char, int>(finalList[i].Item1, finalList[i].Item2 + concurr.Item2);
+                        finalList[i] = new Tuple<string, int>(finalList[i].Item1, finalList[i].Item2 + concurr.Item2);
                     }
                     
                 }

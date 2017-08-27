@@ -36,7 +36,7 @@ namespace NetworkAndGenericCalculation.FileTreatment
             using (GZipStream stream = new GZipStream(new MemoryStream(gzip),
                 CompressionMode.Decompress))
             {
-                const int size = 4096;
+                const int size = 15000;
                 byte[] buffer = new byte[size];
                 using (MemoryStream memory = new MemoryStream())
                 {

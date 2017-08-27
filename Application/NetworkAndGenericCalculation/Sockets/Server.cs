@@ -79,7 +79,7 @@ namespace NetworkAndGenericCalculation.Sockets
             nodesConnected = new List<Client>();
             LocalPort = portNumber;
             LocalAddress = host;
-            BUFFER_SIZE = 2048;
+            BUFFER_SIZE = 15000;
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
@@ -275,7 +275,7 @@ namespace NetworkAndGenericCalculation.Sockets
             //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             int FileLength = file.Length;
-            int nbOfLine = 2000;
+            int nbOfLine = 3000;
 
             int nbLine = FileLength / nodesConnected.Count;
 

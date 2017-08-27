@@ -20,7 +20,7 @@ namespace NetworkAndGenericCalculation.Sockets
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.
-        public const int BufferSize = 4096;
+        public const int BufferSize = 15000;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         public List<byte[]> data = new List<byte[]>();
@@ -422,7 +422,10 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public List<String> nodeMethods() {
 
-            return null;
+            List<string> listest = new List<string>();
+            listest.Add("COUCOU");
+
+            return listest;
         }
 
         //public abstract object ProcessInput(DataInput dataI);

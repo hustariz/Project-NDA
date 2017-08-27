@@ -29,12 +29,19 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "globalReduceMethod1":
-                    globalResultMethod1 = ReduceMethod1(globalResultMethod1, (List<Tuple<char, int>>)dateReceived.Data);
+                    //globalResultMethod1 = ReduceMethod1(globalResultMethod1, (List<Tuple<char, int>>)dateReceived.Data);
 
-                    foreach (Tuple<char, int> dataTa in globalResultMethod1)
+                    /*foreach (Tuple<char, int> dataTa in globalResultMethod1)
                     {
                         Console.WriteLine("dataTa Serveur: " + dataTa.Item1 + " " + dataTa.Item2);
-                    }
+                    }*/
+
+
+                    foreach (Tuple<string, int> dataTa in (List<Tuple<string,int>>)dateReceived.Data)
+                  {
+                      Console.WriteLine("dataTa Serveur: " + dataTa.Item1 + " " + dataTa.Item2);
+                  }
+
 
 
                     for (int i = 0; i < nodesConnected.Count; i++)
