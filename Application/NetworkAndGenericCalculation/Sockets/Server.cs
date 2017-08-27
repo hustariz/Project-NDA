@@ -47,7 +47,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private int fileState { get; set; }
 
         
-
+        /*
         public int Length => throw new NotImplementedException();
 
         public int ChunkDefaultLength => throw new NotImplementedException();
@@ -57,8 +57,9 @@ namespace NetworkAndGenericCalculation.Sockets
         public bool IsActive => throw new NotImplementedException();
 
         public int ChunkRemainsLength => throw new NotImplementedException();
-
+        */
         public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
+        
 
         public int subTaskCount { get; set; }
 
@@ -266,15 +267,15 @@ namespace NetworkAndGenericCalculation.Sockets
         public void SplitAndSend()
         {
 
-
             String method = "method1";
             FileSplitter fileSplitted = new FileSplitter();
 
-            string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
             //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
 
             int FileLength = file.Length;
-            int nbOfLine = 200;
+            int nbOfLine = 2000;
 
             int nbLine = FileLength / nodesConnected.Count;
 

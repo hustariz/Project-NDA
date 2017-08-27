@@ -21,3 +21,13 @@ E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\Net
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.dll
 E:\Dev\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.pdb
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.dll.config
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.dll
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\GenomicTreatment.pdb
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.dll
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\bin\Debug\NetworkAndGenericCalculation.pdb
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csprojResolveAssemblyReference.cache
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.Properties.Resources.resources
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.csproj.GenerateResource.Cache
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.dll
+D:\ProjectC#\ProjectC#\Project-NDA\Application\GenomicTreatment (Metier)\obj\Debug\GenomicTreatment.pdb

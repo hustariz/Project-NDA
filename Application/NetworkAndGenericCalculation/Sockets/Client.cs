@@ -502,6 +502,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public float ProcessorUsage => processorCounter.NextValue();
         public float MemoryUsage => memoryCounter.NextValue();
 
+        /*
         public int Length => throw new NotImplementedException();
 
         public int ChunkDefaultLength => throw new NotImplementedException();
@@ -511,7 +512,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public bool IsActive => throw new NotImplementedException();
 
         public int ChunkRemainsLength => throw new NotImplementedException();
-
+        */
         /// <summary>
         /// Fonction générant l'ID d'un Node
         /// </summary>

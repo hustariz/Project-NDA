@@ -48,3 +48,16 @@ C:\Users\loika\Desktop\projet-NDA\Project-NDA\Application\IHM (Windows Forms)\Ma
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.pdb
 E:\Dev\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll.config
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe.config
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.exe
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\MainForm.pdb
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.dll
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.dll
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\GenomicTreatment.pdb
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\bin\Debug\NetworkAndGenericCalculation.pdb
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csprojResolveAssemblyReference.cache
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.MainForm.resources
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.Properties.Resources.resources
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForms.csproj.GenerateResource.Cache
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.exe
+D:\ProjectC#\ProjectC#\Project-NDA\Application\IHM (Windows Forms)\MainForm\obj\Debug\MainForm.pdb

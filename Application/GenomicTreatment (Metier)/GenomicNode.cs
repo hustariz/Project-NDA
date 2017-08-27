@@ -15,8 +15,8 @@ namespace GenomicTreatment
     public class GenomicNode : Client
     {
         public int counter = 0;
-        public List<Tuple<char, int>> reduceResult { get; set; }
-        public ConcurrentBag<Tuple<char,int>> ReduceConccurent { get; set; }
+        public List<Tuple<char, int>> reduceResult = new List<Tuple<char, int>>();
+        public ConcurrentBag<Tuple<char, int>> ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
         public DataInput dataReceived { get; set; }
         public int increment;
 
@@ -46,7 +46,10 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "method1":
-                    map("method1", (string[])dateReceived.Data, 0, 0);
+                    ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
+                    reduceResult = new List<Tuple<char, int>>();
+                    string[] dataReceiveded = (string[])dateReceived.Data;
+                    map("method1", dataReceiveded, 0, 0);
                     break;
 
             }
@@ -60,13 +63,17 @@ namespace GenomicTreatment
             try
             {
                 Interlocked.Increment(ref counter);
+                Console.WriteLine(counter);
                 string[] dataTab = (string[])e.Argument;
                 List<Tuple<char, int>> workReduced = new List<Tuple<char, int>>();
                 workReduced = CountBases(dataTab);
-                reduceResult = ReduceMethod1(reduceResult, workReduced);
+                Thread.Sleep(100);
+                //reduceResult = ReduceMethod1(reduceResult, workReduced);
+                ReduceMethod1(workReduced);
             }
             catch (Exception ex)
-            {            
+            {
+                Console.WriteLine("Exception : " + ex);
                 throw ex;
             }
            
@@ -80,23 +87,46 @@ namespace GenomicTreatment
 
             if (counter == 0)
             {
-
-                foreach (Tuple<char, int> dataTa in reduceResult)
+               
+                foreach (Tuple<char, int> dataTa in ReduceConccurent)
                 {
-                    Console.WriteLine("dataTa Client: " + dataTa.Item1 + " " + dataTa.Item2);
+                    
+                    //Console.WriteLine("ReduceConcurrent Client: " + dataTa.Item1 + " " + dataTa.Item2);
+                    //Console.WriteLine("Index en cours :" + i + " ReduceConcurrent Client: " + dataTa.Item1 + " " + dataTa.Item2);
+
+                    reduceResult = lastReduce(dataTa, reduceResult);
+                  
+                   /* foreach (Tuple<char, int> reduceData in reduceResult)
+                    {
+                        Console.WriteLine("reduceResult Client: " + reduceData.Item1 + " " + reduceData.Item2);
+                       
+                    } */
                 }
-
-                DataInput dataI = new DataInput()
+                /*
+                foreach(Tuple<char, int> dataTa in reduceResult)
                 {
-                    TaskId = dataReceived.TaskId,
-                    SubTaskId = dataReceived.SubTaskId,
-                    Method = "globalReduceMethod1",
-                    Data = reduceResult,
-                    NodeGUID = dataReceived.NodeGUID
-                };
-                Send(ClientSocket, dataI);
+                    Console.WriteLine( dataTa.Item1 + " : " + dataTa.Item2);
+                }
+              
 
-                reduceResult = null;
+                /*
+                foreach (Tuple<char, int> dataDA in lastList)
+                {
+                    Console.WriteLine("dataDA Client: " + dataDA.Item1 + " " + dataDA.Item2);
+                }*/
+
+                 DataInput dataI = new DataInput()
+                 {
+                     TaskId = dataReceived.TaskId,
+                     SubTaskId = dataReceived.SubTaskId,
+                     Method = "globalReduceMethod1",
+                     Data = reduceResult,
+                     NodeGUID = dataReceived.NodeGUID
+                 };
+                 Send(ClientSocket, dataI);
+
+               reduceResult = null;
+               ReduceConccurent = null;
             }
         }
 
@@ -107,7 +137,7 @@ namespace GenomicTreatment
 
             string finalData = "";
 
-            foreach(string dataS in dataTab)
+            foreach (string dataS in dataTab)
             {
                 finalData += dataS;
             }
@@ -120,7 +150,14 @@ namespace GenomicTreatment
             foreach (char data in chartab)
             {
 
+                if (dataToReduce.Count == 0 || dataToReduce == null)
+                {
+                    dataToReduce.Add(new Tuple<char, int>(data, 1));
+                }
+
                 bool present = false;
+
+                Console.WriteLine("INDEX DE MERDE : " + dataToReduce.Count);
                 for(i = 0; i < dataToReduce.Count; i++)
                 {
                     if(dataToReduce[i].Item1 == data)
@@ -155,6 +192,7 @@ namespace GenomicTreatment
                     break;
 
                 case "method1":
+                    //Console.WriteLine("TEXT TAILLE : " + text.Length);
                     List<string[]> tabToprocess = Split(text,text.Length);
                     int e = 0;
                     for(int i = 0; i < tabToprocess.Count; i++)
@@ -179,39 +217,43 @@ namespace GenomicTreatment
         public GenomicNode(string adress, string port, string name) :base(adress,port,name)
         {
             reduceResult = new List<Tuple<char, int>>();
+            //ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
+
+
         }
 
-        public List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
+        public void ReduceMethod1(List<Tuple<char, int>> listMapped)
         {
-            List<Tuple<char, int>> newListGlobal = listGlobale;
+            //List<Tuple<char, int>> newListGlobal = listGlobale;
 
+            //Console.WriteLine("INSIDE REDUCE METHOD  : " + listMapped.Count);
 
-            if (newListGlobal == null || newListGlobal.Count == 0)
-            {
-                for(int i = 0; i < listMapped.Count; i++)
-                {
-                    ReduceConccurent.Add(listMapped[i]);
-                    ReduceConccurent.TryTake();
-                }
-                newListGlobal = listMapped;
-            } else
-            {
                 for (int i = 0; i < listMapped.Count; i++)
                 {
-                    bool present = false;
-                    for (int e = 0; e < newListGlobal.Count; e++)
-                    {
-                        if (newListGlobal[e].Item1 == listMapped[i].Item1)
-                        {
-                            present = true;
-                            newListGlobal[e] = new Tuple<char, int>(newListGlobal[i].Item1, newListGlobal[i].Item2 + listMapped[i].Item2);
-                        }
-                    }
-                    if (!present)
-                        newListGlobal.Add(listMapped[i]);
+                    /* bool present = false;
+                     foreach(Tuple<char,int> listTuple in ReduceConccurent)
+                     {
+                         if(listTuple.Item1 == listMapped[i].Item1)
+                         {
+                             present = true;
+                             char char1 = listTuple.Item1;
+                             int intToAdd = listTuple.Item2 + listMapped[i].Item2;
+
+                             Console.WriteLine(listTuple.Item1 +" : "+ listTuple.Item2);
+                             Tuple<char, int> result;
+                             ReduceConccurent.TryTake(out result);
+                             Console.WriteLine("TryTake : {0}", result);
+                             ReduceConccurent.Add(new Tuple<char, int>(char1, intToAdd));
+                         }
+                     }*/
+
+                    this.ReduceConccurent.Add(listMapped[i]);
+
+                   /* if (!present)
+                        ReduceConccurent.Add(listMapped[i]); */
                 }
-            }
-            return newListGlobal;
+            
+            //return newListGlobal;
         }
 
         public List<string[]> Split(string[] array, int index)
@@ -234,6 +276,40 @@ namespace GenomicTreatment
             Console.WriteLine(tab1.Length+" : "+ tab2.Length+" : "+ tab3.Length + " : "+ tab4.Length);
 
             return tabToprcess;
+        }
+
+        public List<Tuple<char,int>> lastReduce(Tuple<char, int> concurr, List<Tuple<char, int>> finalList)
+        {
+
+        //List<Tuple<char, int>> finalList = new List<Tuple<char, int>>();
+
+
+            if (finalList == null || finalList.Count == 0)
+            {
+                finalList.Add(concurr);
+                return finalList;
+            }
+            else
+            {
+                bool present = false;
+                for (int i = 0; i < finalList.Count; i++)
+                {
+                    
+                    if (finalList[i].Item1 == concurr.Item1)
+                    {
+                        //Console.WriteLine("INSIDE FINAL LIST == : " + finalList[i].Item1 +" : " + concurr.Item1);
+                        present = true;
+                        finalList[i] = new Tuple<char, int>(finalList[i].Item1, finalList[i].Item2 + concurr.Item2);
+                    }
+                    
+                }
+                if (!present)
+                    {
+                        //Console.WriteLine("INSIDE FINAL !Present : " + concurr.Item1 + " : " + concurr.Item2);
+                        finalList.Add(concurr);
+                    }
+            }
+            return finalList;
         }
     }
 }
