@@ -16,12 +16,13 @@ namespace GenomicTreatment
     {
         public int counter = 0;
         public List<Tuple<string, int>> reduceResult = new List<Tuple<string, int>>();
-        public ConcurrentBag<Tuple<string, int>> ReduceConccurent = new ConcurrentBag<Tuple<string, int>>();
+        public ConcurrentBag<Dictionary<string,int>> ReduceConccurent { get; set; }
         public DataInput dataReceived { get; set; }
         public int increment;
 
         public GenomicNode(Action<string> logger) : base(logger)
         {
+            ReduceConccurent = new ConcurrentBag<Dictionary<string, int>>();
         }
 
         /// <summary>
@@ -47,7 +48,6 @@ namespace GenomicTreatment
             {
                 case "method1":
                     Console.WriteLine("SUBTASK RECEIVED : " + dateReceived.SubTaskId);
-                    ReduceConccurent = new ConcurrentBag<Tuple<string, int>>();
                     reduceResult = new List<Tuple<string, int>>();
                     string[] dataReceiveded = (string[])dateReceived.Data;
                     map("method1", dataReceiveded, 0, 0);
@@ -66,11 +66,12 @@ namespace GenomicTreatment
                 Interlocked.Increment(ref counter);
                 Console.WriteLine(counter);
                 string[] dataTab = (string[])e.Argument;
-                List<Tuple<string, int>> workReduced = new List<Tuple<string, int>>();
+                Dictionary<string, int> workReduced = new Dictionary<string, int>();
                 workReduced = CountBases(dataTab);
-                Thread.Sleep(100);
+                ReduceConccurent.Add(workReduced);
+                //Thread.Sleep(100);
                 //reduceResult = ReduceMethod1(reduceResult, workReduced);
-                ReduceMethod1(workReduced);
+                //ReduceMethod1(workReduced);
             }
             catch (Exception ex)
             {
@@ -88,33 +89,15 @@ namespace GenomicTreatment
 
             if (counter == 0)
             {
+
+                Dictionary<string, int> datatruc =  lastReduce(ReduceConccurent);
+ 
+                foreach(string key in datatruc.Keys)
+                {
+                    Console.WriteLine("KEY : "+ key + ":" + datatruc[key]);
+                }
                
-                foreach (Tuple<string, int> dataTa in ReduceConccurent)
-                {
-                    
-                    //Console.WriteLine("ReduceConcurrent Client: " + dataTa.Item1 + " " + dataTa.Item2);
-                    //Console.WriteLine("Index en cours :" + i + " ReduceConcurrent Client: " + dataTa.Item1 + " " + dataTa.Item2);
 
-                    reduceResult = lastReduce(dataTa, reduceResult);
-                  
-                   /* foreach (Tuple<char, int> reduceData in reduceResult)
-                    {
-                        Console.WriteLine("reduceResult Client: " + reduceData.Item1 + " " + reduceData.Item2);
-                       
-                    } */
-                }
-                /*
-                foreach(Tuple<char, int> dataTa in reduceResult)
-                {
-                    Console.WriteLine( dataTa.Item1 + " : " + dataTa.Item2);
-                }
-              
-
-                /*
-                foreach (Tuple<char, int> dataDA in lastList)
-                {
-                    Console.WriteLine("dataDA Client: " + dataDA.Item1 + " " + dataDA.Item2);
-                }*/
 
                  DataInput dataI = new DataInput()
                  {
@@ -134,75 +117,21 @@ namespace GenomicTreatment
         }
 
 
-        private List<Tuple<string, int>> CountBases(string[] dataTab)
+        private Dictionary<string,int> CountBases(string[] dataTab)
         {
-            List<Tuple<string, int>> dataToReduce = new List<Tuple<string, int>>();
+            Dictionary<string,int> dataToReduce = new Dictionary<string, int>();
 
-            /*
-            string finalData = "";
+            int nbOccur;
 
-            foreach (string dataS in dataTab)
+            foreach(string data in dataTab)
             {
-                Console.WriteLine("DATAS :" + dataS);
-                finalData += dataS;
-            }
-
-            char[] chartab;
-            chartab = null;
-
-            chartab = finalData.ToCharArray();
-
-            foreach (char data in chartab)
-            {
-
-                if (dataToReduce.Count == 0 || dataToReduce == null)
+                if (dataToReduce.TryGetValue(data,out nbOccur)){
+                    dataToReduce[data] = nbOccur + 1;
+                }else
                 {
-                    dataToReduce.Add(new Tuple<char, int>(data, 1));
-                }
-
-                bool present = false;
-
-                Console.WriteLine("INDEX DE MERDE : " + dataToReduce.Count);
-                for(i = 0; i < dataToReduce.Count; i++)
-                {
-                    if(dataToReduce[i].Item1 == data)
-                    {
-                        present = true;
-                        dataToReduce[i] = new Tuple<char, int>(dataToReduce[i].Item1,dataToReduce[i].Item2+1);
-                    }
-                }
-                if (!present)
-                {
-                    dataToReduce.Add(new Tuple<char, int>(data, 1));
-                }
-            } */
-
-            foreach(string datas in dataTab)
-            {
-                if (dataToReduce.Count == 0 || dataToReduce == null)
-                {
-                    dataToReduce.Add(new Tuple<string, int>(datas, 1));
-                }
-
-                bool present = false;
-
-                //Console.WriteLine("INDEX DE MERDE : " + dataToReduce.Count);
-                //Console.WriteLine("--------------");
-                Thread.Sleep(100);
-                for (i = 0; i < dataToReduce.Count; i++)
-                {
-                    if (dataToReduce[i].Item1 == datas)
-                    {
-                        present = true;
-                        dataToReduce[i] = new Tuple<string, int>(dataToReduce[i].Item1, dataToReduce[i].Item2 + 1);
-                    }
-                }
-                if (!present)
-                {
-                    dataToReduce.Add(new Tuple<string, int>(datas, 1));
+                    dataToReduce.Add(data, 1);
                 }
             }
-
 
             return dataToReduce;
             
@@ -225,12 +154,12 @@ namespace GenomicTreatment
                     break;
 
                 case "method1":
-                    //Console.WriteLine("TEXT TAILLE : " + text.Length);
+                    
                     List<string[]> tabToprocess = Split(text,text.Length);
                     int e = 0;
                     for(int i = 0; i < tabToprocess.Count; i++)
                     {
-                        Console.WriteLine(e++);
+                        
                         BackgroundWorker bc = new BackgroundWorker();
                         bc.DoWork += backgroundWorker1_DoWork;
                         bc.RunWorkerCompleted += Bw_OnWorkComplete;
@@ -280,7 +209,7 @@ namespace GenomicTreatment
                          }
                      }*/
 
-                    this.ReduceConccurent.Add(listMapped[i]);
+                    //TODO this.ReduceConccurent.Add(listMapped[i]);
 
                    /* if (!present)
                         ReduceConccurent.Add(listMapped[i]); */
@@ -311,37 +240,34 @@ namespace GenomicTreatment
             return tabToprcess;
         }
 
-        public List<Tuple<string,int>> lastReduce(Tuple<string, int> concurr, List<Tuple<string, int>> finalList)
+        public Dictionary<string, int> lastReduce(ConcurrentBag<Dictionary<string,int>> datas)
         {
 
-        //List<Tuple<char, int>> finalList = new List<Tuple<char, int>>();
+            Dictionary<string, int> finalList = new Dictionary < string, int>();
 
+            int nbOccur;
 
-            if (finalList == null || finalList.Count == 0)
+            foreach (Dictionary<string, int> data in datas)
             {
-                finalList.Add(concurr);
-                return finalList;
-            }
-            else
-            {
-                bool present = false;
-                for (int i = 0; i < finalList.Count; i++)
+
+                foreach(string key in data.Keys)
                 {
-                    
-                    if (finalList[i].Item1 == concurr.Item1)
+                    if (finalList.TryGetValue(key, out nbOccur))
                     {
-                        //Console.WriteLine("INSIDE FINAL LIST == : " + finalList[i].Item1 +" : " + concurr.Item1);
-                        present = true;
-                        finalList[i] = new Tuple<string, int>(finalList[i].Item1, finalList[i].Item2 + concurr.Item2);
+
+                        finalList[key] = nbOccur + data[key];
                     }
-                    
+                    else
+                    {
+                        finalList.Add(key, data[key]);
+                    }
                 }
-                if (!present)
-                    {
-                        //Console.WriteLine("INSIDE FINAL !Present : " + concurr.Item1 + " : " + concurr.Item2);
-                        finalList.Add(concurr);
-                    }
+               
+               
             }
+
+
+
             return finalList;
         }
     }

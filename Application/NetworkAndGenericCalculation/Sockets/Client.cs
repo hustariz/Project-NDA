@@ -20,7 +20,7 @@ namespace NetworkAndGenericCalculation.Sockets
         // Client socket.
         public Socket workSocket = null;
         // Size of receive buffer.
-        public const int BufferSize = 8192;
+        public const int BufferSize = 4096;
         // Receive buffer.
         public byte[] buffer = new byte[BufferSize];
         public List<byte[]> data = new List<byte[]>();
@@ -217,13 +217,22 @@ namespace NetworkAndGenericCalculation.Sockets
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);
 
+                Console.WriteLine("bt :" + bytesRead);
 
                 //Console.WriteLine(lala);
-                state.data.Add(state.buffer);
-
+                /*if(bytesRead < StateObject.BufferSize)
+                {
+                    Console.WriteLine("PASSAGE");
+                    byte[] msg = new byte[bytesRead];
+                    Array.Copy(state.buffer, msg, bytesRead);
+                    state.data.Add(msg); 
+                }else
+                {
+                    state.data.Add(state.buffer);
+                }*/
 
                  //input = null;
-                    try
+                   /* try
                     {
                         byte[] data = state.data
                                          .SelectMany(a => a)
@@ -231,6 +240,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     DataInput input = Format.Deserialize<DataInput>(data);
 
                     // Receive après inputmabite
+                    Console.WriteLine("DATA RECEIVED MON CUL : " + input.Data);
                     ProcessInput(input);
 
 
@@ -244,14 +254,37 @@ namespace NetworkAndGenericCalculation.Sockets
                         NodeGUID = "192.168.31.26"
                     };*/
 
-                    Receive(client);
+                    //Receive(client);
 
-                       
+                    try
+                    {
+                        // Read data from the remote device.
+                        //int nbByteRead = node.NodeSocket.EndReceive(ar);
+                        // Gety data from buffer
+                        byte[] dataToConcat = new byte[bytesRead];
+                        Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
+                        state.data.Add(dataToConcat);
+                    if (IsEndOfMessage(state.buffer, bytesRead))
+                    {
+                        byte[] data = ConcatByteArray(state.data);
+                        DataInput input = Format.Deserialize<DataInput>(data);
+                        Receive(client);
+                        Console.WriteLine("DATA INPUT : " + input.Data);
+                        ProcessInput(input);
+                    }
+                    else
+                    {
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, ReceiveCallback, state);
+                    }
+
+
                     }
                     catch(Exception e)
                     {
+                    Console.WriteLine("erreur sérialisation ");
+                    //Console.WriteLine("Error : " + e);
                     //Console.WriteLine(e.ToString());
-                    state.data.Add(state.buffer);
+                    //state.data.Add(state.buffer);
                     //Receive(client);
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
@@ -534,6 +567,27 @@ namespace NetworkAndGenericCalculation.Sockets
             throw new NotImplementedException();
         }
 
-        
+        private bool IsEndOfMessage(byte[] buffer, int byteRead)
+        {
+            byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+            byte[] endOfBuffer = new byte[8];
+            Array.Copy(buffer, byteRead - endSequence.Length, endOfBuffer, 0, endSequence.Length);
+            return endSequence.SequenceEqual(endOfBuffer);
+        }
+
+        private byte[] ConcatByteArray(List<byte[]> data)
+        {
+            List<byte> byteStorage = new List<byte>();
+            foreach (byte[] bytes in data)
+            {
+                foreach (byte bit in bytes)
+                {
+                    byteStorage.Add(bit);
+                }
+            }
+            return byteStorage.ToArray();
+        }
+
+
     }
 }
