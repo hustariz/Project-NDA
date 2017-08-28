@@ -34,52 +34,42 @@ namespace GenomicTreatment
             {
                 case "globalReduceMethod1":
 
-                    Console.WriteLine("globalReduceMethod : " + increment++);
+                    //Console.WriteLine("globalReduceMethod : " + increment++);
+                    Dictionary<string, int> incdico = new Dictionary<string, int>();
+                    incdico = (Dictionary<string, int>)dateReceived.Data;
 
-                    for (int e = 0; e < taskList.Count; e++) { 
+                    Console.WriteLine("SERVEUR SUBTASK RECEIVE : " + dateReceived.SubTaskId);
 
-                        if(taskList[e].Item2 == dateReceived.NodeGUID && taskList[e].Item3 == dateReceived.SubTaskId)
-                        {
-                           
-                            Console.WriteLine(taskList[e].Item1.Count);
-                            Console.WriteLine(dateReceived.NodeGUID + " : " + dateReceived.SubTaskId);
-                            List<Tuple<string, int>> listReceived = new List<Tuple<string, int>>();
-                            listReceived = (List<Tuple<string, int>>)dateReceived.Data;
-                            Console.WriteLine(listReceived.Count);
-                            Tuple<List<Tuple<string, int>>, string, int, bool> newTuplou = new Tuple<List<Tuple<string, int>>, string, int, bool>(listReceived, dateReceived.NodeGUID, dateReceived.SubTaskId, true);
-                            taskList[e] = newTuplou;
-
-                            Console.WriteLine("TASKLIST E : " + taskList[e].Item2 + " : " + taskList[e].Item3 + " : " + taskList[e].Item4 +" : "+ taskList[e].Item1.Count);
-
-                        }
-
-                    }
-
-                    //globalResultMethod1 = ReduceMethod1(globalResultMethod1, (List<Tuple<char, int>>)dateReceived.Data);
-
-                    /*foreach (Tuple<char, int> dataTa in globalResultMethod1)
+                    foreach (int key in dicoFinal.Keys)
                     {
-                        Console.WriteLine("dataTa Serveur: " + dataTa.Item1 + " " + dataTa.Item2);
-                    }*/
-
-
-                   /* foreach (Tuple<string, int> dataTa in (List<Tuple<string,int>>)dateReceived.Data)
-                  {
-                      Console.WriteLine("dataTa Serveur: " + dataTa.Item1 + " " + dataTa.Item2);
-                  }*/
-
-
-
-                    for (int i = 0; i < nodesConnected.Count; i++)
-                    {
-                        if (nodesConnected[i].NodeID == dateReceived.NodeGUID)
+                        if(key == dateReceived.SubTaskId)
                         {
-                            nodesConnected[i].isAvailable = true;
+                            dicoFinal[key] = new Tuple<bool, Dictionary<string, int>>(true, incdico);
+                            Console.WriteLine("Received and update : " + dateReceived.SubTaskId);
                         }
                     }
 
 
+                    bool isNotComplete = false;
+                    foreach (int key in dicoFinal.Keys)
+                    {
+                        if (dicoFinal[key].Item1 != true)
+                        {
+                            isNotComplete = true;
+                        }
+                    }
 
+                    if (!isNotComplete)
+                    {
+                        Dictionary<string, int> datatruc = lastReduce(dicoFinal);
+                        foreach(string key in datatruc.Keys)
+                        {
+                            Console.WriteLine("KEY : "+ key + " DATA : " + datatruc[key]);
+                        }
+
+                        stopWatch.Stop();
+                        Console.WriteLine("STOP WATCH" + stopWatch.Elapsed);
+                    }
                     break;
             }
         }
@@ -108,6 +98,8 @@ namespace GenomicTreatment
 
                         }
                     }
+
+                    
                     break;
             }
 
@@ -166,6 +158,30 @@ namespace GenomicTreatment
                 }
             }
             return listGlobale;
+        }
+
+        public Dictionary<string, int> lastReduce(ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> datas)
+        {
+
+            Dictionary<string, int> finalList = new Dictionary<string, int>();
+
+
+            foreach (var tuple in datas)
+            {
+                foreach (var key in tuple.Value.Item2)
+                {
+                    int nbOccur;
+                    if (finalList.TryGetValue(key.Key, out nbOccur))
+                    {
+                        finalList[key.Key] = finalList[key.Key] + key.Value;
+                    }
+                    else
+                    {
+                        finalList.Add(key.Key, key.Value);
+                    }
+                }
+            }
+            return finalList;
         }
     }
 }

@@ -66,11 +66,6 @@ namespace GenomicTreatment
                 Tuple<int,string[]> dataTab = (Tuple<int, string[]>)e.Argument;
                 Dictionary<string, int> workReduced = new Dictionary<string, int>();
                 workReduced = CountBases(dataTab.Item2);
-
-                foreach(string key in workReduced.Keys)
-                {
-                    Console.WriteLine("Prems:" + dataTab.Item1 + ":" + key + ":"+ workReduced[key]);
-                }
                 e.Result = new Tuple<int, Dictionary<string, int>>(dataTab.Item1, workReduced);
 
                 //ReduceConccurent.Add(workReduced);
@@ -90,11 +85,6 @@ namespace GenomicTreatment
             Interlocked.Decrement(ref counter);
 
             Tuple<int, Dictionary<string, int>> tupleresult = (Tuple < int, Dictionary< string, int>>)e.Result;
-
-            foreach(string key in tupleresult.Item2.Keys)
-            {
-                Console.WriteLine("Result:"+tupleresult.Item1 + ":" + key + ":" + tupleresult.Item2[key]);
-            }
 
             foreach(int key in dico.Keys)
             {
@@ -120,9 +110,13 @@ namespace GenomicTreatment
 
               
                 Dictionary<string, int> datatruc =  lastReduce(dico);
- 
 
-                 DataInput dataI = new DataInput()
+                foreach(string key in datatruc.Keys)
+                {
+                    Console.WriteLine("KEY : " + key + " DATA : " + datatruc[key]);
+                }
+
+                DataInput dataI = new DataInput()
                  {
                      TaskId = dataReceived.TaskId,
                      SubTaskId = dataReceived.SubTaskId,
@@ -131,7 +125,6 @@ namespace GenomicTreatment
                      NodeGUID = dataReceived.NodeGUID
                  };
 
-                Console.WriteLine("SUBTASK SENT : " + dataReceived.SubTaskId);
                 Send(ClientSocket, dataI);
 
                reduceResult = null;

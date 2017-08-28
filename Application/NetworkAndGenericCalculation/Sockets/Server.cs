@@ -49,6 +49,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private int fileState { get; set; }
         public List<Tuple<List<Tuple<string,int>>,string,int,bool>> taskList { get; set; }
         public ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> dicoFinal { get; set; }
+        public Stopwatch stopWatch = new Stopwatch();
 
 
         /*
@@ -203,10 +204,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 //On ajoute le buffer récupéré à la liste
                 state.data.Add(state.buffer);
-
-
                 int bytesRead = client.EndReceive(ar);
-
                 try
                 {
                     // Read data from the remote device.
@@ -238,8 +236,6 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 Console.WriteLine(e.ToString());
             }
-
-
         }
 
 
@@ -276,39 +272,18 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public void SplitAndSend()
         {
-
+            stopWatch.Start();
             String method = "method1";
             FileSplitter fileSplitted = new FileSplitter();
 
             //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            //string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
-
-
+            string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
             int FileLength = file.Length;
             int nbOfLine = FileLength / nodesConnected.Count;
 
-            for(int nb = 0; nb < nodesConnected.Count; nb++)
-            {
-                Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
-                Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
-                dicoFinal.TryAdd(subTaskCount++, ProcessTuple);
-            }
-
-            foreach(int key in dicoFinal.Keys)
-            {
-                foreach (Client clientSocket in nodesConnected)
-                {
-                    
-                }
-            }
-
             Tuple<int, string[]> chunkToUse = null;
-            
-
-            Stopwatch st = new Stopwatch();
-            st.Start();
-
+            bool isSuccess = true;
             while (FileLength != fileState)
             {
                 foreach (Client clientSocket in nodesConnected)
@@ -328,12 +303,15 @@ namespace NetworkAndGenericCalculation.Sockets
 
                     if (isSuccess)
                     {
+                        Console.WriteLine("SuBtaskToApply : " + subTaskCount++);
+                        Console.WriteLine("SuBtaskToApply : " + subTaskCount);
                         chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
                         fileState = chunkToUse.Item1;
-                        //Console.WriteLine(fileState);
-
+                        Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                        Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                        dicoFinal.TryAdd(subTaskCount, ProcessTuple);
                     }
-                    
+
                     //Création d'un nouveau DataInput à envoyer aux Nodes
                     DataInput dataI = new DataInput()
                     {
@@ -344,14 +322,9 @@ namespace NetworkAndGenericCalculation.Sockets
                         NodeGUID = clientSocket.NodeID
                     };
                     //voir pour mettre à jour la liste automatiquement
-
-                    
-
                     if (clientSocket.isAvailable)
                     {
-                        //tasksInProcess.Add(new Tuple<string, int, string, int>(clientSocket.NodeID,1,"inProcess", subTaskCount));
-                        taskList.Add(new Tuple<List<Tuple<string, int>>,string,int,bool>(new List<Tuple<string,int>>(),clientSocket.NodeID,subTaskCount,false));
-                        //Console.WriteLine( clientSocket.NodeID);
+                        Console.WriteLine("SubTaskID : " + subTaskCount);
                         Send(clientSocket.ClientSocket, dataI);
                         clientSocket.isAvailable = false;
                         isSuccess = true;
@@ -363,9 +336,6 @@ namespace NetworkAndGenericCalculation.Sockets
                     }   
                 }
             }
-
-            st.Stop();
-            Console.WriteLine("TEMPS : {0}",st.Elapsed);
         }
 
         public void touchatoncul()
@@ -386,7 +356,6 @@ namespace NetworkAndGenericCalculation.Sockets
         {
 
             byte[] data = Format.Serialize(obj);
-            Console.WriteLine("DATA : " + data.Length);
             try
             {
                 //Console.WriteLine("Send data : " + obj + " to : " + client);
@@ -397,7 +366,7 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 /// Client Down ///
                 if (!client.Connected)
-                    Console.WriteLine("Client " + client.RemoteEndPoint.ToString() + " Disconnected");
+                Console.WriteLine("Client " + client.RemoteEndPoint.ToString() + " Disconnected");
                 Console.WriteLine(ex.ToString());
             }
         }
@@ -409,13 +378,11 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public virtual Object map(string MethodMap, string[] text, int chunkSize, int offsets)
         {
-            //Console.WriteLine("OK SERVEUR BRO");
             return null;
         }
 
         public object reduce()
         {
-
             throw new NotImplementedException();
         }
         public virtual List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
