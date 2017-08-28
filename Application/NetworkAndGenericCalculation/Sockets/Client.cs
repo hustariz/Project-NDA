@@ -215,51 +215,11 @@ namespace NetworkAndGenericCalculation.Sockets
                 Socket client = state.workSocket;
 
                 // Read data from the remote device.
-                int bytesRead = client.EndReceive(ar);
-
-                Console.WriteLine("bt :" + bytesRead);
-
-                //Console.WriteLine(lala);
-                /*if(bytesRead < StateObject.BufferSize)
-                {
-                    Console.WriteLine("PASSAGE");
-                    byte[] msg = new byte[bytesRead];
-                    Array.Copy(state.buffer, msg, bytesRead);
-                    state.data.Add(msg); 
-                }else
-                {
-                    state.data.Add(state.buffer);
-                }*/
-
-                 //input = null;
-                   /* try
-                    {
-                        byte[] data = state.data
-                                         .SelectMany(a => a)
-                                         .ToArray();
-                    DataInput input = Format.Deserialize<DataInput>(data);
-
-                    // Receive après inputmabite
-                    Console.WriteLine("DATA RECEIVED MON CUL : " + input.Data);
-                    ProcessInput(input);
-
-
-                    /*
-                    DataInput dataI = new DataInput()
-                    {
-                        TaskId = 1,
-                        SubTaskId = 2,
-                        Method = "loulou",
-                        Data = "TA GUEULE",
-                        NodeGUID = "192.168.31.26"
-                    };*/
-
-                    //Receive(client);
+                int bytesRead = client.EndReceive(ar);       
 
                     try
                     {
                         // Read data from the remote device.
-                        //int nbByteRead = node.NodeSocket.EndReceive(ar);
                         // Gety data from buffer
                         byte[] dataToConcat = new byte[bytesRead];
                         Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);

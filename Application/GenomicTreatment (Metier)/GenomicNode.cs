@@ -66,6 +66,11 @@ namespace GenomicTreatment
                 Tuple<int,string[]> dataTab = (Tuple<int, string[]>)e.Argument;
                 Dictionary<string, int> workReduced = new Dictionary<string, int>();
                 workReduced = CountBases(dataTab.Item2);
+
+                foreach(string key in workReduced.Keys)
+                {
+                    Console.WriteLine("Prems:" + dataTab.Item1 + ":" + key + ":"+ workReduced[key]);
+                }
                 e.Result = new Tuple<int, Dictionary<string, int>>(dataTab.Item1, workReduced);
 
                 //ReduceConccurent.Add(workReduced);
@@ -86,6 +91,11 @@ namespace GenomicTreatment
 
             Tuple<int, Dictionary<string, int>> tupleresult = (Tuple < int, Dictionary< string, int>>)e.Result;
 
+            foreach(string key in tupleresult.Item2.Keys)
+            {
+                Console.WriteLine("Result:"+tupleresult.Item1 + ":" + key + ":" + tupleresult.Item2[key]);
+            }
+
             foreach(int key in dico.Keys)
             {
                 if(key == tupleresult.Item1)
@@ -95,36 +105,29 @@ namespace GenomicTreatment
 
             }
 
-
-            int countDico = dico.Count;
-            int countFinished = 0;
+            bool isNotComplete = false;
             foreach (int key in dico.Keys)
             {
-                if(dico[key].Item1 == true)
+                if(dico[key].Item1 != true)
                 {
-                    countFinished++;
+                    isNotComplete = true;
                 }
             }
 
 
-            if (countDico- countFinished == 0)
+            if (!isNotComplete)
             {
 
+              
                 Dictionary<string, int> datatruc =  lastReduce(dico);
  
-                foreach(string key in datatruc.Keys)
-                {
-                    Console.WriteLine("KEY : "+ key + ":" + datatruc[key]);
-                }
-               
-
 
                  DataInput dataI = new DataInput()
                  {
                      TaskId = dataReceived.TaskId,
                      SubTaskId = dataReceived.SubTaskId,
                      Method = "globalReduceMethod1",
-                     Data = reduceResult,
+                     Data = datatruc,
                      NodeGUID = dataReceived.NodeGUID
                  };
 
@@ -242,7 +245,7 @@ namespace GenomicTreatment
                     int nbOccur;
                     if (finalList.TryGetValue(key.Key, out nbOccur))
                     {
-                        finalList[key.Key] = finalList[key.Key] + nbOccur;
+                        finalList[key.Key] = finalList[key.Key] + key.Value;
                     }
                     else
                     {

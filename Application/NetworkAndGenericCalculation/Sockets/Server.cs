@@ -4,6 +4,7 @@ using NetworkAndGenericCalculation.MapReduce;
 using NetworkAndGenericCalculation.Nodes;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -46,8 +47,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
-
         public List<Tuple<List<Tuple<string,int>>,string,int,bool>> taskList { get; set; }
+        public ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> dicoFinal { get; set; }
 
 
         /*
@@ -62,7 +63,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public int ChunkRemainsLength => throw new NotImplementedException();
         */
         //public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
-        
+
 
         public int subTaskCount { get; set; }
 
@@ -89,6 +90,7 @@ namespace NetworkAndGenericCalculation.Sockets
             nodeConnected = new List<Node>();
             //tasksInProcess = new List<Tuple<string, int, string, int>>();
             taskList = new List<Tuple<List<Tuple<string, int>>, string, int, bool>>();
+            dicoFinal = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
 
         }
 
@@ -202,29 +204,31 @@ namespace NetworkAndGenericCalculation.Sockets
                 //On ajoute le buffer récupéré à la liste
                 state.data.Add(state.buffer);
 
-                DataInput input = null;
 
                 int bytesRead = client.EndReceive(ar);
 
                 try
                 {
-                    //On désérialise la data
-                    byte[] data = state.data
-                                     .SelectMany(a => a)
-                                     .ToArray();
-                     input = Format.Deserialize<DataInput>(data);
-
-                    //Console.WriteLine("method input : " + input.Method);
-
-                    Receive(client);
-                    ProcessInput(input);
-                    //On récupère la méthod liste pour remplir la combobox du serveur
-                   
+                    // Read data from the remote device.
+                    // Gety data from buffer
+                    byte[] dataToConcat = new byte[bytesRead];
+                    Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
+                    state.data.Add(dataToConcat);
+                    if (IsEndOfMessage(state.buffer, bytesRead))
+                    {
+                        byte[] data = ConcatByteArray(state.data);
+                        DataInput input = Format.Deserialize<DataInput>(data);
+                        Receive(client);
+                        Console.WriteLine("DATA INPUT : " + input.Data);
+                        ProcessInput(input);
+                    }
+                    else
+                    {
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, ReceiveCallback, state);
+                    }
                 }
                 catch (Exception e)
                 {
-                    // TODO : Nécessaire ?
-                    state.data.Add(state.buffer);
                     //Le ReceiveCallback est rappelé si rien n'a été récupéré plus tôt
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
@@ -277,16 +281,30 @@ namespace NetworkAndGenericCalculation.Sockets
             FileSplitter fileSplitted = new FileSplitter();
 
             //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+
 
             int FileLength = file.Length;
-            int nbOfLine = file.Length;
+            int nbOfLine = FileLength / nodesConnected.Count;
 
-            int nbLine = FileLength / nodesConnected.Count;
+            for(int nb = 0; nb < nodesConnected.Count; nb++)
+            {
+                Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                dicoFinal.TryAdd(subTaskCount++, ProcessTuple);
+            }
+
+            foreach(int key in dicoFinal.Keys)
+            {
+                foreach (Client clientSocket in nodesConnected)
+                {
+                    
+                }
+            }
 
             Tuple<int, string[]> chunkToUse = null;
-            bool isSuccess = true;
+            
 
             Stopwatch st = new Stopwatch();
             st.Start();
@@ -320,7 +338,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     DataInput dataI = new DataInput()
                     {
                         TaskId = 1,
-                        SubTaskId = subTaskCount++,
+                        SubTaskId = subTaskCount,
                         Method = method,
                         Data = chunkToUse.Item2,
                         NodeGUID = clientSocket.NodeID
@@ -417,5 +435,26 @@ namespace NetworkAndGenericCalculation.Sockets
                 }
             }
         }
+        private bool IsEndOfMessage(byte[] buffer, int byteRead)
+        {
+            byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+            byte[] endOfBuffer = new byte[8];
+            Array.Copy(buffer, byteRead - endSequence.Length, endOfBuffer, 0, endSequence.Length);
+            return endSequence.SequenceEqual(endOfBuffer);
+        }
+
+        private byte[] ConcatByteArray(List<byte[]> data)
+        {
+            List<byte> byteStorage = new List<byte>();
+            foreach (byte[] bytes in data)
+            {
+                foreach (byte bit in bytes)
+                {
+                    byteStorage.Add(bit);
+                }
+            }
+            return byteStorage.ToArray();
+        }
     }
+            
 }

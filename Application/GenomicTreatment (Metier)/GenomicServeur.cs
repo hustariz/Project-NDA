@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NetworkAndGenericCalculation.Sockets;
 using NetworkAndGenericCalculation.MapReduce;
 using NetworkAndGenericCalculation.Chunk;
+using System.Collections.Concurrent;
 
 namespace GenomicTreatment
 {
@@ -15,9 +16,11 @@ namespace GenomicTreatment
         public List<Tuple<char, int>> globalResultMethod1 { get; set; }
         public int increment { get; set; }
 
+        
+
         public GenomicServeur(IPAddress host, int portNumber, Action<string> servLogger, Action<string, string, int, int, float, float> gridupdater) : base(host, portNumber, servLogger, gridupdater)
         {
-            globalResultMethod1 = new List<Tuple<char, int>>();
+           
         }
 
        
