@@ -16,13 +16,15 @@ namespace GenomicTreatment
     {
         public int counter = 0;
         public List<Tuple<string, int>> reduceResult = new List<Tuple<string, int>>();
-        public ConcurrentBag<Dictionary<string,int>> ReduceConccurent { get; set; }
+        //public ConcurrentBag<Tuple<Dictionary<string,int>,string>> ReduceConccurent { get; set; }
+        public ConcurrentDictionary<int,Tuple<bool,Dictionary<string,int>>> dico { get; set; }
         public DataInput dataReceived { get; set; }
         public int increment;
 
         public GenomicNode(Action<string> logger) : base(logger)
         {
-            ReduceConccurent = new ConcurrentBag<Dictionary<string, int>>();
+            //ReduceConccurent = new ConcurrentBag<Tuple<Dictionary<string, int>, string>>();
+            dico = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
         }
 
         /// <summary>
@@ -47,14 +49,11 @@ namespace GenomicTreatment
             switch (dateReceived.Method)
             {
                 case "method1":
-                    Console.WriteLine("SUBTASK RECEIVED : " + dateReceived.SubTaskId);
                     reduceResult = new List<Tuple<string, int>>();
                     string[] dataReceiveded = (string[])dateReceived.Data;
                     map("method1", dataReceiveded, 0, 0);
                     break;
-
             }
-
             return null;
         }
 
@@ -63,15 +62,13 @@ namespace GenomicTreatment
         {
             try
             {
-                Interlocked.Increment(ref counter);
-                Console.WriteLine(counter);
-                string[] dataTab = (string[])e.Argument;
+                //Interlocked.Increment(ref counter);
+                Tuple<int,string[]> dataTab = (Tuple<int, string[]>)e.Argument;
                 Dictionary<string, int> workReduced = new Dictionary<string, int>();
-                workReduced = CountBases(dataTab);
-                ReduceConccurent.Add(workReduced);
-                //Thread.Sleep(100);
-                //reduceResult = ReduceMethod1(reduceResult, workReduced);
-                //ReduceMethod1(workReduced);
+                workReduced = CountBases(dataTab.Item2);
+                e.Result = new Tuple<int, Dictionary<string, int>>(dataTab.Item1, workReduced);
+
+                //ReduceConccurent.Add(workReduced);
             }
             catch (Exception ex)
             {
@@ -87,10 +84,33 @@ namespace GenomicTreatment
 
             Interlocked.Decrement(ref counter);
 
-            if (counter == 0)
+            Tuple<int, Dictionary<string, int>> tupleresult = (Tuple < int, Dictionary< string, int>>)e.Result;
+
+            foreach(int key in dico.Keys)
+            {
+                if(key == tupleresult.Item1)
+                {
+                    dico[key] = new Tuple<bool, Dictionary<string, int>>(true, tupleresult.Item2);
+                }
+
+            }
+
+
+            int countDico = dico.Count;
+            int countFinished = 0;
+            foreach (int key in dico.Keys)
+            {
+                if(dico[key].Item1 == true)
+                {
+                    countFinished++;
+                }
+            }
+
+
+            if (countDico- countFinished == 0)
             {
 
-                Dictionary<string, int> datatruc =  lastReduce(ReduceConccurent);
+                Dictionary<string, int> datatruc =  lastReduce(dico);
  
                 foreach(string key in datatruc.Keys)
                 {
@@ -112,7 +132,7 @@ namespace GenomicTreatment
                 Send(ClientSocket, dataI);
 
                reduceResult = null;
-               ReduceConccurent = null;
+               //ReduceConccurent = null;
             }
         }
 
@@ -159,11 +179,14 @@ namespace GenomicTreatment
                     int e = 0;
                     for(int i = 0; i < tabToprocess.Count; i++)
                     {
-                        
+                        Interlocked.Increment(ref counter);
+                        Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                        Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                        dico.TryAdd(counter, ProcessTuple);
                         BackgroundWorker bc = new BackgroundWorker();
                         bc.DoWork += backgroundWorker1_DoWork;
                         bc.RunWorkerCompleted += Bw_OnWorkComplete;
-                        bc.RunWorkerAsync(tabToprocess[i]);
+                        bc.RunWorkerAsync(new Tuple<int,string[]>(counter,tabToprocess[i]));
                     }
 
                     break; 
@@ -182,40 +205,6 @@ namespace GenomicTreatment
             //ReduceConccurent = new ConcurrentBag<Tuple<char, int>>();
 
 
-        }
-
-        public void ReduceMethod1(List<Tuple<string, int>> listMapped)
-        {
-            //List<Tuple<char, int>> newListGlobal = listGlobale;
-
-            //Console.WriteLine("INSIDE REDUCE METHOD  : " + listMapped.Count);
-
-                for (int i = 0; i < listMapped.Count; i++)
-                {
-                    /* bool present = false;
-                     foreach(Tuple<char,int> listTuple in ReduceConccurent)
-                     {
-                         if(listTuple.Item1 == listMapped[i].Item1)
-                         {
-                             present = true;
-                             char char1 = listTuple.Item1;
-                             int intToAdd = listTuple.Item2 + listMapped[i].Item2;
-
-                             Console.WriteLine(listTuple.Item1 +" : "+ listTuple.Item2);
-                             Tuple<char, int> result;
-                             ReduceConccurent.TryTake(out result);
-                             Console.WriteLine("TryTake : {0}", result);
-                             ReduceConccurent.Add(new Tuple<char, int>(char1, intToAdd));
-                         }
-                     }*/
-
-                    //TODO this.ReduceConccurent.Add(listMapped[i]);
-
-                   /* if (!present)
-                        ReduceConccurent.Add(listMapped[i]); */
-                }
-            
-            //return newListGlobal;
         }
 
         public List<string[]> Split(string[] array, int index)
@@ -240,34 +229,27 @@ namespace GenomicTreatment
             return tabToprcess;
         }
 
-        public Dictionary<string, int> lastReduce(ConcurrentBag<Dictionary<string,int>> datas)
+        public Dictionary<string, int> lastReduce(ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> datas)
         {
 
-            Dictionary<string, int> finalList = new Dictionary < string, int>();
+            Dictionary<string, int> finalList = new Dictionary <string, int>();
 
-            int nbOccur;
-
-            foreach (Dictionary<string, int> data in datas)
+           
+            foreach (var tuple in datas)
             {
-
-                foreach(string key in data.Keys)
+                foreach(var key in tuple.Value.Item2)
                 {
-                    if (finalList.TryGetValue(key, out nbOccur))
+                    int nbOccur;
+                    if (finalList.TryGetValue(key.Key, out nbOccur))
                     {
-
-                        finalList[key] = nbOccur + data[key];
+                        finalList[key.Key] = finalList[key.Key] + nbOccur;
                     }
                     else
                     {
-                        finalList.Add(key, data[key]);
+                        finalList.Add(key.Key, key.Value);
                     }
-                }
-               
-               
+                }   
             }
-
-
-
             return finalList;
         }
     }
