@@ -36,8 +36,8 @@ namespace NetworkAndGenericCalculation.Sockets
         private static byte[] buffer { get; set; }
         private Action<string> ServLogger { get; set; }
         private Action<int, string, string, float, float> GridUpdater { get; set; }
-        private int LocalPort { get; set; }
-        private IPAddress LocalAddress { get; set; }
+        public int LocalPort { get; set; }
+        public IPAddress LocalAddress { get; set; }
         private static String response = String.Empty;
         private static List<String> ipListe { get; set; }
         private List<Tuple<List<int>, Nodes.Node>> Nodes;
@@ -79,6 +79,7 @@ namespace NetworkAndGenericCalculation.Sockets
             ListNodesConnected = new List<Node>();
             LocalPort = portNumber;
             LocalAddress = host;
+            Console.WriteLine("From contructor :" + LocalAddress);
             BUFFER_SIZE = 2048;
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
@@ -185,7 +186,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
 
             Node nodeConnected = new Node(ipAddress,port,name);
-            nodeConnected.NodeID = createNodeId(ipAddress, port, name);
+            nodeConnected.NodeID = createNodeId(LocalAddress.ToString(), LocalPort.ToString(), name);
             nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
             ListNodesConnected.Add(nodeConnected);

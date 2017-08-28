@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GenomicTreatment;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -110,6 +111,10 @@ namespace MainForms
         // Server's button event handlers
         private void btn_start_srv_Click(object sender, EventArgs e)
         {
+            ipServer = txt_host.Text;
+            //Initialise with the log for the IHM to access return from server
+            server = new GenomicServeur(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
+            servController = new ServController(this, server);
             // Enabling timer
             // () => == delegate
             Invoke(new ThreadStart(() => {

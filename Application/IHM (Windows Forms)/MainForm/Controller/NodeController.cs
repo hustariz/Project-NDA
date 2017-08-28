@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace MainForms
 { 
 
-    public class ClientController
+    public class NodeController
     {
         private MainForm view;
         private Node clientSocket;
 
 
 
-        public ClientController(MainForm view, Node clientSocket)
+        public NodeController(MainForm view, Node clientSocket)
         {
             this.view = view;
             this.clientSocket = clientSocket;

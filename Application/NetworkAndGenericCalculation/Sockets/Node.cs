@@ -92,7 +92,9 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public Node(String adress, String port, String name)
         {
+    
             nodeAdress = adress;
+            Console.WriteLine("From node constructor : " + nodeAdress);
             NodePort = port;
             nodeName = name;
             processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");

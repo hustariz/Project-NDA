@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using NetworkAndGenericCalculation.Sockets;
+using GenomicTreatment;
 
 namespace MainForms
 {
@@ -33,18 +34,26 @@ namespace MainForms
         // Client's button event handler
         private void btn_connection_client_Click(object sender, EventArgs e)
         {
-           clientController.ConnectToServer(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text));
+            ipNode = txt_host_client.Text;
+
+            //Initialise with the log for the IHM to access return from server
+
+            Node = new GenomicNode(this.CLog);
+            //IPEndPoint remoteIpEndPoint = client.ClientSocket.RemoteEndPoint as IPEndPoint;
+            //Console.WriteLine(remoteIpEndPoint.Address);
+            NodeController = new NodeController(this, Node);
+            NodeController.ConnectToServer(IPAddress.Parse(ipNode), Int32.Parse(txt_port.Text));
         }
         private void btn_exit_client_Click(object sender, EventArgs e)
         {
-            clientController.Exit();
+            NodeController.Exit();
         }
         private void btn_send_client_Click(object sender, EventArgs e)
         {
-            clientController.SendRequest(txt_message_client.Text);
+            NodeController.SendRequest(txt_message_client.Text);
             if (txt_message_client.Text.ToLower() != "exit")
             {
-                clientController.ReceiveResponse();
+                NodeController.ReceiveResponse();
             }
         }
     }

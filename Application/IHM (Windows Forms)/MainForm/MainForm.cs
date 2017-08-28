@@ -20,10 +20,10 @@ namespace MainForms
     public partial class MainForm : Form
     {
         private ServController servController;
-        private ClientController clientController;
+        private NodeController NodeController;
         private Server server;
-        private Node client;
-        private String ipServer, ipClient;
+        private Node Node;
+        private String ipServer, ipNode;
         private List <String> modules;
 
 
@@ -40,19 +40,10 @@ namespace MainForms
                 if (adress.AddressFamily == AddressFamily.InterNetwork)
                 {
                     txt_host_client.Text = adress.ToString();
-                    ipClient = txt_host_client.Text;
                     txt_host.Text = adress.ToString();
-                    ipServer = txt_host.Text;
-
                 }
             }
-            //Initialise with the log for the IHM to access return from server
-            server = new GenomicServeur(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text), this.SLog, this.Nlog);
-            servController = new ServController(this, server);
-            client = new GenomicNode(this.CLog);
-            //IPEndPoint remoteIpEndPoint = client.ClientSocket.RemoteEndPoint as IPEndPoint;
-            //Console.WriteLine(remoteIpEndPoint.Address);
-            clientController = new ClientController(this, client);
+
 
             //Initialisation of the combobox
             modules = new List<string>();
@@ -103,9 +94,9 @@ namespace MainForms
 
         }
 
-        public void SetClientController(ClientController controller)
+        public void SetClientController(NodeController controller)
         {
-            clientController = controller;
+            NodeController = controller;
         }
 
     }
