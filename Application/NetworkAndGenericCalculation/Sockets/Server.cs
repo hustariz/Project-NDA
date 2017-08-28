@@ -277,65 +277,100 @@ namespace NetworkAndGenericCalculation.Sockets
             FileSplitter fileSplitted = new FileSplitter();
 
             //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            //string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
             int FileLength = file.Length;
             int nbOfLine = FileLength / nodesConnected.Count;
 
             Tuple<int, string[]> chunkToUse = null;
             bool isSuccess = true;
+
+            /*List<Tuple<int, string[]>> chunks = new List<Tuple<int, string[]>>();
+
+            for (int i = 0; i < nodesConnected.Count; i++)
+            {
+                while (FileLength != fileState)
+                {
+                    chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                    fileState = chunkToUse.Item1;
+                    chunks.Add(chunkToUse);
+                }
+                    
+            }*/
             while (FileLength != fileState)
             {
-                foreach (Client clientSocket in nodesConnected)
-                {
-                    if (FileLength == fileState)
-                    {
-                        map("check", chunkToUse.Item2, 0, 0);
-                        break;
-                    }
+                Parallel.ForEach(nodesConnected, (clientSocket) =>
+                 {
+                     if (isSuccess)
+                     {
+                         subTaskCount++;
+                         Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                         
+                         chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                         fileState = chunkToUse.Item1;
+                         Interlocked.Increment(ref fileState);
+                         Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                         dicoFinal.TryAdd(subTaskCount, ProcessTuple);
+                     }
 
-                    if (fileState + nbOfLine > FileLength)
-                    {
-                        nbOfLine = FileLength - fileState;
-                        map("check", chunkToUse.Item2, 0, 0);
-                        Console.WriteLine(fileState);
-                    }
-
-                    if (isSuccess)
-                    {
-                        Console.WriteLine("SuBtaskToApply : " + subTaskCount++);
-                        Console.WriteLine("SuBtaskToApply : " + subTaskCount);
-                        chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
-                        fileState = chunkToUse.Item1;
-                        Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
-                        Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
-                        dicoFinal.TryAdd(subTaskCount, ProcessTuple);
-                    }
-
-                    //Création d'un nouveau DataInput à envoyer aux Nodes
-                    DataInput dataI = new DataInput()
-                    {
-                        TaskId = 1,
-                        SubTaskId = subTaskCount,
-                        Method = method,
-                        Data = chunkToUse.Item2,
-                        NodeGUID = clientSocket.NodeID
-                    };
-                    //voir pour mettre à jour la liste automatiquement
-                    if (clientSocket.isAvailable)
-                    {
-                        Console.WriteLine("SubTaskID : " + subTaskCount);
-                        Send(clientSocket.ClientSocket, dataI);
-                        clientSocket.isAvailable = false;
-                        isSuccess = true;
-                    }
-                    else
-                    {
-                        Thread.Sleep(100);
-                        isSuccess = false;
-                    }   
-                }
+                     //Création d'un nouveau DataInput à envoyer aux Nodes
+                     DataInput dataI = new DataInput()
+                     {
+                         TaskId = 1,
+                         SubTaskId = subTaskCount,
+                         Method = method,
+                         Data = chunkToUse.Item2,
+                         NodeGUID = clientSocket.NodeID
+                     };
+                     //voir pour mettre à jour la liste automatiquement
+                     if (clientSocket.isAvailable)
+                     {
+                         Send(clientSocket.ClientSocket, dataI);
+                         clientSocket.isAvailable = false;
+                         isSuccess = true;
+                     }
+                     else
+                     {
+                         Thread.Sleep(100);
+                         isSuccess = false;
+                     }
+                 });
             }
+            /*foreach (Client clientSocket in nodesConnected)
+            {
+                if (isSuccess)
+                {
+                    subTaskCount++;
+                    chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                    fileState = chunkToUse.Item1;
+                    Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                    Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                    dicoFinal.TryAdd(subTaskCount, ProcessTuple);
+                }
+
+                //Création d'un nouveau DataInput à envoyer aux Nodes
+                DataInput dataI = new DataInput()
+                {
+                    TaskId = 1,
+                    SubTaskId = subTaskCount,
+                    Method = method,
+                    Data = chunkToUse.Item2,
+                    NodeGUID = clientSocket.NodeID
+                };
+                //voir pour mettre à jour la liste automatiquement
+                if (clientSocket.isAvailable)
+                {
+                    Send(clientSocket.ClientSocket, dataI);
+                    clientSocket.isAvailable = false;
+                    isSuccess = true;
+                }
+                else
+                {
+                    Thread.Sleep(100);
+                    isSuccess = false;
+                }
+            }*/
+
         }
 
         public void touchatoncul()

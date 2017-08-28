@@ -86,23 +86,40 @@ namespace GenomicTreatment
 
             Tuple<int, Dictionary<string, int>> tupleresult = (Tuple < int, Dictionary< string, int>>)e.Result;
 
-            foreach(int key in dico.Keys)
+            Parallel.ForEach(dico.Keys, (key) => {
+
+                if (key == tupleresult.Item1)
+                {
+                    dico[key] = new Tuple<bool, Dictionary<string, int>>(true, tupleresult.Item2);
+                }
+            });
+
+            /*foreach(int key in dico.Keys)
             {
                 if(key == tupleresult.Item1)
                 {
                     dico[key] = new Tuple<bool, Dictionary<string, int>>(true, tupleresult.Item2);
                 }
 
-            }
+            }*/
 
             bool isNotComplete = false;
-            foreach (int key in dico.Keys)
+
+            Parallel.ForEach(dico.Keys, (key) => {
+
+                if (dico[key].Item1 != true)
+                {
+                    isNotComplete = true;
+                }
+            });
+
+            /*foreach (int key in dico.Keys)
             {
                 if(dico[key].Item1 != true)
                 {
                     isNotComplete = true;
                 }
-            }
+            }*/
 
 
             if (!isNotComplete)
@@ -173,6 +190,7 @@ namespace GenomicTreatment
                     
                     List<string[]> tabToprocess = Split(text,text.Length);
                     int e = 0;
+
                     for(int i = 0; i < tabToprocess.Count; i++)
                     {
                         Interlocked.Increment(ref counter);
@@ -230,7 +248,6 @@ namespace GenomicTreatment
 
             Dictionary<string, int> finalList = new Dictionary <string, int>();
 
-           
             foreach (var tuple in datas)
             {
                 foreach(var key in tuple.Value.Item2)

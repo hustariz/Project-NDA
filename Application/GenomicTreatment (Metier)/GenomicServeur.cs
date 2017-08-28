@@ -88,17 +88,6 @@ namespace GenomicTreatment
 
                 case "check":
 
-                    Console.WriteLine(taskList.Count);
-
-                    foreach (Tuple<List<Tuple<string, int>>, string, int, bool> newTuplou  in taskList)
-                    {
-                        foreach(Tuple<string, int> tuplou2 in newTuplou.Item1){
-
-                            Console.WriteLine("Tuploud : ID " + newTuplou.Item2 + " SubTask:" + newTuplou.Item3 +" KEY:"+ tuplou2.Item1 + " VALUE:" + tuplou2.Item2);
-
-                        }
-                    }
-
                     
                     break;
             }
@@ -128,6 +117,7 @@ namespace GenomicTreatment
 
             pairs = pairsList.ToArray<string>();
             Tuple<int, string[]> chunkTosend = new Tuple<int, string[]>(lastIndex + i, pairs);
+
             return chunkTosend;
         }
 
@@ -165,8 +155,23 @@ namespace GenomicTreatment
 
             Dictionary<string, int> finalList = new Dictionary<string, int>();
 
+            Parallel.ForEach(datas, (tuple) => {
 
-            foreach (var tuple in datas)
+                foreach (var key in tuple.Value.Item2)
+                {
+                    int nbOccur;
+                    if (finalList.TryGetValue(key.Key, out nbOccur))
+                    {
+                        finalList[key.Key] = finalList[key.Key] + key.Value;
+                    }
+                    else
+                    {
+                        finalList.Add(key.Key, key.Value);
+                    }
+                }
+            });
+
+            /*foreach (var tuple in datas)
             {
                 foreach (var key in tuple.Value.Item2)
                 {
@@ -180,7 +185,7 @@ namespace GenomicTreatment
                         finalList.Add(key.Key, key.Value);
                     }
                 }
-            }
+            }*/
             return finalList;
         }
     }

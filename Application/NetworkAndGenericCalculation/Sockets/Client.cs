@@ -229,7 +229,6 @@ namespace NetworkAndGenericCalculation.Sockets
                         byte[] data = ConcatByteArray(state.data);
                         DataInput input = Format.Deserialize<DataInput>(data);
                         Receive(client);
-                        Console.WriteLine("DATA INPUT : " + input.Data);
                         ProcessInput(input);
                     }
                     else
@@ -242,159 +241,14 @@ namespace NetworkAndGenericCalculation.Sockets
                     catch(Exception e)
                     {
                     Console.WriteLine("erreur sérialisation ");
-                    //Console.WriteLine("Error : " + e);
-                    //Console.WriteLine(e.ToString());
-                    //state.data.Add(state.buffer);
-                    //Receive(client);
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
-
-                //Console.WriteLine("LLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                //Console.WriteLine(input.Method);
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-
-            
-            //try
-            //{
-            /*// Retrieve the state object and the client socket 
-            // from the asynchronous state object.
-            StateObject state = (StateObject)ar.AsyncState;
-            Socket client = state.workSocket;
-            //processInput(state);
-            //Socket client = (Socket)ar.AsyncState;
-
-            // Read data from the remote device.
-            int bytesRead = client.EndReceive(ar);
-
-            //processInput();
-
-            int finalresult = 0;
-
-            byte[] coucou = new byte[bytesRead];
-
-            ProcessInput(coucou);
-
-            backGroundworkerList = new List<BackgroundWorker>();
-
-            for(int i = 0; i < 4; i++)
-            {
-
-                BackgroundWorker bw2 = new BackgroundWorker()
-                {
-                    WorkerSupportsCancellation = true,
-                    WorkerReportsProgress = true
-                };
-                backGroundworkerList.Add(bw2);
-
-            }
-
-
-            foreach(BackgroundWorker bc in backGroundworkerList)
-            {
-                bc.DoWork += (o, a) =>
-                {
-                    //Console.WriteLine("MABITE");
-                    Thread.Sleep(1000);
-                    //finalresult = calculTest(2, 4);
-                    a.Result = calculTest(2, 4);
-                    //Console.WriteLine();
-                };
-
-                bc.RunWorkerCompleted += (o, a) =>
-                {
-                    int moncul =  (int)a.Result;
-                    Console.WriteLine(moncul);
-                };
-
-                bc.RunWorkerAsync();
-            }
-
-            BackgroundWorker bcChecker = new BackgroundWorker()
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
-
-            bcChecker.DoWork += (o, a) =>
-            {
-                //Console.WriteLine("MABITE");
-                monitoringBW();
-
-            };
-
-            bcChecker.RunWorkerCompleted += (o, a) =>
-            {
-                var data = new byte[bytesRead];
-                
-                Console.WriteLine("Tout le monde a fini");
-            };
-
-
-            bcChecker.RunWorkerAsync();
-
-            /*
-            BackgroundWorker bw = new BackgroundWorker()
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
-
-            bw.DoWork += (o, a) =>
-            {
-                Console.WriteLine("MABITE");
-                finalresult = calculTest(2, 4);
-                //finalresult = (int)a.Result;
-                //Console.WriteLine(finalresult);
-            };
-
-
-            bw.RunWorkerCompleted += (o, a) =>
-            {
-
-                Console.WriteLine(finalresult);
-            };
-
-            //bw.RunWorkerCompleted += worker_RunWorkerCompleted;
-
-            bw.RunWorkerAsync();
-
-            */
-
-            /*if (bytesRead > 0)
-             {
-                 // There might be more data, so store the data received so far.
-                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                 Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                 // Get the rest of the data.
-                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                     new AsyncCallback(ReceiveCallback), state);
-             }
-             else
-             {
-                 // All the data has arrived; put it in response.
-                 if (state.sb.Length > 1)
-                 {
-
-                    response = state.sb.ToString();
-                 }
-                // Signal that all bytes have been received.
-                //Console.WriteLine("FIN");
-                receiveDone.Set();
-
-                //
-            }
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }*/
         }
 
         public virtual Object ProcessInput(DataInput dataI) {
@@ -403,7 +257,6 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 case "IdentNode":
                     NodeID = (String)dataI.Data;
-                    Console.WriteLine(NodeID);
                     break;
                
                 
@@ -498,17 +351,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public float ProcessorUsage => processorCounter.NextValue();
         public float MemoryUsage => memoryCounter.NextValue();
 
-        /*
-        public int Length => throw new NotImplementedException();
 
-        public int ChunkDefaultLength => throw new NotImplementedException();
-
-        public int ChunkCount => throw new NotImplementedException();
-
-        public bool IsActive => throw new NotImplementedException();
-
-        public int ChunkRemainsLength => throw new NotImplementedException();
-        */
         /// <summary>
         /// Fonction générant l'ID d'un Node
         /// </summary>
