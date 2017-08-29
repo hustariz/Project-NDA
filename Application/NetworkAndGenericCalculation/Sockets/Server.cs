@@ -285,92 +285,44 @@ namespace NetworkAndGenericCalculation.Sockets
             Tuple<int, string[]> chunkToUse = null;
             bool isSuccess = true;
 
-            /*List<Tuple<int, string[]>> chunks = new List<Tuple<int, string[]>>();
 
-            for (int i = 0; i < nodesConnected.Count; i++)
-            {
-                while (FileLength != fileState)
-                {
-                    chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
-                    fileState = chunkToUse.Item1;
-                    chunks.Add(chunkToUse);
-                }
-                    
-            }*/
             while (FileLength != fileState)
-            {
-                Parallel.ForEach(nodesConnected, (clientSocket) =>
-                 {
-                     if (isSuccess)
-                     {
-                         subTaskCount++;
-                         Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
-                         
-                         chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
-                         fileState = chunkToUse.Item1;
-                         Interlocked.Increment(ref fileState);
-                         Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
-                         dicoFinal.TryAdd(subTaskCount, ProcessTuple);
-                     }
+            {             
+                foreach (Client clientSocket in nodesConnected)
+                {
+                    if (isSuccess)
+                    {
+                        subTaskCount++;
+                        chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                        fileState = chunkToUse.Item1;
+                        Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                        Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                        dicoFinal.TryAdd(subTaskCount, ProcessTuple);
+                    }
 
-                     //Création d'un nouveau DataInput à envoyer aux Nodes
-                     DataInput dataI = new DataInput()
-                     {
-                         TaskId = 1,
-                         SubTaskId = subTaskCount,
-                         Method = method,
-                         Data = chunkToUse.Item2,
-                         NodeGUID = clientSocket.NodeID
-                     };
-                     //voir pour mettre à jour la liste automatiquement
-                     if (clientSocket.isAvailable)
-                     {
-                         Send(clientSocket.ClientSocket, dataI);
-                         clientSocket.isAvailable = false;
-                         isSuccess = true;
-                     }
-                     else
-                     {
-                         Thread.Sleep(100);
-                         isSuccess = false;
-                     }
-                 });
+                    //Création d'un nouveau DataInput à envoyer aux Nodes
+                    DataInput dataI = new DataInput()
+                    {
+                        TaskId = 1,
+                        SubTaskId = subTaskCount,
+                        Method = method,
+                        Data = chunkToUse.Item2,
+                        NodeGUID = clientSocket.NodeID
+                    };
+                    //voir pour mettre à jour la liste automatiquement
+                    if (clientSocket.isAvailable)
+                    {
+                        Send(clientSocket.ClientSocket, dataI);
+                        clientSocket.isAvailable = false;
+                        isSuccess = true;
+                    }
+                    else
+                    {
+                        Thread.Sleep(100);
+                        isSuccess = false;
+                    }
+                }
             }
-            /*foreach (Client clientSocket in nodesConnected)
-            {
-                if (isSuccess)
-                {
-                    subTaskCount++;
-                    chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
-                    fileState = chunkToUse.Item1;
-                    Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
-                    Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
-                    dicoFinal.TryAdd(subTaskCount, ProcessTuple);
-                }
-
-                //Création d'un nouveau DataInput à envoyer aux Nodes
-                DataInput dataI = new DataInput()
-                {
-                    TaskId = 1,
-                    SubTaskId = subTaskCount,
-                    Method = method,
-                    Data = chunkToUse.Item2,
-                    NodeGUID = clientSocket.NodeID
-                };
-                //voir pour mettre à jour la liste automatiquement
-                if (clientSocket.isAvailable)
-                {
-                    Send(clientSocket.ClientSocket, dataI);
-                    clientSocket.isAvailable = false;
-                    isSuccess = true;
-                }
-                else
-                {
-                    Thread.Sleep(100);
-                    isSuccess = false;
-                }
-            }*/
-
         }
 
         public void touchatoncul()
@@ -393,7 +345,6 @@ namespace NetworkAndGenericCalculation.Sockets
             byte[] data = Format.Serialize(obj);
             try
             {
-                //Console.WriteLine("Send data : " + obj + " to : " + client);
                 client.BeginSend(data, 0, data.Length, 0,
                     new AsyncCallback(SendCallback), client);
             }
