@@ -49,7 +49,11 @@ namespace NetworkAndGenericCalculation.Sockets
         public List<Tuple<List<Tuple<string,int>>,string,int,bool>> taskList { get; set; }
         public ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> dicoFinal { get; set; }
         public Stopwatch stopWatch = new Stopwatch();
-
+        private string nodeState { get; set; }
+        private bool clientConnected { get; set; }
+        private float nodeProcessorUsage;
+        private float nodeMemoryUsage;
+        private string nodeName;
 
         /*
         public int Length => throw new NotImplementedException();
@@ -187,11 +191,11 @@ namespace NetworkAndGenericCalculation.Sockets
             nodeConnected.NodeID = createNodeId(LocalAddress.ToString(), LocalPort.ToString(), name);
             nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
-            ListNodesConnected.Add(nodeConnected);
+            nodesConnected.Add(nodeConnected);
             clientConnected = true;
 
             //call the method the first time
-            updateNodeGridData(ListNodesConnected);
+            updateNodeGridData(nodesConnected);
 
 
           //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
