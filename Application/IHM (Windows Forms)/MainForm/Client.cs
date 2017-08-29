@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using NetworkAndGenericCalculation.Sockets;
 
 namespace MainForms
 {
@@ -15,88 +16,35 @@ namespace MainForms
 
         Socket ClientSocket;
 
-        //Open a Socket Connection with a server
-        private void ConnectToServer(IPAddress host, int port)
-        {
-            ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            int attempts = 0;
-            while (!ClientSocket.Connected)
-            {
-                try
-                {
-                    attempts++;
-                    AppendClientStatus("Connection attempt :" + attempts);
-                    ClientSocket.Connect(host, port);
-                }
-                catch (SocketException)
-                {
-                    AppendClientStatus("SocketException");
-                }
-            }
-            AppendClientStatus("Connected");
-        }
 
-        // Close socket and write a message in the status box.
-        private void Exit()
+        // Append the Client Status Textbox with the argument
+        //Params object to be able to display object
+        public void AppendClientStatus(params object[] message)
         {
-            SendString("exit"); // Tell the server we are exiting
-            ClientSocket.Shutdown(SocketShutdown.Both);
-            ClientSocket.Close();
-            AppendClientStatus("Client disconnected");
-        }
-
-        // Send a Request to the server
-        private void SendRequest()
-        {
-            string request = txt_message_client.Text;
-            SendString(request);
-            AppendClientStatus("request sent : " + request);
-                if (request.ToLower() == "exit")
-                {
-                    Exit();
-                }
-
+            txt_status_client.AppendText(string.Join(" ", message) + Environment.NewLine);
         }
 
 
-        // Sends a string to the server with ASCII encoding.
-        private void SendString(string text)
+        public void CLog(string message)
         {
-            byte[] buffer = Encoding.ASCII.GetBytes(text);
-            ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-        }
-
-        // Receive and convert data into a string to print it
-        // Do not remove the delegate == () =>
-        private void ReceiveResponse()
-        {
-            Invoke(new ThreadStart(() =>
-            {
-                var buffer = new byte[2048];
-                int received = ClientSocket.Receive(buffer, SocketFlags.None);
-                if (received == 0) return;
-                var data = new byte[received];
-                Array.Copy(buffer, data, received);
-                string text = Encoding.ASCII.GetString(data);
-                AppendClientStatus("Response : " + text);
-            }));
+            AppendClientStatus(message);
         }
 
         // Client's button event handler
         private void btn_connection_client_Click(object sender, EventArgs e)
         {
-            ConnectToServer(IPAddress.Parse(txt_host.Text), Int32.Parse(txt_port.Text));
+           clientController.ConnectToServer(IPAddress.Parse(ipServer), Int32.Parse(txt_port.Text));
         }
         private void btn_exit_client_Click(object sender, EventArgs e)
         {
-            Exit();
+            clientController.Exit();
         }
         private void btn_send_client_Click(object sender, EventArgs e)
         {
-            SendRequest();
+            clientController.SendRequest(txt_message_client.Text);
             if (txt_message_client.Text.ToLower() != "exit")
             {
-                ReceiveResponse();
+                clientController.ReceiveResponse();
             }
         }
     }
