@@ -93,14 +93,27 @@ namespace MainForms
             
 
 
-            server.touchatoncul();
+           // server.touchatoncul();
 
+        }
+
+        private void btn_start_process_Click(object sender, EventArgs e)
+        {
+
+            BackgroundWorker bc = new BackgroundWorker();
+            bc.DoWork += (o, a) =>
+            {
+                server.SplitAndSend("method1",file);
+            };
+            bc.RunWorkerAsync();
         }
 
         public void SetClientController(NodeController controller)
         {
             NodeController = controller;
         }
+
+        
 
     }
 }

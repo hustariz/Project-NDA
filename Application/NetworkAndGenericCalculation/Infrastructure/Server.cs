@@ -32,7 +32,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private static List<Socket> clientSockets { get; set; }
         public List<Node> nodesConnected { get; set; }
         //private static List<Client> clientSockets { get; set; }
-        private static List<Nodes.Node> nodeConnected { get; set; }
+        private static List<Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
@@ -42,7 +42,7 @@ namespace NetworkAndGenericCalculation.Sockets
         public IPAddress LocalAddress { get; set; }
         private static String response = String.Empty;
         private static List<String> ipListe { get; set; }
-        private List<Tuple<List<int>, Nodes.Node>> Nodes;
+        //private List<Tuple<List<int>, Node>> Nodes;
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
@@ -83,7 +83,7 @@ namespace NetworkAndGenericCalculation.Sockets
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
-            nodeConnected = new List<Nodes.Node>();
+            nodeConnected = new List<Node>();
             //tasksInProcess = new List<Tuple<string, int, string, int>>();
             taskList = new List<Tuple<List<Tuple<string, int>>, string, int, bool>>();
             dicoFinal = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
@@ -222,12 +222,11 @@ namespace NetworkAndGenericCalculation.Sockets
                     byte[] dataToConcat = new byte[bytesRead];
                     Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
                     state.data.Add(dataToConcat);
-                    if (IsEndOfMessage(state.buffer, bytesRead))
+                    if (MessageFlag(state.buffer, bytesRead))
                     {
                         byte[] data = ConcatByteArray(state.data);
-                        DataInput input = Format.Deserialize<DataInput>(data);
+                        Chunk.Chunk input = Format.Deserialize<Chunk.Chunk>(data);
                         Receive(client);
-                        Console.WriteLine("DATA INPUT : " + input.Data);
                         ProcessInput(input);
                     }
                     else
@@ -237,7 +236,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 }
                 catch (Exception e)
                 {
-                    //Le ReceiveCallback est rappelé si rien n'a été récupéré plus tôt
+                    Console.WriteLine("Exception : "+e);
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
@@ -277,7 +276,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
 
         //Transite data for the IHM throught a log system to the server status box
-        internal void SLog(string msg)
+        public void SLog(string msg)
         {
             ServLogger?.Invoke(msg);
         }
@@ -285,17 +284,27 @@ namespace NetworkAndGenericCalculation.Sockets
         /// <summary>
         /// Execution du split et de l'envoi des fichiers
         /// </summary>
-        public void SplitAndSend()
+        public void SplitAndSend(string methodName, string fileLocation)
         {
             stopWatch.Start();
-            String method = "method1";
+            SLog("Début du traitement");
+
+            String method = methodName;
+            subTaskCount = 0;
+            fileState = 0;
+            Console.WriteLine("REINIT FILESTATE : " + fileState);
+
+
             FileSplitter fileSplitted = new FileSplitter();
 
             //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
             //string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
-            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines(fileLocation);
             int FileLength = file.Length;
-            int nbOfLine = FileLength / nodesConnected.Count;
+            //int nbOfLine = FileLength / nodesConnected.Count;
+
+            int nbOfLine = Math.DivRem(FileLength, nodesConnected.Count, out int remainder);
+
 
             Tuple<int, string[]> chunkToUse = null;
             bool isSuccess = true;
@@ -305,10 +314,13 @@ namespace NetworkAndGenericCalculation.Sockets
             {             
                 foreach (Node clientSocket in nodesConnected)
                 {
+
+
                     if (isSuccess)
                     {
                         subTaskCount++;
-                        chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                        chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine+ remainder, fileState);
+                        remainder = 0;
                         fileState = chunkToUse.Item1;
                         Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
                         Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
@@ -316,7 +328,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     }
 
                     //Création d'un nouveau DataInput à envoyer aux Nodes
-                    DataInput dataI = new DataInput()
+                    Chunk.Chunk dataI = new Chunk.Chunk()
                     {
                         TaskId = 1,
                         SubTaskId = subTaskCount,
@@ -341,28 +353,11 @@ namespace NetworkAndGenericCalculation.Sockets
         }
 
         /// <summary>
-        /// TODO : Changer
-        /// </summary>
-        public void touchatoncul()
-        {
-            Thread myThread;
-
-            // Instanciation du thread, on spécifie dans le 
-            // délégué ThreadStart le nom de la méthode qui
-            // sera exécutée lorsque l'on appele la méthode
-            // Start() de notre thread.
-            myThread = new Thread(new ThreadStart(SplitAndSend));
-
-            // Lancement du thread
-            myThread.Start();
-        }
-
-        /// <summary>
         /// Envoi en Asynchrone les données
         /// </summary>
         /// <param name="client"></param>
         /// <param name="obj"></param>
-        private static void Send(Socket client, DataInput obj)
+        private static void Send(Socket client, Chunk.Chunk obj)
         {
             //Sérialise les données à envoyer
             byte[] data = Format.Serialize(obj);
@@ -419,16 +414,12 @@ namespace NetworkAndGenericCalculation.Sockets
             return null;
         }
 
-        public virtual void ProcessInput(DataInput input)
+        public virtual void ProcessInput(Chunk.Chunk input)
         {
             if (input.Method == "MethodLIST")
             {
                 //A mettre dans la combobox
                 List<String> methodReceive = (List<string>)input.Data;
-                foreach (String method in methodReceive)
-                {
-                    Console.WriteLine(method);
-                }
             }
         }
 
@@ -438,9 +429,9 @@ namespace NetworkAndGenericCalculation.Sockets
         /// <param name="buffer"></param>
         /// <param name="byteRead"></param>
         /// <returns></returns>
-        private bool IsEndOfMessage(byte[] buffer, int byteRead)
+        private bool MessageFlag(byte[] buffer, int byteRead)
         {
-            byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+            byte[] endSequence = Encoding.ASCII.GetBytes("GAMEOVER");
             byte[] endOfBuffer = new byte[8];
             Array.Copy(buffer, byteRead - endSequence.Length, endOfBuffer, 0, endSequence.Length);
             return endSequence.SequenceEqual(endOfBuffer);

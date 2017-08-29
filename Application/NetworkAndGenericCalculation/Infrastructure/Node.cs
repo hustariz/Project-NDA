@@ -132,7 +132,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
             //Send methods to serveur
             List<string> methodList = nodeMethods();
-            DataInput dataI = new DataInput()
+            Chunk.Chunk dataI = new Chunk.Chunk()
             {
                 Method = "MethodLIST",
                 Data = methodList,
@@ -193,7 +193,10 @@ namespace NetworkAndGenericCalculation.Sockets
         }
 
 
-
+        /// <summary>
+        /// Accepte la communication en Asynchrone
+        /// </summary>
+        /// <param name="ar"></param>
         public void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
@@ -210,7 +213,10 @@ namespace NetworkAndGenericCalculation.Sockets
                 new AsyncCallback(ReceiveCallback), state);
         }
 
-
+        /// <summary>
+        /// Reçoit la communication en Asynchrone
+        /// </summary>
+        /// <param name="ar"></param>
         private void ReceiveCallback(IAsyncResult ar)
         {
             try
@@ -230,10 +236,10 @@ namespace NetworkAndGenericCalculation.Sockets
                         byte[] dataToConcat = new byte[bytesRead];
                         Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
                         state.data.Add(dataToConcat);
-                    if (IsEndOfMessage(state.buffer, bytesRead))
+                    if (MessageFlag(state.buffer, bytesRead))
                     {
                         byte[] data = ConcatByteArray(state.data);
-                        DataInput input = Format.Deserialize<DataInput>(data);
+                        Chunk.Chunk input = Format.Deserialize<Chunk.Chunk>(data);
                         Receive(client);
                         ProcessInput(input);
                     }
@@ -246,7 +252,7 @@ namespace NetworkAndGenericCalculation.Sockets
                     }
                     catch(Exception e)
                     {
-                    Console.WriteLine("erreur sérialisation ");
+                    Console.WriteLine(e.ToString());
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
@@ -257,26 +263,28 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        public virtual Object ProcessInput(DataInput dataI) {
-
+        /// <summary>
+        /// Orchestre les méthodes reçues
+        /// </summary>
+        /// <param name="dataI"></param>
+        /// <returns></returns>
+        public virtual Object ProcessInput(Chunk.Chunk dataI) {
             switch (dataI.Method)
             {
                 case "IdentNode":
                     NodeID = (String)dataI.Data;
-                    break;
-               
-                
+                    break;                           
             }
-
             return null;
-
         }
 
+        /// <summary>
+        /// TODO : Récupère la liste des méthodes
+        /// </summary>
+        /// <returns></returns>
         public List<String> nodeMethods() {
-
             List<string> listest = new List<string>();
             listest.Add("COUCOU");
-
             return listest;
         }
 
@@ -293,7 +301,7 @@ namespace NetworkAndGenericCalculation.Sockets
             Log("Server Response : " + text);
         }
 
-        internal void Log(string msg)
+        public void Log(string msg)
         {
             Logger?.Invoke(msg);
         }
@@ -311,7 +319,7 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        public static void Send(Socket handler, DataInput obj)
+        public static void Send(Socket handler, Chunk.Chunk obj)
         {
 
             byte[] data = Format.Serialize(obj);
@@ -376,9 +384,9 @@ namespace NetworkAndGenericCalculation.Sockets
             throw new NotImplementedException();
         }
 
-        private bool IsEndOfMessage(byte[] buffer, int byteRead)
+        private bool MessageFlag(byte[] buffer, int byteRead)
         {
-            byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+            byte[] endSequence = Encoding.ASCII.GetBytes("GAMEOVER");
             byte[] endOfBuffer = new byte[8];
             Array.Copy(buffer, byteRead - endSequence.Length, endOfBuffer, 0, endSequence.Length);
             return endSequence.SequenceEqual(endOfBuffer);

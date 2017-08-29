@@ -21,11 +21,9 @@ namespace GenomicTreatment
         public GenomicServeur(IPAddress host, int portNumber, Action<string> servLogger, Action<int, string, string, float, float> gridupdater) : base(host, portNumber, servLogger, gridupdater)
         {
            
-        }
+        }  
 
-       
-
-        public override void ProcessInput(DataInput dateReceived)
+        public override void ProcessInput(Chunk dateReceived)
         {
 
 
@@ -34,21 +32,24 @@ namespace GenomicTreatment
             {
                 case "globalReduceMethod1":
 
-                    //Console.WriteLine("globalReduceMethod : " + increment++);
                     Dictionary<string, int> incdico = new Dictionary<string, int>();
                     incdico = (Dictionary<string, int>)dateReceived.Data;
-
-                    Console.WriteLine("SERVEUR SUBTASK RECEIVE : " + dateReceived.SubTaskId);
 
                     foreach (int key in dicoFinal.Keys)
                     {
                         if(key == dateReceived.SubTaskId)
                         {
                             dicoFinal[key] = new Tuple<bool, Dictionary<string, int>>(true, incdico);
-                            Console.WriteLine("Received and update : " + dateReceived.SubTaskId);
                         }
                     }
 
+                    foreach(Node node in nodesConnected)
+                    {
+                        if(node.NodeID == dateReceived.NodeGUID)
+                        {
+                            node.isAvailable = true;
+                        }
+                    }
 
                     bool isNotComplete = false;
                     foreach (int key in dicoFinal.Keys)
@@ -64,11 +65,16 @@ namespace GenomicTreatment
                         Dictionary<string, int> datatruc = lastReduce(dicoFinal);
                         foreach(string key in datatruc.Keys)
                         {
-                            Console.WriteLine("KEY : "+ key + " DATA : " + datatruc[key]);
+                            SLog("KEY : "+ key + " VALUE : " + datatruc[key]);
                         }
 
                         stopWatch.Stop();
-                        Console.WriteLine("STOP WATCH" + stopWatch.Elapsed);
+                        
+                        dicoFinal = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
+
+                        SLog("Temps de traitement : " + stopWatch.Elapsed);
+
+                        stopWatch.Reset();
                     }
                     break;
             }
@@ -110,7 +116,11 @@ namespace GenomicTreatment
                 {
                     foreach (char c in text[lastIndex + i].Split('\t')[3].ToCharArray())
                     {
-                        pairsList.Add(c.ToString());
+                        if(c != 'D' && c != 'I')
+                        {
+                            pairsList.Add(c.ToString());
+                        }
+                        
                     }
                 }
             }
@@ -162,30 +172,21 @@ namespace GenomicTreatment
                     int nbOccur;
                     if (finalList.TryGetValue(key.Key, out nbOccur))
                     {
-                        finalList[key.Key] = finalList[key.Key] + key.Value;
+                        if(key.Key != "I" || key.Key != "D")
+                        {
+                            finalList[key.Key] = finalList[key.Key] + key.Value;
+                        }
+                        
                     }
                     else
                     {
-                        finalList.Add(key.Key, key.Value);
+                        if (key.Key != "I" || key.Key != "D")
+                        {
+                            finalList.Add(key.Key, key.Value);
+                        }
                     }
                 }
             });
-
-            /*foreach (var tuple in datas)
-            {
-                foreach (var key in tuple.Value.Item2)
-                {
-                    int nbOccur;
-                    if (finalList.TryGetValue(key.Key, out nbOccur))
-                    {
-                        finalList[key.Key] = finalList[key.Key] + key.Value;
-                    }
-                    else
-                    {
-                        finalList.Add(key.Key, key.Value);
-                    }
-                }
-            }*/
             return finalList;
         }
     }

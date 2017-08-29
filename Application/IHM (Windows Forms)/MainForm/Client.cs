@@ -15,8 +15,6 @@ namespace MainForms
     public partial class MainForm : Form
     {
 
-        Socket ClientSocket;
-
 
         // Append the Client Status Textbox with the argument
         //Params object to be able to display object
@@ -39,8 +37,6 @@ namespace MainForms
             //Initialise with the log for the IHM to access return from server
 
             Node = new GenomicNode(this.CLog);
-            //IPEndPoint remoteIpEndPoint = client.ClientSocket.RemoteEndPoint as IPEndPoint;
-            //Console.WriteLine(remoteIpEndPoint.Address);
             NodeController = new NodeController(this, Node);
             NodeController.ConnectToServer(IPAddress.Parse(ipNode), Int32.Parse(txt_port.Text));
         }

@@ -22,6 +22,7 @@ namespace MainForms
         //if true doesn't create another row in Nlog
         int compteurNode = -1;
         bool clientConnected = false;
+        string file;
         // Append the Server Status Textbox with the argument
         public void AppendSrvStatus(params object[] message)
         {
@@ -58,16 +59,14 @@ namespace MainForms
             AppendSrvStatus(message);
             if (message == "Client connected, waiting for request...")
             {
-                    try
-                    {
+
                         clientConnected = true;
-                        grp_box_data_process.Enabled = true;
-                    }
-                    catch(Exception e)
-                    {
-                    Console.WriteLine(e);
-                    }
-                
+                Invoke(new ThreadStart(() =>
+                {
+                    grp_box_data_process.Enabled = true;
+                }));
+
+
             }
             else if (message == "Client disconnected")
             {
@@ -102,7 +101,7 @@ namespace MainForms
             DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
             if (result == DialogResult.OK) // Test result.
             {
-                string file = openFileDialog1.FileName;
+                file = openFileDialog1.FileName;
                 txt_file_path.Text = file;
                 try
                 {

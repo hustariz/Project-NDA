@@ -6,32 +6,19 @@ using System.Threading.Tasks;
 
 namespace NetworkAndGenericCalculation.Chunk
 {
-    public class Chunk<T>
+    [Serializable]
+    public class Chunk
     {
-        public int Index { get; protected set; }
-        public ChunkState State { get; set; }
-        public T[] Data { get; protected set; }
+        //public String ClientGUID;
+        public String NodeGUID;
+        public int TaskId;
+        public int SubTaskId;
+        public String Method { get; set; }
+        public Object Data { get; set; }
 
-        public long RealLength
+        public override string ToString()
         {
-            get
-            {
-                if (Data == null) return -1;
-                long length = 0;
-                for (int i = 0; i < Data.Length; ++i)
-                {
-                    if (Data[i] != null) ++length;
-                }
-                return length;
-            }
-        }
-
-        public Chunk(T[] data, int index)
-        {
-            Data = data;
-            Index = index;
-            State = ChunkState.AVALAIBLE;
+            return "Data -> Method : " + Method  + " NodeGuid : " + NodeGUID + " TaskId  : " + TaskId + " Data : " + Data;
         }
     }
 }
-

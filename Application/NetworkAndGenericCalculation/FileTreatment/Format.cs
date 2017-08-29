@@ -60,25 +60,6 @@ namespace NetworkAndGenericCalculation.FileTreatment
         /// </summary>
         public static byte[] Serialize(object obj)
         {
-            /*  if (obj == null)
-                  return null;
-
-              BinaryFormatter bf = new BinaryFormatter();
-              try
-              {
-                  using (MemoryStream ms = new MemoryStream())
-                  {
-                      bf.Serialize(ms, obj);
-                      byte[] compressed = Compress(ms.ToArray());
-                      return compressed;
-                  }
-              }
-              catch (SerializationException ex)
-              {
-                  Console.WriteLine("Serialize Error : " + ex);
-                  return null;
-              }*/
-
             if (obj == null)
                 return null;
 
@@ -89,7 +70,7 @@ namespace NetworkAndGenericCalculation.FileTreatment
                 {
                     bf.Serialize(ms, obj);
                     byte[] data = Compress(ms.ToArray());
-                    byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+                    byte[] endSequence = Encoding.ASCII.GetBytes("GAMEOVER");
                     byte[] full = new byte[data.Length + endSequence.Length];
                     Array.Copy(data, 0, full, 0, data.Length);
                     Array.Copy(endSequence, 0, full, data.Length, endSequence.Length);
@@ -98,6 +79,7 @@ namespace NetworkAndGenericCalculation.FileTreatment
             }
             catch (SerializationException ex)
             {
+                Console.WriteLine("erreur : " + ex);
                 return null;
             }
         }

@@ -18,7 +18,7 @@ namespace GenomicTreatment
         public List<Tuple<string, int>> reduceResult = new List<Tuple<string, int>>();
         //public ConcurrentBag<Tuple<Dictionary<string,int>,string>> ReduceConccurent { get; set; }
         public ConcurrentDictionary<int,Tuple<bool,Dictionary<string,int>>> dico { get; set; }
-        public DataInput dataReceived { get; set; }
+        public Chunk dataReceived { get; set; }
         public int increment;
 
         public GenomicNode(Action<string> logger) : base(logger)
@@ -41,7 +41,7 @@ namespace GenomicTreatment
         }
 
 
-        public override Object ProcessInput(DataInput dateReceived)
+        public override Object ProcessInput(Chunk dateReceived)
         {
             dataReceived = dateReceived;
 
@@ -51,6 +51,7 @@ namespace GenomicTreatment
                 case "method1":
                     reduceResult = new List<Tuple<string, int>>();
                     string[] dataReceiveded = (string[])dateReceived.Data;
+                    Log("Début du traitement");
                     map("method1", dataReceiveded, 0, 0);
                     break;
             }
@@ -123,17 +124,10 @@ namespace GenomicTreatment
 
 
             if (!isNotComplete)
-            {
-
-              
+            {              
                 Dictionary<string, int> datatruc =  lastReduce(dico);
 
-                foreach(string key in datatruc.Keys)
-                {
-                    Console.WriteLine("KEY : " + key + " DATA : " + datatruc[key]);
-                }
-
-                DataInput dataI = new DataInput()
+                Chunk dataI = new Chunk()
                  {
                      TaskId = dataReceived.TaskId,
                      SubTaskId = dataReceived.SubTaskId,
@@ -143,8 +137,9 @@ namespace GenomicTreatment
                  };
 
                 Send(ClientSocket, dataI);
-
+                Log("Fin du traitement");
                reduceResult = null;
+               dico = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
                //ReduceConccurent = null;
             }
         }
@@ -182,14 +177,9 @@ namespace GenomicTreatment
             base.map(Method, text, chunkSize, offsets);
             switch (Method)
             {
-                case "1":
-                    Console.WriteLine("J'suis MAP");
-                    break;
-
                 case "method1":
                     
                     List<string[]> tabToprocess = Split(text,text.Length);
-                    int e = 0;
 
                     for(int i = 0; i < tabToprocess.Count; i++)
                     {
@@ -221,6 +211,12 @@ namespace GenomicTreatment
 
         }
 
+        /// <summary>
+        /// Split des données en 4
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public List<string[]> Split(string[] array, int index)
         {
 
@@ -238,11 +234,14 @@ namespace GenomicTreatment
             tabToprcess.Add(tab3);
             tabToprcess.Add(tab4);
 
-            Console.WriteLine(tab1.Length+" : "+ tab2.Length+" : "+ tab3.Length + " : "+ tab4.Length);
-
             return tabToprcess;
         }
 
+        /// <summary>
+        /// Reduce genomique
+        /// </summary>
+        /// <param name="datas"></param>
+        /// <returns></returns>
         public Dictionary<string, int> lastReduce(ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> datas)
         {
 
