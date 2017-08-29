@@ -9,13 +9,13 @@ namespace NetworkAndGenericCalculation.MapReduce
 {
     public interface IMapper
     {
-        int Length { get; }
+        /*int Length { get; }
         int ChunkDefaultLength { get; }
         int ChunkCount { get; }
         bool IsActive { get; }
-        int ChunkRemainsLength { get; }
+        int ChunkRemainsLength { get; }*/
 
-        object map(string Method);
+        object map(string Method, string[] text, int chunkSize, int offsets);
 
         //Chunk<T> NextChunk();
     }
