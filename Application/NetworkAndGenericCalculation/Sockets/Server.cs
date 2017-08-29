@@ -55,20 +55,6 @@ namespace NetworkAndGenericCalculation.Sockets
         private float nodeMemoryUsage;
         private string nodeName;
 
-        /*
-        public int Length => throw new NotImplementedException();
-
-        public int ChunkDefaultLength => throw new NotImplementedException();
-
-        public int ChunkCount => throw new NotImplementedException();
-
-        public bool IsActive => throw new NotImplementedException();
-
-        public int ChunkRemainsLength => throw new NotImplementedException();
-        */
-        //public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
-
-
         public int subTaskCount { get; set; }
 
         // ManualResetEvent instances signal completion.
@@ -79,7 +65,13 @@ namespace NetworkAndGenericCalculation.Sockets
         private static ManualResetEvent receiveDone =
             new ManualResetEvent(false);
 
-
+        /// <summary>
+        /// Initialisation du serveur
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="portNumber"></param>
+        /// <param name="servLogger"></param>
+        /// <param name="gridupdater"></param>
         public Server(IPAddress host, int portNumber, Action<string> servLogger, Action<int, string,string, float, float> gridupdater)
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -98,7 +90,9 @@ namespace NetworkAndGenericCalculation.Sockets
 
         }
 
-
+        /// <summary>
+        /// Démarrage de l'écoute
+        /// </summary>
         public void SetupServer()
         {
             SLog("Setting up server...");
@@ -140,7 +134,10 @@ namespace NetworkAndGenericCalculation.Sockets
 
         //}
 
-        // Update the grid view with node Data throught a log system.
+        /// <summary>
+        /// Met à jour la grille depuis le système de log
+        /// </summary>
+        /// <param name="ClientsConnected"></param>
         public void updateNodeGridData(List<Node> ClientsConnected)
         {
             if (clientConnected)
@@ -162,7 +159,10 @@ namespace NetworkAndGenericCalculation.Sockets
 
         }
 
-        //Accept the connection of multiple client
+        /// <summary>
+        /// Accepte la connexion des nodes
+        /// </summary>
+        /// <param name="ar"></param>
         public void AcceptCallback(IAsyncResult ar)
         {
             Socket listener = (Socket)ar.AsyncState;
@@ -171,7 +171,7 @@ namespace NetworkAndGenericCalculation.Sockets
                 listener = serverSocket.EndAccept(ar);
                 
             }
-            catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
+            catch (ObjectDisposedException)
             {
                 return;
             }
@@ -180,11 +180,6 @@ namespace NetworkAndGenericCalculation.Sockets
             String ipAddress = remoteIpEndPoint.Address.ToString();
             String port = remoteIpEndPoint.Port.ToString();
             String name = "Node "+nbConnectedNode++;
-
-            // TODO
-            // Création d'un node 
-            // Ajout du node à la liste
-            // Envoi du port pour MAJ nodeID
 
 
             Node nodeConnected = new Node(ipAddress,port,name);
@@ -197,24 +192,17 @@ namespace NetworkAndGenericCalculation.Sockets
             //call the method the first time
             updateNodeGridData(nodesConnected);
 
-
-          //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
-          DataInput dataI = new DataInput()
-              {
-                  TaskId = 1,
-                  SubTaskId = 2,
-                  Method = "IdentNode",
-                  Data = nodeConnected.NodeID,
-                  NodeGUID = "192.168.31.26"
-              };
-
             Receive(listener);
-            Send(listener, dataI);
+            //Send(listener, dataI);
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
+        /// <summary>
+        /// Reçoit les informations de la part des nodes
+        /// </summary>
+        /// <param name="ar"></param>
         private void ReceiveCallback(IAsyncResult ar)
         {
             try
@@ -294,6 +282,9 @@ namespace NetworkAndGenericCalculation.Sockets
             ServLogger?.Invoke(msg);
         }
 
+        /// <summary>
+        /// Execution du split et de l'envoi des fichiers
+        /// </summary>
         public void SplitAndSend()
         {
             stopWatch.Start();
@@ -349,6 +340,9 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        /// <summary>
+        /// TODO : Changer
+        /// </summary>
         public void touchatoncul()
         {
             Thread myThread;
@@ -363,9 +357,14 @@ namespace NetworkAndGenericCalculation.Sockets
             myThread.Start();
         }
 
+        /// <summary>
+        /// Envoi en Asynchrone les données
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="obj"></param>
         private static void Send(Socket client, DataInput obj)
         {
-
+            //Sérialise les données à envoyer
             byte[] data = Format.Serialize(obj);
             try
             {
@@ -381,20 +380,40 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        /// <summary>
+        /// Créer l'identifiant du Node
+        /// </summary>
+        /// <param name="adress"></param>
+        /// <param name="port"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public String createNodeId(string adress, string port, string name)
         {
             return adress + ":" + port + ":" + name + ":";
         }
 
+        /// <summary>
+        /// Mapping Générique
+        /// </summary>
+        /// <param name="MethodMap"></param>
+        /// <param name="text"></param>
+        /// <param name="chunkSize"></param>
+        /// <param name="offsets"></param>
+        /// <returns></returns>
         public virtual Object map(string MethodMap, string[] text, int chunkSize, int offsets)
         {
             return null;
         }
 
+        /// <summary>
+        /// Réduce générique
+        /// </summary>
+        /// <returns></returns>
         public object reduce()
         {
             throw new NotImplementedException();
         }
+
         public virtual List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
         {
             return null;
@@ -412,6 +431,13 @@ namespace NetworkAndGenericCalculation.Sockets
                 }
             }
         }
+
+        /// <summary>
+        /// Défini si il s'agit de la fin d'un message et y ajoute une fin de séquence
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="byteRead"></param>
+        /// <returns></returns>
         private bool IsEndOfMessage(byte[] buffer, int byteRead)
         {
             byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");

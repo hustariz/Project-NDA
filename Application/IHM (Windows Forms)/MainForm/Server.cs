@@ -58,8 +58,16 @@ namespace MainForms
             AppendSrvStatus(message);
             if (message == "Client connected, waiting for request...")
             {
-                clientConnected = true;
-                grp_box_data_process.Enabled = true;
+                    try
+                    {
+                        clientConnected = true;
+                        grp_box_data_process.Enabled = true;
+                    }
+                    catch(Exception e)
+                    {
+                    Console.WriteLine(e);
+                    }
+                
             }
             else if (message == "Client disconnected")
             {
