@@ -29,7 +29,7 @@ namespace NetworkAndGenericCalculation.Sockets
     }
 
 
-    public class Client : IMapper, IReducer
+    public class Node : IMapper, IReducer
     {
         public Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -77,7 +77,7 @@ namespace NetworkAndGenericCalculation.Sockets
             new ManualResetEvent(false);
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
-        public Client(Action<string> logger)
+        public Node(Action<string> logger)
         {
            
             ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -91,13 +91,15 @@ namespace NetworkAndGenericCalculation.Sockets
             
         }
 
-        public Client(String adress, String port, String name)
+        public Node(String adress, String port, String name)
         {
             nodeAdress = adress;
             NodePort = port;
             nodeName = name;
 
         }
+
+        
 
 
         //Open a Socket Connection with a server

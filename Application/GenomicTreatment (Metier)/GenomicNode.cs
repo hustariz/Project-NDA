@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GenomicTreatment
 {
-    public class GenomicNode : Client
+    public class GenomicNode : Node
     {
         public int counter = 0;
         public List<Tuple<string, int>> reduceResult = new List<Tuple<string, int>>();

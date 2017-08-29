@@ -21,7 +21,7 @@ namespace MainForms
         private ServController servController;
         private ClientController clientController;
         private Server server;
-        private Client client;
+        private Node client;
         private String ipServer, ipClient;
 
         public MainForm()

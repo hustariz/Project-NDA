@@ -1,7 +1,6 @@
 ﻿using NetworkAndGenericCalculation.Chunk;
 using NetworkAndGenericCalculation.FileTreatment;
 using NetworkAndGenericCalculation.MapReduce;
-using NetworkAndGenericCalculation.Nodes;
 
 using System;
 using System.Collections.Concurrent;
@@ -31,9 +30,9 @@ namespace NetworkAndGenericCalculation.Sockets
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
-        public List<Client> nodesConnected { get; set; }
+        public List<Node> nodesConnected { get; set; }
         //private static List<Client> clientSockets { get; set; }
-        private static List<Node> nodeConnected { get; set; }
+        private static List<Nodes.Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
         private int BUFFER_SIZE { get; set; }
         private static byte[] buffer { get; set; }
@@ -43,7 +42,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private IPAddress LocalAddress { get; set; }
         private static String response = String.Empty;
         private static List<String> ipListe { get; set; }
-        private List<Tuple<List<int>, Node>> Nodes;
+        private List<Tuple<List<int>, Nodes.Node>> Nodes;
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
@@ -81,14 +80,14 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSockets = new List<Socket>();
-            nodesConnected = new List<Client>();
+            nodesConnected = new List<Node>();
             LocalPort = portNumber;
             LocalAddress = host;
             BUFFER_SIZE = 4096;
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
-            nodeConnected = new List<Node>();
+            nodeConnected = new List<Nodes.Node>();
             //tasksInProcess = new List<Tuple<string, int, string, int>>();
             taskList = new List<Tuple<List<Tuple<string, int>>, string, int, bool>>();
             dicoFinal = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
@@ -128,21 +127,21 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        public void ConnectNode(int threadCount, String IP)
+        /*public void ConnectNode(int threadCount, String IP)
         {
             SLog("Setting up local node...");
-            localnode = new Node(threadCount, IP);
+            localnode = new NetworkAndGenericCalculation.Sockets.Node(threadCount, IP);
             SLog("Connected : " + localnode.ToString());
             nodeConnected.Add(localnode);
+            
+        }*/
 
-        }
-
-        public void updateNodeGridData()
+        /*public void updateNodeGridData()
         {
             string nodeState = "Active";
             if (localnode.isAvailable) nodeState = "Inactive";
             NLog(localnode.ToString(), nodeState, localnode.ActualWorker, localnode.Workers.Count, localnode.ProcessorUsage, localnode.MemoryUsage);
-        }
+        }*/
 
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult ar)
@@ -169,7 +168,7 @@ namespace NetworkAndGenericCalculation.Sockets
             // Envoi du port pour MAJ nodeID
 
 
-            Client nodeConnected = new Client(ipAddress,port,name);
+            Node nodeConnected = new Node(ipAddress,port,name);
             nodeConnected.NodeID = createNodeId(ipAddress, port, name);
             nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
@@ -288,7 +287,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
             while (FileLength != fileState)
             {             
-                foreach (Client clientSocket in nodesConnected)
+                foreach (Node clientSocket in nodesConnected)
                 {
                     if (isSuccess)
                     {

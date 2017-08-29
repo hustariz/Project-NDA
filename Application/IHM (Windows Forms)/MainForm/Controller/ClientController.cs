@@ -13,11 +13,11 @@ namespace MainForms
     public class ClientController
     {
         private MainForm view;
-        private Client clientSocket;
+        private Node clientSocket;
 
 
 
-        public ClientController(MainForm view, Client clientSocket)
+        public ClientController(MainForm view, Node clientSocket)
         {
             this.view = view;
             this.clientSocket = clientSocket;

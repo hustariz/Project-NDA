@@ -33,12 +33,12 @@ namespace MainForms
 
         public void ConnectNode(int threadCount, String IP)
         {
-            serverSocket.ConnectNode(threadCount, IP);
+           // serverSocket.ConnectNode(threadCount, IP);
         }
 
         public void updateNodeGridData()
         {
-            serverSocket.updateNodeGridData();
+           // serverSocket.updateNodeGridData();
         }
 
         public void sendFile()
