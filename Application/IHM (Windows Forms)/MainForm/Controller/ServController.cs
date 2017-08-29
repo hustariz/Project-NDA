@@ -48,14 +48,14 @@ namespace MainForms
                 //isAvailable = serverSocket.ClientsConnected[i].isAvailable;
                 //processorUsage = serverSocket.ClientsConnected[i].ProcessorUsage;
                 //memoryUsage = serverSocket.ClientsConnected[i].MemoryUsage;
-                ClientsConnected = serverSocket.ListNodesConnected;
+                ClientsConnected = serverSocket.nodesConnected;
                 serverSocket.updateNodeGridData(ClientsConnected);                  
         }
 
         public int getNodeCount()
         {
             int count = 0;
-            for (int i = 0; i < serverSocket.ListNodesConnected.Count; i++)
+            for (int i = 0; i < serverSocket.nodesConnected.Count; i++)
             {
                 count += 1;
             }

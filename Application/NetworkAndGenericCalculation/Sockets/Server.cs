@@ -1,11 +1,13 @@
 ﻿using NetworkAndGenericCalculation.Chunk;
 using NetworkAndGenericCalculation.FileTreatment;
 using NetworkAndGenericCalculation.MapReduce;
-using NetworkAndGenericCalculation.Nodes;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -28,7 +30,7 @@ namespace NetworkAndGenericCalculation.Sockets
         private static Socket serverSocket { get; set; }
         // List of clientSocket for multiple connection from client
         private static List<Socket> clientSockets { get; set; }
-        public List<Node> ListNodesConnected { get; set; }
+        public List<Node> nodesConnected { get; set; }
         //private static List<Client> clientSockets { get; set; }
         private static List<Nodes.Node> nodeConnected { get; set; }
         //private static List<T> clientConnected { get; set; }
@@ -44,15 +46,16 @@ namespace NetworkAndGenericCalculation.Sockets
         private Node localnode { get; set; }
         private int nbConnectedNode { get; set; }
         private int fileState { get; set; }
-        private string nodeAdress;
-        private string nodeState;
-        private int nodeActiveWThread;
-        private int nodeWorkerCount;
+        public List<Tuple<List<Tuple<string,int>>,string,int,bool>> taskList { get; set; }
+        public ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>> dicoFinal { get; set; }
+        public Stopwatch stopWatch = new Stopwatch();
+        private string nodeState { get; set; }
+        private bool clientConnected { get; set; }
         private float nodeProcessorUsage;
         private float nodeMemoryUsage;
         private string nodeName;
-        private Boolean clientConnected;
 
+        /*
         public int Length => throw new NotImplementedException();
 
         public int ChunkDefaultLength => throw new NotImplementedException();
@@ -62,6 +65,11 @@ namespace NetworkAndGenericCalculation.Sockets
         public bool IsActive => throw new NotImplementedException();
 
         public int ChunkRemainsLength => throw new NotImplementedException();
+        */
+        //public List<Tuple<String, int, String, int>> tasksInProcess { get; set; }
+
+
+        public int subTaskCount { get; set; }
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -76,15 +84,17 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             clientSockets = new List<Socket>();
-            ListNodesConnected = new List<Node>();
+            nodesConnected = new List<Node>();
             LocalPort = portNumber;
             LocalAddress = host;
-            Console.WriteLine("From contructor :" + LocalAddress);
-            BUFFER_SIZE = 2048;
+            BUFFER_SIZE = 4096;
             buffer = new byte[BUFFER_SIZE];
             ServLogger = servLogger;
             GridUpdater = gridupdater;
             nodeConnected = new List<Nodes.Node>();
+            //tasksInProcess = new List<Tuple<string, int, string, int>>();
+            taskList = new List<Tuple<List<Tuple<string, int>>, string, int, bool>>();
+            dicoFinal = new ConcurrentDictionary<int, Tuple<bool, Dictionary<string, int>>>();
 
         }
 
@@ -155,15 +165,7 @@ namespace NetworkAndGenericCalculation.Sockets
         //Accept the connection of multiple client
         public void AcceptCallback(IAsyncResult ar)
         {
-            // Signal the main thread to continue.
-            //allDone.Set();
-
             Socket listener = (Socket)ar.AsyncState;
-
-            //Client clientConnected = new GenomicNode(listener);
-
-            //clientConnected.isAvailable = true;
-
             try
             {
                 listener = serverSocket.EndAccept(ar);
@@ -177,7 +179,7 @@ namespace NetworkAndGenericCalculation.Sockets
             IPEndPoint remoteIpEndPoint = listener.RemoteEndPoint as IPEndPoint;
             String ipAddress = remoteIpEndPoint.Address.ToString();
             String port = remoteIpEndPoint.Port.ToString();
-            String name = "Node "+nbConnectedNode;
+            String name = "Node "+nbConnectedNode++;
 
             // TODO
             // Création d'un node 
@@ -189,11 +191,11 @@ namespace NetworkAndGenericCalculation.Sockets
             nodeConnected.NodeID = createNodeId(LocalAddress.ToString(), LocalPort.ToString(), name);
             nodeConnected.isAvailable = true;
             nodeConnected.ClientSocket = listener;
-            ListNodesConnected.Add(nodeConnected);
+            nodesConnected.Add(nodeConnected);
             clientConnected = true;
 
             //call the method the first time
-            updateNodeGridData(ListNodesConnected);
+            updateNodeGridData(nodesConnected);
 
 
           //Création d'un nouveau DataInput afin de le renvoyer dès que le serveur à reçu l'information
@@ -208,7 +210,6 @@ namespace NetworkAndGenericCalculation.Sockets
 
             Receive(listener);
             Send(listener, dataI);
-            map("2");
             SLog("Client connected, waiting for request...");
             //In case another client wants to connect
             serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
@@ -225,37 +226,29 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 //On ajoute le buffer récupéré à la liste
                 state.data.Add(state.buffer);
-
-                DataInput input = null;
-
+                int bytesRead = client.EndReceive(ar);
                 try
                 {
-                    //On désérialise la data
-                    byte[] data = state.data
-                                     .SelectMany(a => a)
-                                     .ToArray();
-                     input = Format.Deserialize<DataInput>(data);
-
-                    //TODO : remove
-                     Console.WriteLine(input.Method);
-
-                    Receive(client);
-
-                    //On récupère la méthod liste pour remplir la combobox du serveur
-                    if(input.Method == "MethodLIST")
+                    // Read data from the remote device.
+                    // Gety data from buffer
+                    byte[] dataToConcat = new byte[bytesRead];
+                    Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
+                    state.data.Add(dataToConcat);
+                    if (IsEndOfMessage(state.buffer, bytesRead))
                     {
-                        //A mettre dans la combobox
-                        List<String> methodReceive = (List<string>)input.Data;
-                        foreach(String method in methodReceive)
-                        {
-                            Console.WriteLine(method);
-                        }
+                        byte[] data = ConcatByteArray(state.data);
+                        DataInput input = Format.Deserialize<DataInput>(data);
+                        Receive(client);
+                        Console.WriteLine("DATA INPUT : " + input.Data);
+                        ProcessInput(input);
+                    }
+                    else
+                    {
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, ReceiveCallback, state);
                     }
                 }
                 catch (Exception e)
                 {
-                    // TODO : Nécessaire ?
-                    state.data.Add(state.buffer);
                     //Le ReceiveCallback est rappelé si rien n'a été récupéré plus tôt
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
@@ -265,8 +258,6 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 Console.WriteLine(e.ToString());
             }
-
-
         }
 
 
@@ -283,11 +274,6 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
-
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
-
             }
             catch (Exception e)
             {
@@ -308,67 +294,81 @@ namespace NetworkAndGenericCalculation.Sockets
             ServLogger?.Invoke(msg);
         }
 
-        public void SplitAndSend(String method)
+        public void SplitAndSend()
         {
+            stopWatch.Start();
+            String method = "method1";
             FileSplitter fileSplitted = new FileSplitter();
-            //String fileTosend = fileSplitted.FileReader("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
-            // TODO : remplacer par le choix fait dans la combobox du Serveur
-            String fileTosend = fileSplitted.FileReader("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
 
-            //ChunkSplit chunkToUse = new ChunkSplit();
-         
-            
-            foreach(Node clientSocket in ListNodesConnected)
-            {
+            //string[] file = File.ReadAllLines("E:/Dev/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            //string[] file = File.ReadAllLines("D:/ProjectC#/ProjectC#/Project-NDA/Genomes/genome_kennethreitz.txt");
+            string[] file = File.ReadAllLines("C:/Users/loika/Desktop/projet-NDA/Project-NDA/Genomes/genome_kennethreitz.txt");
+            int FileLength = file.Length;
+            int nbOfLine = FileLength / nodesConnected.Count;
 
-                Tuple<int,string> chunkToUse = fileSplitted.SplitIntoChunks(fileTosend, 4096, fileState);
+            Tuple<int, string[]> chunkToUse = null;
+            bool isSuccess = true;
 
-                fileState = chunkToUse.Item1;
-                //Création d'un nouveau DataInput à envoyer aux Nodes
-                DataInput dataI = new DataInput()
+
+            while (FileLength != fileState)
+            {             
+                foreach (Node clientSocket in nodesConnected)
                 {
-                    TaskId = 1,
-                    SubTaskId = 2,
-                    Method = method,
-                    Data = chunkToUse.Item2,
-                    NodeGUID = "192.168.31.26"
-                };
-                //voir pour mettre à jour la liste automatiquement
+                    if (isSuccess)
+                    {
+                        subTaskCount++;
+                        chunkToUse = (Tuple<int, string[]>)map("Method1", file, nbOfLine, fileState);
+                        fileState = chunkToUse.Item1;
+                        Dictionary<string, int> ProccessDico = new Dictionary<string, int>();
+                        Tuple<bool, Dictionary<string, int>> ProcessTuple = new Tuple<bool, Dictionary<string, int>>(false, ProccessDico);
+                        dicoFinal.TryAdd(subTaskCount, ProcessTuple);
+                    }
 
-                if (clientSocket.isAvailable)
-                {
-                    Send(clientSocket.ClientSocket, dataI);
-                    clientSocket.isAvailable = false;
+                    //Création d'un nouveau DataInput à envoyer aux Nodes
+                    DataInput dataI = new DataInput()
+                    {
+                        TaskId = 1,
+                        SubTaskId = subTaskCount,
+                        Method = method,
+                        Data = chunkToUse.Item2,
+                        NodeGUID = clientSocket.NodeID
+                    };
+                    //voir pour mettre à jour la liste automatiquement
+                    if (clientSocket.isAvailable)
+                    {
+                        Send(clientSocket.ClientSocket, dataI);
+                        clientSocket.isAvailable = false;
+                        isSuccess = true;
+                    }
+                    else
+                    {
+                        Thread.Sleep(100);
+                        isSuccess = false;
+                    }
                 }
-                
             }
-            
-            //sendDone.WaitOne();
-            //clientSockets[0].BeginSend(chunkToUse.chunkBytes, 0, chunkToUse.chunkBytes.Length, SocketFlags.None,new AsyncCallback(SendCallback), clientSockets[0]);
+        }
 
-            // clientSockets[0].BeginSend(chunkToUse.chunkBytes ,0, AcceptCallback, clientSockets[0]);
+        public void touchatoncul()
+        {
+            Thread myThread;
 
+            // Instanciation du thread, on spécifie dans le 
+            // délégué ThreadStart le nom de la méthode qui
+            // sera exécutée lorsque l'on appele la méthode
+            // Start() de notre thread.
+            myThread = new Thread(new ThreadStart(SplitAndSend));
 
-            // Serveur envoyer la méthode / Texte
-            // Thread
-            // Si node available
-            // Envoyer un tableau chunk
-            // Si pas worker 
-            // Thread.sleep
-            // jusqu'à un événement worker dispo
-
-            //chunkToUse.chunkBytes
-
+            // Lancement du thread
+            myThread.Start();
         }
 
         private static void Send(Socket client, DataInput obj)
         {
 
             byte[] data = Format.Serialize(obj);
-
             try
             {
-                Console.WriteLine("Send data : " + obj + " to : " + client);
                 client.BeginSend(data, 0, data.Length, 0,
                     new AsyncCallback(SendCallback), client);
             }
@@ -376,7 +376,7 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 /// Client Down ///
                 if (!client.Connected)
-                    Console.WriteLine("Client " + client.RemoteEndPoint.ToString() + " Disconnected");
+                Console.WriteLine("Client " + client.RemoteEndPoint.ToString() + " Disconnected");
                 Console.WriteLine(ex.ToString());
             }
         }
@@ -386,16 +386,52 @@ namespace NetworkAndGenericCalculation.Sockets
             return adress + ":" + port + ":" + name + ":";
         }
 
-        public virtual Object map(string MethodMap)
+        public virtual Object map(string MethodMap, string[] text, int chunkSize, int offsets)
         {
-            Console.WriteLine("OK SERVEUR BRO");
             return null;
         }
 
         public object reduce()
         {
-
             throw new NotImplementedException();
         }
+        public virtual List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
+        {
+            return null;
+        }
+
+        public virtual void ProcessInput(DataInput input)
+        {
+            if (input.Method == "MethodLIST")
+            {
+                //A mettre dans la combobox
+                List<String> methodReceive = (List<string>)input.Data;
+                foreach (String method in methodReceive)
+                {
+                    Console.WriteLine(method);
+                }
+            }
+        }
+        private bool IsEndOfMessage(byte[] buffer, int byteRead)
+        {
+            byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+            byte[] endOfBuffer = new byte[8];
+            Array.Copy(buffer, byteRead - endSequence.Length, endOfBuffer, 0, endSequence.Length);
+            return endSequence.SequenceEqual(endOfBuffer);
+        }
+
+        private byte[] ConcatByteArray(List<byte[]> data)
+        {
+            List<byte> byteStorage = new List<byte>();
+            foreach (byte[] bytes in data)
+            {
+                foreach (byte bit in bytes)
+                {
+                    byteStorage.Add(bit);
+                }
+            }
+            return byteStorage.ToArray();
+        }
     }
+            
 }

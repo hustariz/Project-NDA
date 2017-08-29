@@ -90,7 +90,10 @@ namespace MainForms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            server.SplitAndSend("method1");
+            
+
+
+            server.touchatoncul();
 
         }
 

@@ -28,7 +28,8 @@ namespace NetworkAndGenericCalculation.Sockets
         public StringBuilder sb = new StringBuilder();
     }
 
-    public class Node
+
+    public class Node : IMapper, IReducer
     {
         public Socket ClientSocket { get; set; }
         private int BUFFER_SIZE { get; set; }
@@ -101,6 +102,8 @@ namespace NetworkAndGenericCalculation.Sockets
             memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
 
         }
+
+        
 
 
         //Open a Socket Connection with a server
@@ -218,198 +221,40 @@ namespace NetworkAndGenericCalculation.Sockets
                 Socket client = state.workSocket;
 
                 // Read data from the remote device.
-                int bytesRead = client.EndReceive(ar);
+                int bytesRead = client.EndReceive(ar);       
 
-                byte[] coucou = new byte[bytesRead];
-
-                //String lala = Encoding.ASCII.GetString(coucou);
-
-                //Console.WriteLine(lala);
-                state.data.Add(state.buffer);
-
-
-                 //input = null;
                     try
                     {
-                        byte[] data = state.data
-                                         .SelectMany(a => a)
-                                         .ToArray();
-                    DataInput input = Format.Deserialize<DataInput>(data);
-
-                    // Receive après inputmabite
-                    ProcessInput(input);
-
-
-                    /*
-                    DataInput dataI = new DataInput()
+                        // Read data from the remote device.
+                        // Gety data from buffer
+                        byte[] dataToConcat = new byte[bytesRead];
+                        Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
+                        state.data.Add(dataToConcat);
+                    if (IsEndOfMessage(state.buffer, bytesRead))
                     {
-                        TaskId = 1,
-                        SubTaskId = 2,
-                        Method = "loulou",
-                        Data = "TA GUEULE",
-                        NodeGUID = "192.168.31.26"
-                    };*/
+                        byte[] data = ConcatByteArray(state.data);
+                        DataInput input = Format.Deserialize<DataInput>(data);
+                        Receive(client);
+                        ProcessInput(input);
+                    }
+                    else
+                    {
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, ReceiveCallback, state);
+                    }
 
-                    Receive(client);
 
-                       
                     }
                     catch(Exception e)
                     {
-                    //Console.WriteLine(e.ToString());
-                    this.i++;
-                    Console.WriteLine(this.i);
-                    state.data.Add(state.buffer);
-                    //Receive(client);
+                    Console.WriteLine("erreur sérialisation ");
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
-
-                //Console.WriteLine("LLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                //Console.WriteLine(input.Method);
-
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-
-            
-            //try
-            //{
-            /*// Retrieve the state object and the client socket 
-            // from the asynchronous state object.
-            StateObject state = (StateObject)ar.AsyncState;
-            Socket client = state.workSocket;
-            //processInput(state);
-            //Socket client = (Socket)ar.AsyncState;
-
-            // Read data from the remote device.
-            int bytesRead = client.EndReceive(ar);
-
-            //processInput();
-
-            int finalresult = 0;
-
-            byte[] coucou = new byte[bytesRead];
-
-            ProcessInput(coucou);
-
-            backGroundworkerList = new List<BackgroundWorker>();
-
-            for(int i = 0; i < 4; i++)
-            {
-
-                BackgroundWorker bw2 = new BackgroundWorker()
-                {
-                    WorkerSupportsCancellation = true,
-                    WorkerReportsProgress = true
-                };
-                backGroundworkerList.Add(bw2);
-
-            }
-
-
-            foreach(BackgroundWorker bc in backGroundworkerList)
-            {
-                bc.DoWork += (o, a) =>
-                {
-                    //Console.WriteLine("MABITE");
-                    Thread.Sleep(1000);
-                    //finalresult = calculTest(2, 4);
-                    a.Result = calculTest(2, 4);
-                    //Console.WriteLine();
-                };
-
-                bc.RunWorkerCompleted += (o, a) =>
-                {
-                    int moncul =  (int)a.Result;
-                    Console.WriteLine(moncul);
-                };
-
-                bc.RunWorkerAsync();
-            }
-
-            BackgroundWorker bcChecker = new BackgroundWorker()
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
-
-            bcChecker.DoWork += (o, a) =>
-            {
-                //Console.WriteLine("MABITE");
-                monitoringBW();
-
-            };
-
-            bcChecker.RunWorkerCompleted += (o, a) =>
-            {
-                var data = new byte[bytesRead];
-                
-                Console.WriteLine("Tout le monde a fini");
-            };
-
-
-            bcChecker.RunWorkerAsync();
-
-            /*
-            BackgroundWorker bw = new BackgroundWorker()
-            {
-                WorkerSupportsCancellation = true,
-                WorkerReportsProgress = true
-            };
-
-            bw.DoWork += (o, a) =>
-            {
-                Console.WriteLine("MABITE");
-                finalresult = calculTest(2, 4);
-                //finalresult = (int)a.Result;
-                //Console.WriteLine(finalresult);
-            };
-
-
-            bw.RunWorkerCompleted += (o, a) =>
-            {
-
-                Console.WriteLine(finalresult);
-            };
-
-            //bw.RunWorkerCompleted += worker_RunWorkerCompleted;
-
-            bw.RunWorkerAsync();
-
-            */
-
-            /*if (bytesRead > 0)
-             {
-                 // There might be more data, so store the data received so far.
-                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                 Console.WriteLine(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                 // Get the rest of the data.
-                 client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                     new AsyncCallback(ReceiveCallback), state);
-             }
-             else
-             {
-                 // All the data has arrived; put it in response.
-                 if (state.sb.Length > 1)
-                 {
-
-                    response = state.sb.ToString();
-                 }
-                // Signal that all bytes have been received.
-                //Console.WriteLine("FIN");
-                receiveDone.Set();
-
-                //
-            }
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.ToString());
-        }*/
         }
 
         public virtual Object ProcessInput(DataInput dataI) {
@@ -418,8 +263,9 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 case "IdentNode":
                     NodeID = (String)dataI.Data;
-                    Console.WriteLine(NodeID);
                     break;
+               
+                
             }
 
             return null;
@@ -428,7 +274,10 @@ namespace NetworkAndGenericCalculation.Sockets
 
         public List<String> nodeMethods() {
 
-            return null;
+            List<string> listest = new List<string>();
+            listest.Add("COUCOU");
+
+            return listest;
         }
 
         //public abstract object ProcessInput(DataInput dataI);
@@ -449,13 +298,6 @@ namespace NetworkAndGenericCalculation.Sockets
             Logger?.Invoke(msg);
         }
 
-        public static int calculTest(int nb1, int nb2) 
-        {
-            Console.WriteLine("PAR LA" + nb1 + nb2);
-            int nb3 = nb1 + nb2;
-            return nb3;
-        }
-
         public static void monitoringBW()
         {
 
@@ -469,14 +311,14 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        private static void Send(Socket handler, DataInput obj)
+        public static void Send(Socket handler, DataInput obj)
         {
 
             byte[] data = Format.Serialize(obj);
 
             try
             {
-                Console.WriteLine("Send data : " + obj + " to : " + handler);
+                //Console.WriteLine("Send data : " + obj + " to : " + handler);
                 handler.BeginSend(data, 0, data.Length, 0,
                     new AsyncCallback(SendCallback), handler);
             }
@@ -502,7 +344,7 @@ namespace NetworkAndGenericCalculation.Sockets
 
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+               // Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
             }
             catch (Exception e)
@@ -511,21 +353,10 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        /// <summary>
-        /// Fonction executée lorsque l'ensemble des workers ont terminé leur job
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Bw_OnWorkComplete(object sender, RunWorkerCompletedEventArgs e)
-        {
-
-            //Send(ClientSocket, dataI);
-            Tuple<Object,Reduce> reduded = (Tuple<Object,Reduce>)e.Result;
-            //reduded.Item2.reduce(reduded.Item1);
-        }
 
         public float ProcessorUsage => processorCounter.NextValue();
         public float MemoryUsage => memoryCounter.NextValue();
+
 
         /// <summary>
         /// Fonction générant l'ID d'un Node
@@ -534,5 +365,38 @@ namespace NetworkAndGenericCalculation.Sockets
         {
             NodeID = "NODE" + ":" + serveurAdress + ":" + serverNodePort;
         }
+
+        public virtual object map(string Method, string[] text, int chunkSize, int offsets)
+        {
+            return null;
+        }
+
+        public virtual object reduce()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsEndOfMessage(byte[] buffer, int byteRead)
+        {
+            byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
+            byte[] endOfBuffer = new byte[8];
+            Array.Copy(buffer, byteRead - endSequence.Length, endOfBuffer, 0, endSequence.Length);
+            return endSequence.SequenceEqual(endOfBuffer);
+        }
+
+        private byte[] ConcatByteArray(List<byte[]> data)
+        {
+            List<byte> byteStorage = new List<byte>();
+            foreach (byte[] bytes in data)
+            {
+                foreach (byte bit in bytes)
+                {
+                    byteStorage.Add(bit);
+                }
+            }
+            return byteStorage.ToArray();
+        }
+
+
     }
 }
