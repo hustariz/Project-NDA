@@ -414,11 +414,10 @@ namespace NetworkAndGenericCalculation.Sockets
             throw new NotImplementedException();
         }
 
-        public virtual List<Tuple<char, int>> ReduceMethod1(List<Tuple<char, int>> listGlobale, List<Tuple<char, int>> listMapped)
-        {
-            return null;
-        }
-
+        /// <summary>
+        /// Orchestre les méthodes reçues
+        /// </summary>
+        /// <param name="input"></param>
         public virtual void ProcessInput(DataInput input)
         {
             if (input.Method == "MethodLIST")
@@ -446,6 +445,11 @@ namespace NetworkAndGenericCalculation.Sockets
             return endSequence.SequenceEqual(endOfBuffer);
         }
 
+        /// <summary>
+        /// Concatène tous les buffers présents dans la liste dans un buffer final
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private byte[] ConcatByteArray(List<byte[]> data)
         {
             List<byte> byteStorage = new List<byte>();

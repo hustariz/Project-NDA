@@ -77,39 +77,41 @@ namespace NetworkAndGenericCalculation.Sockets
             new ManualResetEvent(false);
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
+        /// <summary>
+        /// Initialisation du Node
+        /// </summary>
+        /// <param name="logger"></param>
         public Node(Action<string> logger)
-        {
-           
+        {         
             ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Logger = logger;
-            //BUFFER_SIZE = 4096;
-            //Buffer = new byte[BUFFER_SIZE];
-            //Attempts = 0;
             processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
-            //Ajouter le NodeId
-            
+            memoryCounter = new PerformanceCounter("Memory", "Available MBytes");            
         }
 
+        /// <summary>
+        /// Création d'un Node à la volée
+        /// </summary>
+        /// <param name="adress"></param>
+        /// <param name="port"></param>
+        /// <param name="name"></param>
         public Node(String adress, String port, String name)
-        {
-    
+        {   
             nodeAdress = adress;
             Console.WriteLine("From node constructor : " + nodeAdress);
             NodePort = port;
             nodeName = name;
             processorCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
             memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
-
         }
 
-        
-
-
-        //Open a Socket Connection with a server
+        /// <summary>
+        /// Ouvre la connexion avec le serveur
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="port"></param>
         public void ConnectToServer(IPAddress host, int port)
         {
-            //nodeClient = new Node(4, host.ToString());
             serveurAdress = host;
             serverNodePort = port;
             while (!ClientSocket.Connected)
@@ -118,17 +120,14 @@ namespace NetworkAndGenericCalculation.Sockets
                 {
                     Attempts++;
                     Log("Connection attempt :" + Attempts);
-                    ClientSocket.Connect(host, port);
-                   
+                    ClientSocket.Connect(host, port);                  
                 }
                 catch (SocketException)
                 {
                     Log("SocketException");
                 }
             }
-            //Log(nodeClient.NetworkAdress);
             Log("Connected");
-            //this.isAvailable = true;
 
             //Send methods to serveur
             List<string> methodList = nodeMethods();
@@ -140,11 +139,12 @@ namespace NetworkAndGenericCalculation.Sockets
             };
             Send(ClientSocket, dataI);
             Receive(ClientSocket);
-            
-           
-           // receiveDone.WaitOne();
         }
 
+        /// <summary>
+        /// Initialise le ReceiveCallback en Asynchrone
+        /// </summary>
+        /// <param name="client"></param>
         private void Receive(Socket client)
         {
             try
@@ -163,7 +163,9 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-        // Close socket and write a message in the status box.
+        /// <summary>
+        /// Ferme la connexion
+        /// </summary>
         public void Exit()
         {
             SendString("exit"); // Tell the server we are exiting
@@ -172,7 +174,10 @@ namespace NetworkAndGenericCalculation.Sockets
             Log("Client disconnected");
         }
 
-        // Send a Request to the server
+        /// <summary>
+        /// Envoi une requête au serveur
+        /// </summary>
+        /// <param name="message"></param>
         public void SendRequest(String message)
         {
             string request = message;
@@ -182,18 +187,22 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 Exit();
             }
-
         }
 
-        // Sends a string to the server with ASCII encoding.
+        /// <summary>
+        /// Envoi un string au serveur
+        /// </summary>
+        /// <param name="text"></param>
         public void SendString(string text)
         {
             byte[] buffer = Encoding.ASCII.GetBytes(text);
             ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
         }
 
-
-
+        /// <summary>
+        /// Accepte la communication en Asynchrone
+        /// </summary>
+        /// <param name="ar"></param>
         public void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
@@ -210,7 +219,10 @@ namespace NetworkAndGenericCalculation.Sockets
                 new AsyncCallback(ReceiveCallback), state);
         }
 
-
+        /// <summary>
+        /// Reçoit la communication en Asynchrone
+        /// </summary>
+        /// <param name="ar"></param>
         private void ReceiveCallback(IAsyncResult ar)
         {
             try
@@ -223,13 +235,13 @@ namespace NetworkAndGenericCalculation.Sockets
                 // Read data from the remote device.
                 int bytesRead = client.EndReceive(ar);       
 
-                    try
-                    {
-                        // Read data from the remote device.
-                        // Gety data from buffer
-                        byte[] dataToConcat = new byte[bytesRead];
-                        Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
-                        state.data.Add(dataToConcat);
+                try
+                {
+                    // Read data from the remote device.
+                    // Gety data from buffer
+                    byte[] dataToConcat = new byte[bytesRead];
+                    Array.Copy(state.buffer, 0, dataToConcat, 0, bytesRead);
+                    state.data.Add(dataToConcat);
                     if (IsEndOfMessage(state.buffer, bytesRead))
                     {
                         byte[] data = ConcatByteArray(state.data);
@@ -241,12 +253,10 @@ namespace NetworkAndGenericCalculation.Sockets
                     {
                         client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, ReceiveCallback, state);
                     }
-
-
-                    }
-                    catch(Exception e)
-                    {
-                    Console.WriteLine("erreur sérialisation ");
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("erreur sérialisation "+e);
                     client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReceiveCallback), state);
                 }
@@ -257,32 +267,36 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        /// <summary>
+        /// Orchestre les méthodes reçues
+        /// </summary>
+        /// <param name="dataI"></param>
+        /// <returns></returns>
         public virtual Object ProcessInput(DataInput dataI) {
 
             switch (dataI.Method)
             {
                 case "IdentNode":
                     NodeID = (String)dataI.Data;
-                    break;
-               
-                
+                    break;          
             }
-
             return null;
-
         }
 
+        /// <summary>
+        /// TODO : Récupère la liste des méthodes
+        /// </summary>
+        /// <returns></returns>
         public List<String> nodeMethods() {
-
             List<string> listest = new List<string>();
             listest.Add("COUCOU");
-
             return listest;
         }
 
-        //public abstract object ProcessInput(DataInput dataI);
-
         // Receive and convert data into a string to print it
+        /// <summary>
+        /// Reçoit la réponse et converti les données en string pour les afficher
+        /// </summary>
         public void ReceiveResponse()
         {
             int received = ClientSocket.Receive(Buffer, SocketFlags.None);
@@ -293,14 +307,20 @@ namespace NetworkAndGenericCalculation.Sockets
             Log("Server Response : " + text);
         }
 
+        /// <summary>
+        /// Log
+        /// </summary>
+        /// <param name="msg"></param>
         internal void Log(string msg)
         {
             Logger?.Invoke(msg);
         }
 
+        /// <summary>
+        /// Monitore les BackgroundWorkers
+        /// </summary>
         public static void monitoringBW()
         {
-
             foreach(BackgroundWorker bc in backGroundworkerList)
             {
                 while (bc.IsBusy)
@@ -311,20 +331,21 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
+        /// <summary>
+        /// Envoi des données sérialisées en Asynchrone
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="obj"></param>
         public static void Send(Socket handler, DataInput obj)
         {
-
             byte[] data = Format.Serialize(obj);
-
             try
             {
-                //Console.WriteLine("Send data : " + obj + " to : " + handler);
                 handler.BeginSend(data, 0, data.Length, 0,
                     new AsyncCallback(SendCallback), handler);
             }
             catch (SocketException ex)
             {
-                /// Client Down ///
                 if (!handler.Connected)
                     Console.WriteLine("Client " + handler.RemoteEndPoint.ToString() + " Disconnected");
                 Console.WriteLine(ex.ToString());
@@ -341,11 +362,9 @@ namespace NetworkAndGenericCalculation.Sockets
             {
                 // Retrieve the socket from the state object.
                 Socket handler = (Socket)ar.AsyncState;
-
                 // Complete sending the data to the remote device.
                 int bytesSent = handler.EndSend(ar);
                // Console.WriteLine("Sent {0} bytes to server.", bytesSent);
-
             }
             catch (Exception e)
             {
@@ -353,8 +372,13 @@ namespace NetworkAndGenericCalculation.Sockets
             }
         }
 
-
+        /// <summary>
+        /// Usage du processeur
+        /// </summary>
         public float ProcessorUsage => processorCounter.NextValue();
+        /// <summary>
+        /// Usage de la mémoire
+        /// </summary>
         public float MemoryUsage => memoryCounter.NextValue();
 
 
@@ -366,16 +390,34 @@ namespace NetworkAndGenericCalculation.Sockets
             NodeID = "NODE" + ":" + serveurAdress + ":" + serverNodePort;
         }
 
+        /// <summary>
+        /// Mapping générique
+        /// </summary>
+        /// <param name="Method"></param>
+        /// <param name="text"></param>
+        /// <param name="chunkSize"></param>
+        /// <param name="offsets"></param>
+        /// <returns></returns>
         public virtual object map(string Method, string[] text, int chunkSize, int offsets)
         {
             return null;
         }
 
+        /// <summary>
+        /// Reduce générique
+        /// </summary>
+        /// <returns></returns>
         public virtual object reduce()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Défini si il s'agit de la fin d'un message et y ajoute une fin de séquence
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="byteRead"></param>
+        /// <returns></returns>
         private bool IsEndOfMessage(byte[] buffer, int byteRead)
         {
             byte[] endSequence = Encoding.ASCII.GetBytes("PIPICACA");
@@ -384,6 +426,11 @@ namespace NetworkAndGenericCalculation.Sockets
             return endSequence.SequenceEqual(endOfBuffer);
         }
 
+        /// <summary>
+        /// Concatène tous les buffers présents dans la liste dans un buffer final
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private byte[] ConcatByteArray(List<byte[]> data)
         {
             List<byte> byteStorage = new List<byte>();
